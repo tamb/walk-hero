@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/walk-hero/static/css/main.6dea0f05.chunk.css",
+    "main.js": "/walk-hero/static/js/main.8012edbb.chunk.js",
+    "main.js.map": "/walk-hero/static/js/main.8012edbb.chunk.js.map",
+    "runtime-main.js": "/walk-hero/static/js/runtime-main.47f2f3da.js",
+    "runtime-main.js.map": "/walk-hero/static/js/runtime-main.47f2f3da.js.map",
+    "static/js/2.4fa2a26e.chunk.js": "/walk-hero/static/js/2.4fa2a26e.chunk.js",
+    "static/js/2.4fa2a26e.chunk.js.map": "/walk-hero/static/js/2.4fa2a26e.chunk.js.map",
+    "static/js/3.236d0374.chunk.js": "/walk-hero/static/js/3.236d0374.chunk.js",
+    "static/js/3.236d0374.chunk.js.map": "/walk-hero/static/js/3.236d0374.chunk.js.map",
+    "index.html": "/walk-hero/index.html",
+    "static/css/main.6dea0f05.chunk.css.map": "/walk-hero/static/css/main.6dea0f05.chunk.css.map",
+    "static/js/2.4fa2a26e.chunk.js.LICENSE.txt": "/walk-hero/static/js/2.4fa2a26e.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.47f2f3da.js",
+    "static/js/2.4fa2a26e.chunk.js",
+    "static/css/main.6dea0f05.chunk.css",
+    "static/js/main.8012edbb.chunk.js"
+  ]
+}
