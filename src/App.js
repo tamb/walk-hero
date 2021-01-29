@@ -4,7 +4,6 @@ import { Container, Row, Col } from "reactstrap";
 
 import { toLatLong, toTime } from "./services/Geo";
 
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +17,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.poll = navigator.geolocation.watchPosition(this.success);
+    this.poll = navigator.geolocation.watchPosition(this.success, null, {
+      enableHighAccuracy: true,
+      timeout: 1000,
+    });
     navigator.geolocation.getCurrentPosition(this.setStart);
   }
 
