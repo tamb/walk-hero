@@ -30,26 +30,53 @@ class App extends React.Component {
       timeout: 1000,
     });
     navigator.geolocation.getCurrentPosition(this.setStart);
+
+    this.cityPoll = setInterval(this.getCurrentCity, 120000);
+    this.map = null;
   }
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.poll);
+    clearInterval(this.cityPoll);
   }
+
+  renderMap = () => {
+    this.map = window.L.map("map", {
+      minZoom: 10
+    }).setView(toLatLong(this.state.geoData), 17);
+    window.L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      subdomains: ["a", "b", "c"],
+    }).addTo(this.map);
+    window.L.marker(toLatLong(this.state.geoData)).addTo(this.map);
+  };
 
   setStart = (data) => {
     const latLong = toLatLong(data);
     this.setState({ start: data, geoData: data }, () => {
-      CityWorker.getEntryByLatLong(latLong).then((value) => {
-        console.log(value);
-        // console.log(parseFloat(value[2].lng));
-        // console.log(latLong[1]);
-        // console.log(parseFloat(value[2].lng) - latLong[1])
-        // console.log(toLatLong(this.state.geoData)[0].toFixed(5));
-        // console.log(value[2].lat - toLatLong(this.state.geoData)[0].toFixed(5));
-        // console.log(toLatLong(this.state.geoData));
-        // console.log((toLatLong(this.state.geoData)[0] + Number(value[0])))
+      this.getCurrentCity(latLong);
+      this.renderMap();
+    });
+  };
+
+  recheckCity = () => {
+    this.getCurrentCity(toLatLong(this.state.geoData));
+  };
+
+  getCurrentCity = (latLong) => {
+    CityWorker.getEntryByLatLong(latLong).then((value) => {
+      if (value.length !== 0) {
         this.setState({ startingLocation: value[0] });
-      });
+      } else {
+        this.setState({
+          failedAtCity: true,
+          startingLocation: {
+            name: "Could not find city",
+            country: "Could not find country",
+          },
+        });
+      }
     });
   };
 
@@ -108,6 +135,9 @@ class App extends React.Component {
             <p>Starting location</p>
             <p>City: {this.state.startingLocation.name}</p>
             <p>Country: {this.state.startingLocation.country}</p>
+          </Col>
+          <Col>
+            <div style={{ width: "100%", height: "50vh" }} id="map"></div>
           </Col>
         </Row>
       </Container>
