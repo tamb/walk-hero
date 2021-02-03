@@ -3,6 +3,9 @@ import distFrom from "distance-from";
 import { Container, Row, Col } from "reactstrap";
 
 import { toLatLong, toTime } from "./services/Geo";
+import cityWorker from "workerize-loader!./workers/cities"; // eslint-disable-line import/no-webpack-loader-syntax
+
+const CityWorker = cityWorker();
 
 class App extends React.Component {
   constructor(props) {
@@ -10,9 +13,14 @@ class App extends React.Component {
 
     this.state = {
       geoData: {},
+      farthestGeoDataFromStart: null,
       hasLocation: false,
       start: false,
-      distanceFromStartCM: null,
+      distanceFromStartCM: 0,
+      prevGeoData: {},
+      distanceTraveledInCM: 0,
+      totalDistanceTraveledInCM: 0,
+      startingLocation: {},
     };
   }
 
@@ -28,32 +36,53 @@ class App extends React.Component {
     navigator.geolocation.clearWatch(this.poll);
   }
 
-  setStart = (data) => this.setState({ start: data });
+  setStart = (data) => {
+    const latLong = toLatLong(data);
+    this.setState({ start: data, geoData: data }, () => {
+      CityWorker.getEntryByLatLong(latLong).then((value) => {
+        console.log(value);
+        // console.log(parseFloat(value[2].lng));
+        // console.log(latLong[1]);
+        // console.log(parseFloat(value[2].lng) - latLong[1])
+        // console.log(toLatLong(this.state.geoData)[0].toFixed(5));
+        // console.log(value[2].lat - toLatLong(this.state.geoData)[0].toFixed(5));
+        // console.log(toLatLong(this.state.geoData));
+        // console.log((toLatLong(this.state.geoData)[0] + Number(value[0])))
+        this.setState({ startingLocation: value[0] });
+      });
+    });
+  };
 
   success = (geoData) => {
+    let farthestGeoData = this.state.farthestGeoDataFromStart;
+    const distanceTraveled = distFrom(toLatLong(geoData))
+      .to(toLatLong(this.state.geoData))
+      .in("cm");
+
+    const distFromStart = distFrom(toLatLong(this.state.start))
+      .to(toLatLong(geoData))
+      .in("cm");
+    if (this.state.farthestGeoDataFromStart) {
+      if (
+        distFromStart >
+        distFrom(toLatLong(this.state.farthestGeoDataFromStart))
+          .to(toLatLong(this.state.start))
+          .in("cm")
+      ) {
+        farthestGeoData = geoData;
+      }
+    } else {
+      farthestGeoData = geoData;
+    }
     this.setState({
+      farthestGeoDataFromStart: farthestGeoData,
       geoData,
       distanceFromStartCM: distFrom(toLatLong(this.state.start))
         .to(toLatLong(geoData))
         .in("cm"),
-      distanceFromStartM: distFrom(toLatLong(this.state.start))
-        .to(toLatLong(geoData))
-        .in("m"),
-      distanceFromStartKM: distFrom(toLatLong(this.state.start))
-        .to(toLatLong(geoData))
-        .in("km"),
-      distanceFromStartIN: distFrom(toLatLong(this.state.start))
-        .to(toLatLong(geoData))
-        .in("in"),
-      distanceFromStartFT: distFrom(toLatLong(this.state.start))
-        .to(toLatLong(geoData))
-        .in("ft"),
-      distanceFromStartYD: distFrom(toLatLong(this.state.start))
-        .to(toLatLong(geoData))
-        .in("yd"),
-      distanceFromStartMI: distFrom(toLatLong(this.state.start))
-        .to(toLatLong(geoData))
-        .in("mi"),
+      distanceTraveledInCM: distanceTraveled,
+      totalDistanceTraveledInCM:
+        this.state.totalDistanceTraveledInCM + distanceTraveled,
     });
   };
 
@@ -69,12 +98,16 @@ class App extends React.Component {
 
             <p>Distance from start</p>
             <p>cm: {this.state.distanceFromStartCM}</p>
-            <p>m: {this.state.distanceFromStartM}</p>
-            <p>km: {this.state.distanceFromStartKM}</p>
-            <p>in: {this.state.distanceFromStartIN}</p>
-            <p>ft: {this.state.distanceFromStartFT}</p>
-            <p>yd: {this.state.distanceFromStartYD}</p>
-            <p>mi: {this.state.distanceFromStartMI}</p>
+            <p>
+              Distance JUST Traveled in CM: {this.state.distanceTraveledInCM}
+            </p>
+            <p>
+              TOTAL Distance Traveled in CM:{" "}
+              {this.state.totalDistanceTraveledInCM}
+            </p>
+            <p>Starting location</p>
+            <p>City: {this.state.startingLocation.name}</p>
+            <p>Country: {this.state.startingLocation.country}</p>
           </Col>
         </Row>
       </Container>
