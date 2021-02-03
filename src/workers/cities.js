@@ -11,10 +11,6 @@ export function getEntryByLatLong(latLong) {
 
     const match = diffLat < 0.01 && diffLng < 0.01;
 
-    if (match) {
-      var t = "tom";
-    }
-
     return match === true;
 
     // return diffLat < 0.1 && diffLng < 0.1;

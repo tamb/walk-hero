@@ -42,14 +42,14 @@ class App extends React.Component {
 
   renderMap = () => {
     this.map = window.L.map("map", {
-      minZoom: 10
+      minZoom: 10,
     }).setView(toLatLong(this.state.geoData), 17);
     window.L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       subdomains: ["a", "b", "c"],
     }).addTo(this.map);
-    window.L.marker(toLatLong(this.state.geoData)).addTo(this.map);
+    this.moveUserCursor();
   };
 
   setStart = (data) => {
@@ -58,6 +58,14 @@ class App extends React.Component {
       this.getCurrentCity(latLong);
       this.renderMap();
     });
+  };
+
+  moveUserCursor = () => {
+    if (this.userMarker){
+      this.userMarker.update();
+    } else {
+      this.userMarker = window.L.marker(toLatLong(this.state.geoData), {draggable: false}).addTo(this.map);
+    }
   };
 
   recheckCity = () => {
@@ -78,6 +86,10 @@ class App extends React.Component {
         });
       }
     });
+  };
+
+  handleStateCoordUpdate = () => {
+    this.moveUserCursor();
   };
 
   success = (geoData) => {
@@ -101,23 +113,25 @@ class App extends React.Component {
     } else {
       farthestGeoData = geoData;
     }
-    this.setState({
-      farthestGeoDataFromStart: farthestGeoData,
-      geoData,
-      distanceFromStartCM: distFrom(toLatLong(this.state.start))
-        .to(toLatLong(geoData))
-        .in("cm"),
-      distanceTraveledInCM: distanceTraveled,
-      totalDistanceTraveledInCM:
-        this.state.totalDistanceTraveledInCM + distanceTraveled,
-    });
+    this.setState(
+      {
+        farthestGeoDataFromStart: farthestGeoData,
+        geoData,
+        distanceFromStartCM: distFrom(toLatLong(this.state.start))
+          .to(toLatLong(geoData))
+          .in("cm"),
+        distanceTraveledInCM: distanceTraveled,
+        totalDistanceTraveledInCM:
+          this.state.totalDistanceTraveledInCM + distanceTraveled,
+      }, this.handleStateCoordUpdate
+    );
   };
 
   render() {
     return (
       <Container>
         <Row>
-          <Col>
+          <Col xs={12} sm={6}>
             <p>
               Starting at: {this.state.start && toLatLong(this.state.start)}
             </p>
@@ -136,7 +150,7 @@ class App extends React.Component {
             <p>City: {this.state.startingLocation.name}</p>
             <p>Country: {this.state.startingLocation.country}</p>
           </Col>
-          <Col>
+          <Col xs={12} sm={6}>
             <div style={{ width: "100%", height: "50vh" }} id="map"></div>
           </Col>
         </Row>
