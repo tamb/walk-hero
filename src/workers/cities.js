@@ -1,7 +1,9 @@
 import cities from "./../data/cities.json";
+import {toLatLong} from "./../services/Geo";
 
-export function getEntryByLatLong(latLong) {
+export function getEntryByLatLong(geoData) {
   // 5 decimal
+  const latLong = toLatLong(geoData)
   return cities.filter((city) => {
     //   return [typeof city.lat, city.lng];
     // }

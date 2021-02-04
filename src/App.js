@@ -1,18 +1,30 @@
 import React from "react";
-import distFrom from "distance-from";
 import { Container, Row, Col } from "reactstrap";
 
-import { toLatLong, toTime } from "./services/Geo";
+import {
+  toLatLong,
+  startPoll,
+  killPoll,
+  getStartingPoint,
+  cloneGeoData,
+} from "./services/Geo";
 import cityWorker from "workerize-loader!./workers/cities"; // eslint-disable-line import/no-webpack-loader-syntax
+import measureWorker from "workerize-loader!./workers/measurements"; // eslint-disable-line import/no-webpack-loader-syntax
+
+import DisplayData from "./components/DisplayData/DisplayData";
+import Map from "./components/Map/Map";
 
 const CityWorker = cityWorker();
+const MeasurementWorker = measureWorker();
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      geoData: {},
+      geoData: {
+        coords: {},
+      },
       farthestGeoDataFromStart: null,
       hasLocation: false,
       start: false,
@@ -22,54 +34,30 @@ class App extends React.Component {
       totalDistanceTraveledInCM: 0,
       startingLocation: {},
     };
-  }
 
-  componentDidMount() {
-    this.poll = navigator.geolocation.watchPosition(this.success, null, {
-      enableHighAccuracy: true,
-      timeout: 1000,
-    });
-    navigator.geolocation.getCurrentPosition(this.setStart);
-
-    this.cityPoll = setInterval(this.getCurrentCity, 120000);
+    this.poll = null;
     this.map = null;
   }
 
-  componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.poll);
-    clearInterval(this.cityPoll);
+  componentDidMount() {
+    this.poll = startPoll(this.success);
+    getStartingPoint(this.setStart);
+    this.cityPoll = setInterval(
+      () => this.getCurrentCity(cloneGeoData(this.state.geoData)),
+      12000
+    );
   }
 
-  renderMap = () => {
-    this.map = window.L.map("map", {
-      minZoom: 10,
-    }).setView(toLatLong(this.state.geoData), 17);
-    window.L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      subdomains: ["a", "b", "c"],
-    }).addTo(this.map);
-    this.moveUserCursor();
-  };
+  componentWillUnmount() {
+    killPoll(this.poll);
+    clearInterval(this.cityPoll);
+  }
 
   setStart = (data) => {
     const latLong = toLatLong(data);
     this.setState({ start: data, geoData: data }, () => {
-      this.getCurrentCity(latLong);
-      this.renderMap();
+      this.getCurrentCity(cloneGeoData(data));
     });
-  };
-
-  moveUserCursor = () => {
-    if (this.userMarker){
-      this.userMarker.update();
-    } else {
-      this.userMarker = window.L.marker(toLatLong(this.state.geoData), {draggable: false}).addTo(this.map);
-    }
-  };
-
-  recheckCity = () => {
-    this.getCurrentCity(toLatLong(this.state.geoData));
   };
 
   getCurrentCity = (latLong) => {
@@ -88,43 +76,47 @@ class App extends React.Component {
     });
   };
 
-  handleStateCoordUpdate = () => {
-    this.moveUserCursor();
-  };
-
   success = (geoData) => {
-    let farthestGeoData = this.state.farthestGeoDataFromStart;
-    const distanceTraveled = distFrom(toLatLong(geoData))
-      .to(toLatLong(this.state.geoData))
-      .in("cm");
+    let _tempFarthestGeoData = null;
+    let _farthestGeoData = null;
+    let _distFromStart = null;
+    let _distTraveled = null;
 
-    const distFromStart = distFrom(toLatLong(this.state.start))
-      .to(toLatLong(geoData))
-      .in("cm");
+    MeasurementWorker.distBetweenInCM(
+      cloneGeoData(this.state.start),
+      cloneGeoData(geoData)
+    ).then((value) => {
+      _distFromStart = value;
+    });
+    MeasurementWorker.distBetweenInCM(
+      cloneGeoData(geoData),
+      cloneGeoData(this.state.geoData)
+    ).then((value) => {
+      _distTraveled = value;
+    });
+
     if (this.state.farthestGeoDataFromStart) {
-      if (
-        distFromStart >
-        distFrom(toLatLong(this.state.farthestGeoDataFromStart))
-          .to(toLatLong(this.state.start))
-          .in("cm")
-      ) {
-        farthestGeoData = geoData;
+      MeasurementWorker.distBetweenInCM(
+        cloneGeoData(this.state.farthestGeoDataFromStart),
+        cloneGeoData(this.state.start)
+      ).then((value) => {
+        _tempFarthestGeoData = value;
+      });
+      if (_distFromStart > _tempFarthestGeoData) {
+        _farthestGeoData = geoData;
       }
     } else {
-      farthestGeoData = geoData;
+      _farthestGeoData = geoData;
     }
-    this.setState(
-      {
-        farthestGeoDataFromStart: farthestGeoData,
-        geoData,
-        distanceFromStartCM: distFrom(toLatLong(this.state.start))
-          .to(toLatLong(geoData))
-          .in("cm"),
-        distanceTraveledInCM: distanceTraveled,
-        totalDistanceTraveledInCM:
-          this.state.totalDistanceTraveledInCM + distanceTraveled,
-      }, this.handleStateCoordUpdate
-    );
+
+    this.setState({
+      farthestGeoDataFromStart: _farthestGeoData,
+      geoData,
+      distanceFromStartCM: _distFromStart,
+      distanceTraveledInCM: _distTraveled,
+      totalDistanceTraveledInCM:
+        this.state.totalDistanceTraveledInCM + _distTraveled,
+    });
   };
 
   render() {
@@ -132,26 +124,10 @@ class App extends React.Component {
       <Container>
         <Row>
           <Col xs={12} sm={6}>
-            <p>
-              Starting at: {this.state.start && toLatLong(this.state.start)}
-            </p>
-            <p>Starting on: {this.state.start && toTime(this.state.start)}</p>
-
-            <p>Distance from start</p>
-            <p>cm: {this.state.distanceFromStartCM}</p>
-            <p>
-              Distance JUST Traveled in CM: {this.state.distanceTraveledInCM}
-            </p>
-            <p>
-              TOTAL Distance Traveled in CM:{" "}
-              {this.state.totalDistanceTraveledInCM}
-            </p>
-            <p>Starting location</p>
-            <p>City: {this.state.startingLocation.name}</p>
-            <p>Country: {this.state.startingLocation.country}</p>
+            <DisplayData {...this.state} />
           </Col>
           <Col xs={12} sm={6}>
-            <div style={{ width: "100%", height: "50vh" }} id="map"></div>
+            <Map geoData={this.state.geoData} />
           </Col>
         </Row>
       </Container>
