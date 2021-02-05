@@ -4,8 +4,6 @@ import {
   Table,
   Badge,
   Modal,
-  ModalBody,
-  ModalFooter,
   ModalHeader,
   Container,
   Row,
@@ -16,7 +14,7 @@ import { toTime, toLatLong } from "./../../services/Geo";
 
 function DisplayData(props) {
   return (
-    <Modal {...props.modalProps}>
+    <Modal {...props.modalProps} centered scrollable>
       <ModalHeader toggle={props.modalProps.toggle}>Data</ModalHeader>
       {props.start && (
         <Container>

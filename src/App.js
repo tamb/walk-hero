@@ -3,7 +3,6 @@ import { Container, Row, Col } from "reactstrap";
 
 import { CUSTOMEVENTS } from "./enums";
 import {
-  toLatLong,
   startPoll,
   killPoll,
   getStartingPoint,
@@ -71,8 +70,7 @@ class App extends React.Component {
   };
 
   setStart = (data) => {
-    const latLong = toLatLong(data);
-    this.setState({ start: data, geoData: data }, () => {
+    this.setState({ start: data, geoData: data, hasLocation: true }, () => {
       this.getCurrentCity(cloneGeoData(data));
     });
   };
@@ -176,7 +174,7 @@ class App extends React.Component {
             <Map geoData={this.state.geoData} />
           </Col>
         </Row>
-        <BottomNav />
+        <BottomNav hasLocation={this.state.hasLocation} />
       </Container>
     );
   }
