@@ -2,6 +2,10 @@ $bs-margin: 15px;
 
 #map {
   height: 90vh;
-  width: 100vw;
+  width: calc(100% + #{$bs-margin * 2});
   margin-left: -$bs-margin;
+
+  .leaflet-control-attribution {
+    font-size: 0.7em;
+  }
 }

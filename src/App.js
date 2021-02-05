@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
 
+import { CUSTOMEVENTS } from "./enums";
 import {
   toLatLong,
   startPoll,
@@ -23,6 +24,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      dataModalOpen: false,
       geoData: {
         coords: {},
       },
@@ -47,12 +49,26 @@ class App extends React.Component {
       () => this.getCurrentCity(cloneGeoData(this.state.geoData)),
       12000
     );
+    window.addEventListener(
+      CUSTOMEVENTS.DATA_MODAL_TOGGLE,
+      this.dataModalToggle
+    );
   }
 
   componentWillUnmount() {
     killPoll(this.poll);
     clearInterval(this.cityPoll);
+    window.removeEventListener(
+      CUSTOMEVENTS.DATA_MODAL_TOGGLE,
+      this.dataModalToggle
+    );
   }
+
+  dataModalToggle = () => {
+    this.setState({
+      dataModalOpen: !this.state.dataModalOpen,
+    });
+  };
 
   setStart = (data) => {
     const latLong = toLatLong(data);
@@ -149,7 +165,13 @@ class App extends React.Component {
     return (
       <Container>
         <Row>
-          <DisplayData {...this.state} />
+          <DisplayData
+            {...this.state}
+            modalProps={{
+              isOpen: this.state.dataModalOpen,
+              toggle: this.dataModalToggle,
+            }}
+          />
           <Col xs={12}>
             <Map geoData={this.state.geoData} />
           </Col>
