@@ -2,7 +2,7 @@
   "name": "walk-hero",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://tamb.github.io/walk-hero",
+  "homepage": "https://walkhero.io",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
