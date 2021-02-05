@@ -3,6 +3,11 @@ import PropTypes from "prop-types";
 
 import { toLatLong } from "./../../services/Geo";
 
+import "./Map.scss";
+
+// tile layer design:
+// http://maps.stamen.com/#watercolor/12/37.7706/-122.3782
+
 class Map extends React.Component {
   constructor(props) {
     super(props);
@@ -14,11 +19,14 @@ class Map extends React.Component {
       this.map = window.L.map("map", {
         minZoom: 10,
       }).setView(toLatLong(this.props.geoData), 17);
-      window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        subdomains: ["a", "b", "c"],
-      }).addTo(this.map);
+      window.L.tileLayer(
+        "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg",
+        {
+          attribution:
+            'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.',
+          subdomains: ["a", "b", "c"],
+        }
+      ).addTo(this.map);
       this.moveUserCursor();
     }
 
@@ -38,7 +46,7 @@ class Map extends React.Component {
   };
 
   render() {
-    return <div style={{ width: "50vw", height: "50vh" }} id="map"></div>;
+    return <div id="map"></div>;
   }
 }
 

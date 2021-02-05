@@ -1,12 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Table, Badge } from "reactstrap";
+import {
+  Table,
+  Badge,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from "reactstrap";
 
 import { toTime, toLatLong } from "./../../services/Geo";
 
 function DisplayData(props) {
   return (
-    <React.Fragment>
+    <Modal>
       {props.start && (
         <React.Fragment>
           <h2>Starting Data</h2>
@@ -62,7 +69,7 @@ function DisplayData(props) {
           <Badge>hey</Badge>
         </div>
       </section>
-    </React.Fragment>
+    </Modal>
   );
 }
 

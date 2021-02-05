@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, UncontrolledCollapse } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 import {
   toLatLong,
@@ -13,6 +13,7 @@ import measureWorker from "workerize-loader!./workers/measurements"; // eslint-d
 
 import DisplayData from "./components/DisplayData/DisplayData";
 import Map from "./components/Map/Map";
+import BottomNav from "./components/BottomNav/BottomNav";
 
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();
@@ -148,18 +149,12 @@ class App extends React.Component {
     return (
       <Container>
         <Row>
-          <Col xs={12}>
-            <a href="#data" id="dataToggler">
-              Data
-            </a>
-            <UncontrolledCollapse id="data" toggler="#dataToggler">
-              <DisplayData {...this.state} />
-            </UncontrolledCollapse>
-          </Col>
+          <DisplayData {...this.state} />
           <Col xs={12}>
             <Map geoData={this.state.geoData} />
           </Col>
         </Row>
+        <BottomNav />
       </Container>
     );
   }
