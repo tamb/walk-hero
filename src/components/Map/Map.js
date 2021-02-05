@@ -38,7 +38,7 @@ class Map extends React.Component {
   };
 
   render() {
-    return <div style={{ width: "100%", height: "50vh" }} id="map"></div>;
+    return <div style={{ width: "50vw", height: "50vh" }} id="map"></div>;
   }
 }
 

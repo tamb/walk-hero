@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, UncontrolledCollapse } from "reactstrap";
 
 import {
   toLatLong,
@@ -77,56 +77,82 @@ class App extends React.Component {
   };
 
   success = (geoData) => {
-    let _tempFarthestGeoData = null;
-    let _farthestGeoData = null;
+    this.calculateFarthestGeo(geoData);
+    this.calculatePointToPointFromStart(geoData);
+    this.calculateTotalDistanceTraveledInCM(geoData);
+
+    this.setState({
+      geoData,
+    });
+  };
+
+  calculatePointToPointFromStart = (_geoData) => {
     let _distFromStart = null;
-    let _distTraveled = null;
 
     MeasurementWorker.distBetweenInCM(
       cloneGeoData(this.state.start),
-      cloneGeoData(geoData)
+      cloneGeoData(_geoData)
     ).then((value) => {
       _distFromStart = value;
+      this.setState({
+        distanceFromStartCM: _distFromStart,
+      });
     });
+  };
+
+  calculateTotalDistanceTraveledInCM = (_geoData) => {
+    let _distTraveled = null;
+
     MeasurementWorker.distBetweenInCM(
-      cloneGeoData(geoData),
+      cloneGeoData(_geoData),
       cloneGeoData(this.state.geoData)
     ).then((value) => {
       _distTraveled = value;
+      this.setState({
+        distanceTraveledInCM: _distTraveled,
+        totalDistanceTraveledInCM:
+          this.state.totalDistanceTraveledInCM + _distTraveled,
+      });
     });
+  };
+
+  calculateFarthestGeo = (_geoData) => {
+    let _farthestGeoData = null;
 
     if (this.state.farthestGeoDataFromStart) {
       MeasurementWorker.distBetweenInCM(
         cloneGeoData(this.state.farthestGeoDataFromStart),
         cloneGeoData(this.state.start)
-      ).then((value) => {
-        _tempFarthestGeoData = value;
+      ).then((value1) => {
+        MeasurementWorker.distBetweenInCM(
+          cloneGeoData(_geoData),
+          cloneGeoData(this.state.farthestGeoDataFromStart)
+        ).then((value2) => {
+          if (value2 > value1) {
+            _farthestGeoData = _geoData;
+            this.setState({ farthestGeoDataFromStart: _farthestGeoData });
+          }
+        });
       });
-      if (_distFromStart > _tempFarthestGeoData) {
-        _farthestGeoData = geoData;
-      }
     } else {
-      _farthestGeoData = geoData;
+      _farthestGeoData = _geoData;
+      this.setState({ farthestGeoDataFromStart: _farthestGeoData });
     }
-
-    this.setState({
-      farthestGeoDataFromStart: _farthestGeoData,
-      geoData,
-      distanceFromStartCM: _distFromStart,
-      distanceTraveledInCM: _distTraveled,
-      totalDistanceTraveledInCM:
-        this.state.totalDistanceTraveledInCM + _distTraveled,
-    });
   };
 
   render() {
     return (
       <Container>
         <Row>
-          <Col xs={12} sm={6}>
-            <DisplayData {...this.state} />
+          <Col xs={12}>
+            <a href="#data" id="dataToggler">
+              Data
+            </a>
+            <UncontrolledCollapse id="data" toggler="#dataToggler">
+              <DisplayData {...this.state} />
+            </UncontrolledCollapse>
           </Col>
-          <Col xs={12} sm={6}>
+          <Col xs={12}>
             <Map geoData={this.state.geoData} />
           </Col>
         </Row>

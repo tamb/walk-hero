@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Table, Badge } from "reactstrap";
 
-import { toTime, toLatLong } from "./../../services/Geo";
+import { toTime, toLatLong, cloneGeoData } from "./../../services/Geo";
 
 function DisplayData(props) {
   return (
@@ -38,13 +38,21 @@ function DisplayData(props) {
                 <th>cm from start</th>
                 <th>cm just traveled</th>
                 <th>total cm</th>
+                <th>lat</th>
+                <th>lng</th>
+                <th>time</th>
               </tr>
-              <tbody>
+            </thead>
+            <tbody>
+              <tr>
                 <td>{props.distanceFromStartCM}</td>
                 <td>{props.distanceTraveledInCM}</td>
                 <td>{props.totalDistanceTraveledInCM}</td>
-              </tbody>
-            </thead>
+                <td>{toLatLong(props.geoData)[0]}</td>
+                <td>{toLatLong(props.geoData)[1]}</td>
+                <td>{toTime(props.geoData)}</td>
+              </tr>
+            </tbody>
           </Table>
         </React.Fragment>
       )}
@@ -63,6 +71,7 @@ DisplayData.propTypes = {
   distanceFromStartCM: PropTypes.number,
   totalDistanceTraveledInCM: PropTypes.number,
   startingLocation: PropTypes.object,
+  geoData: PropTypes.object,
 };
 
 export default DisplayData;
