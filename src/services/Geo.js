@@ -1,5 +1,9 @@
 export const toTime = (geoData) => {
-  return new Date(geoData.timestamp).toUTCString();
+  const o = new Intl.DateTimeFormat(navigator.languages, {
+    timeStyle: "medium",
+    dateStyle: "short",
+  });
+  return o.format(new Date(geoData.timestamp));
 };
 
 export const toLatLong = (geoData) => {

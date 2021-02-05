@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Table, Badge } from "reactstrap";
 
-import { toTime, toLatLong, cloneGeoData } from "./../../services/Geo";
+import { toTime, toLatLong } from "./../../services/Geo";
 
 function DisplayData(props) {
   return (
