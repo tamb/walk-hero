@@ -72,7 +72,7 @@ class App extends React.Component {
 
   journeyTimeTick = () => {
     this.setState({
-      journeyTime: ++this.state.journeyTime,
+      journeyTime: this.state.journeyTime + 1,
     });
   };
 
@@ -180,10 +180,7 @@ class App extends React.Component {
   render() {
     return (
       <Container>
-        <WarningModal
-          toggle={this.acceptWarning}
-          isOpen={this.state.warningModalOpen}
-        />
+       
         <Scorecard
           journeyTime={this.state.journeyTime}
           traveled={this.state.totalDistanceTraveledInCM}
@@ -205,6 +202,10 @@ class App extends React.Component {
           </Col>
         </Row>
         <BottomNav hasLocation={this.state.hasLocation} />
+        <WarningModal
+          toggle={this.acceptWarning}
+          isOpen={this.state.warningModalOpen}
+        />
       </Container>
     );
   }

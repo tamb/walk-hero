@@ -32,6 +32,9 @@ function WarningModal(props) {
         </Container>
       </ModalBody>
       <ModalFooter>
+        <a href="https://google.com" className="btn btn-warning">
+          I DO NOT Accept
+        </a>
         <Button color="success" onClick={props.toggle}>
           I accept
         </Button>

@@ -8,8 +8,9 @@
   transition: opacity 0.5s;
   z-index: 475;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
+  padding: 2vw;
 
   &:hover,
   &:focus {
