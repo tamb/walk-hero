@@ -12,7 +12,7 @@ export function toMiles(cm) {
 }
 
 export function toKm(cm) {
-  return toM(cm) / 1000;
+  return toMeters(cm) / 1000;
 }
 
 export function toMeters(cm) {
