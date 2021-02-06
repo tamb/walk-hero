@@ -179,8 +179,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <Container>
-       
+      <Container fluid>
         <Scorecard
           journeyTime={this.state.journeyTime}
           traveled={this.state.totalDistanceTraveledInCM}
