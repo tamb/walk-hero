@@ -3,6 +3,7 @@ import { Container, Row, Col } from "reactstrap";
 
 import { CUSTOMEVENTS } from "./enums";
 import {
+  toLatLong,
   startPoll,
   killPoll,
   getStartingPoint,
@@ -171,7 +172,11 @@ class App extends React.Component {
             }}
           />
           <Col xs={12}>
-            <Map geoData={this.state.geoData} />
+            <Map
+              geoData={this.state.geoData}
+              hasLocation={this.state.hasLocation}
+              currentLatLong={toLatLong(this.state.geoData)}
+            />
           </Col>
         </Row>
         <BottomNav hasLocation={this.state.hasLocation} />
