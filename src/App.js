@@ -15,6 +15,8 @@ import measureWorker from "workerize-loader!./workers/measurements"; // eslint-d
 import DisplayData from "./components/DisplayData/DisplayData";
 import Map from "./components/Map/Map";
 import BottomNav from "./components/BottomNav/BottomNav";
+import Scorecard from "./components/Scorecard/Scorecard";
+import WarningModal from "./components/WarningModal/WarningModal";
 
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();
@@ -24,6 +26,8 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      warningModalOpen: true,
+      journeyTime: 0,
       dataModalOpen: false,
       geoData: {
         coords: {},
@@ -40,6 +44,7 @@ class App extends React.Component {
 
     this.poll = null;
     this.map = null;
+    this.journeyTimePoll = null;
   }
 
   componentDidMount() {
@@ -58,11 +63,18 @@ class App extends React.Component {
   componentWillUnmount() {
     killPoll(this.poll);
     clearInterval(this.cityPoll);
+    clearInterval(this.journeyTimePoll);
     window.removeEventListener(
       CUSTOMEVENTS.DATA_MODAL_TOGGLE,
       this.dataModalToggle
     );
   }
+
+  journeyTimeTick = () => {
+    this.setState({
+      journeyTime: ++this.state.journeyTime,
+    });
+  };
 
   dataModalToggle = () => {
     this.setState({
@@ -72,6 +84,7 @@ class App extends React.Component {
 
   setStart = (data) => {
     this.setState({ start: data, geoData: data, hasLocation: true }, () => {
+      this.journeyTimePoll = setInterval(this.journeyTimeTick, 1000);
       this.getCurrentCity(cloneGeoData(data));
     });
   };
@@ -160,9 +173,21 @@ class App extends React.Component {
     }
   };
 
+  acceptWarning = () => {
+    this.setState({ warningModalOpen: false });
+  };
+
   render() {
     return (
       <Container>
+        <WarningModal
+          toggle={this.acceptWarning}
+          isOpen={this.state.warningModalOpen}
+        />
+        <Scorecard
+          journeyTime={this.state.journeyTime}
+          traveled={this.state.totalDistanceTraveledInCM}
+        />
         <Row>
           <DisplayData
             {...this.state}

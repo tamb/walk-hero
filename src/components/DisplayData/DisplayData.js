@@ -14,7 +14,7 @@ import { toTime, toLatLong } from "./../../services/Geo";
 
 function DisplayData(props) {
   return (
-    <Modal {...props.modalProps} centered scrollable>
+    <Modal {...props.modalProps} centered>
       <ModalHeader toggle={props.modalProps.toggle}>Data</ModalHeader>
       {props.start && (
         <Container>

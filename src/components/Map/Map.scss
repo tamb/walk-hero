@@ -7,5 +7,9 @@ $bs-margin: 15px;
 
   .leaflet-control-attribution {
     font-size: 0.7em;
+    position: fixed;
+    bottom: 10vh;
+    left: 0;
+    width:100%;
   }
 }

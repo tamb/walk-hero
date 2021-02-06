@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { toLatLong } from "./../../services/Geo";
-
 import "./Map.scss";
 
 // tile layer design:
@@ -33,23 +31,23 @@ class Map extends React.Component {
 
     if (this.map) {
       this.moveUserCursor();
-      this.map.panTo(this.props.currentLatLong, {animate: true});
+      this.map.panTo(this.props.currentLatLong, { animate: true });
     }
   }
 
   moveUserCursor = () => {
     if (this.userMarker) {
-      this.userMarker.setLatLng(this.props.currentLatLong)
+      this.userMarker.setLatLng(this.props.currentLatLong);
     } else {
-      //http://ludumdare.com/compo/wp-content/uploads/2015/08/Knight.gif
       const myIcon = window.L.icon({
-        iconUrl: 'http://ludumdare.com/compo/wp-content/uploads/2015/08/Knight.gif',
+        iconUrl:
+          "https://i.pinimg.com/originals/69/26/31/6926310cf46a809d270cf01c3a617166.jpg",
         iconSize: [75, 75],
         iconAnchor: [22, 94],
         popupAnchor: [-3, -76],
         shadowSize: [68, 95],
-        shadowAnchor: [22, 94]
-    });
+        shadowAnchor: [22, 94],
+      });
       this.userMarker = window.L.marker(this.props.currentLatLong, {
         draggable: false,
         icon: myIcon,
