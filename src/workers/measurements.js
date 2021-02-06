@@ -8,14 +8,14 @@ export function toFeet(cm) {
 }
 
 export function toMiles(cm) {
-  return cm / toFeet(cm) / 5280;
+  return toFeet(cm) / 5280;
 }
 
 export function toKm(cm) {
   return toM(cm) / 1000;
 }
 
-export function toM(cm) {
+export function toMeters(cm) {
   return cm / 100;
 }
 

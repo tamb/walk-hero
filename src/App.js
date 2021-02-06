@@ -84,7 +84,6 @@ class App extends React.Component {
 
   setStart = (data) => {
     this.setState({ start: data, geoData: data, hasLocation: true }, () => {
-      this.journeyTimePoll = setInterval(this.journeyTimeTick, 1000);
       this.getCurrentCity(cloneGeoData(data));
     });
   };
@@ -175,6 +174,7 @@ class App extends React.Component {
 
   acceptWarning = () => {
     this.setState({ warningModalOpen: false });
+    this.journeyTimePoll = setInterval(this.journeyTimeTick, 1000);
   };
 
   render() {

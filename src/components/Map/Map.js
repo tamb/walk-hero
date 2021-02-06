@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import "./Map.scss";
+import knight from "./../../gif/knightherov3.gif";
 
 // tile layer design:
 // http://maps.stamen.com/#watercolor/12/37.7706/-122.3782
@@ -40,8 +41,7 @@ class Map extends React.Component {
       this.userMarker.setLatLng(this.props.currentLatLong);
     } else {
       const myIcon = window.L.icon({
-        iconUrl:
-          "https://i.pinimg.com/originals/69/26/31/6926310cf46a809d270cf01c3a617166.jpg",
+        iconUrl: knight,
         iconSize: [75, 75],
         iconAnchor: [22, 94],
         popupAnchor: [-3, -76],
