@@ -79,7 +79,14 @@ class App extends React.Component {
 
   setUnlockValue = (e) => {
     const value = parseInt(e.target.value);
-    this.setState({ unlockValue: value, isUnlocked: value === 10 });
+    this.setState({
+      unlockValue: value === 10 ? 0 : value,
+      isUnlocked: value === 10,
+    });
+  };
+
+  lockScreen = () => {
+    this.setState({ isUnlocked: false });
   };
 
   togglePaused = () => {
@@ -229,6 +236,7 @@ class App extends React.Component {
             }}
             unlockValue={this.state.unlockValue}
             setUnlockValue={this.setUnlockValue}
+            lockScreen={this.lockScreen}
           />
           <Col xs={12}>
             <Map

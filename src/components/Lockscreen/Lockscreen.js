@@ -9,7 +9,7 @@ function Lockscreen(props) {
     <div className="Lockscreen">
       <div className="Lockscreen__backdrop"></div>
       <FormGroup>
-        <Label for="unlock">Unlock Screen</Label>
+        <Label for="unlock">Unlock Screen >>></Label>
         <Input
           type="range"
           name="range"

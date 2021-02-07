@@ -7,7 +7,8 @@ import {
   ModalHeader,
   Container,
   Row,
-  Col
+  Col,
+  Button,
 } from "reactstrap";
 
 import { toTime, toLatLong } from "./../../services/Geo";
@@ -18,6 +19,11 @@ function DisplayData(props) {
       <ModalHeader toggle={props.modalProps.toggle}>Data</ModalHeader>
       {props.start && (
         <Container>
+          <Row>
+            <Col>
+              <Button onClick={props.lockScreen}>🔒 Lock Screen</Button>
+            </Col>
+          </Row>
           <Row>
             <Col>
               <h2>Starting Data</h2>
