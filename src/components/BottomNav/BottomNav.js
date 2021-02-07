@@ -18,6 +18,16 @@ function BottomNav(props) {
       <Button
         disabled={!props.hasLocation}
         className="BottomNav__icon"
+        onClick={props.togglePaused}
+      >
+        <span className="sr-only">
+          {props.paused ? "Continue" : "Pause Game"}
+        </span>
+        {props.paused ? "\u{1F6B6}" : "\u{23F8}"}
+      </Button>
+      <Button
+        disabled={!props.hasLocation}
+        className="BottomNav__icon"
         onClick={openData}
       >
         <span className="sr-only">Settings</span>
@@ -29,6 +39,8 @@ function BottomNav(props) {
 
 BottomNav.propTypes = {
   hasLocation: PropTypes.bool,
+  paused: PropTypes.bool,
+  togglePaused: PropTypes.func,
 };
 
 export default BottomNav;

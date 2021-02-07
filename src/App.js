@@ -27,6 +27,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      paused: false,
       warningModalOpen: true,
       instructionsModalOpen: false,
       journeyTime: 0,
@@ -50,6 +51,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // todo when starting game, "unpause", render map before unpause so attribution is rendered correctly.
     this.poll = startPoll(this.success);
     getStartingPoint(this.setStart);
     this.cityPoll = setInterval(
@@ -71,6 +73,20 @@ class App extends React.Component {
       this.dataModalToggle
     );
   }
+
+  togglePaused = () => {
+    this.setState({ paused: !this.state.paused }, () => {
+      if (this.state.paused) {
+        // pause timer
+        // pause lat long poll
+        // pause current city poll
+      } else {
+        // continue timer
+        // continue lat long poll
+        // continue current city poll
+      }
+    });
+  };
 
   journeyTimeTick = () => {
     this.setState({
@@ -201,12 +217,17 @@ class App extends React.Component {
           <Col xs={12}>
             <Map
               geoData={this.state.geoData}
+              paused={this.state.paused}
               hasLocation={this.state.hasLocation}
               currentLatLong={toLatLong(this.state.geoData)}
             />
           </Col>
         </Row>
-        <BottomNav hasLocation={this.state.hasLocation} />
+        <BottomNav
+          paused={this.state.paused}
+          togglePaused={this.togglePaused}
+          hasLocation={this.state.hasLocation}
+        />
         <WarningModal
           toggle={this.acceptWarning}
           isOpen={this.state.warningModalOpen}

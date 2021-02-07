@@ -85,7 +85,9 @@ class Map extends React.Component {
     // if (this.userMarker) {
     //   this.userMarker.setLatLong(toLatLong(this.props.geoData));
     // }
-    return <div id="map"></div>;
+    return (
+      <div id="map" data-paused={this.props.paused}></div>
+    );
   }
 }
 
@@ -93,6 +95,7 @@ Map.propTypes = {
   geoData: PropTypes.object,
   currentLatLong: PropTypes.arrayOf(PropTypes.number),
   hasLocation: PropTypes.bool,
+  paused: PropTypes.bool,
 };
 
 export default Map;

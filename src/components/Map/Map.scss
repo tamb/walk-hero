@@ -5,11 +5,23 @@ $bs-margin: 15px;
   width: calc(100% + #{$bs-margin * 2});
   margin-left: -$bs-margin;
 
+  &[data-paused="true"] {
+    opacity: 0.5;
+    &::after {
+      content: "PAUSED";
+      position: absolute;
+      top: 50%;
+      left: 40%;
+      z-index: 460;
+      font-size: 1.4rem;
+    }
+  }
+
   .leaflet-control-attribution {
     font-size: 0.7em;
     position: fixed;
     bottom: 10vh;
     left: 0;
-    width:100%;
+    width: 100%;
   }
 }
