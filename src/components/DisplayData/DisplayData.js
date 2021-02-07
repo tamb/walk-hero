@@ -7,7 +7,7 @@ import {
   ModalHeader,
   Container,
   Row,
-  Col,
+  Col
 } from "reactstrap";
 
 import { toTime, toLatLong } from "./../../services/Geo";

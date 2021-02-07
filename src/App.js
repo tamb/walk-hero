@@ -18,6 +18,7 @@ import BottomNav from "./components/BottomNav/BottomNav";
 import Scorecard from "./components/Scorecard/Scorecard";
 import WarningModal from "./components/WarningModal/WarningModal";
 import InstructionModal from "./components/InstructionModal/InstructionModal";
+import Lockscreen from "./components/Lockscreen/Lockscreen";
 
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();
@@ -27,6 +28,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      isUnlocked: true,
       paused: false,
       warningModalOpen: true,
       instructionsModalOpen: false,
@@ -43,6 +45,7 @@ class App extends React.Component {
       distanceTraveledInCM: 0,
       totalDistanceTraveledInCM: 0,
       startingLocation: {},
+      unlockValue: 0,
     };
 
     this.poll = null;
@@ -73,6 +76,11 @@ class App extends React.Component {
       this.dataModalToggle
     );
   }
+
+  setUnlockValue = (e) => {
+    const value = parseInt(e.target.value);
+    this.setState({ unlockValue: value, isUnlocked: value === 10 });
+  };
 
   togglePaused = () => {
     this.setState({ paused: !this.state.paused }, () => {
@@ -202,6 +210,12 @@ class App extends React.Component {
   render() {
     return (
       <Container fluid>
+        {!this.state.isUnlocked && (
+          <Lockscreen
+            unlockValue={this.state.unlockValue}
+            setUnlockValue={this.setUnlockValue}
+          />
+        )}
         <Scorecard
           journeyTime={this.state.journeyTime}
           traveled={this.state.totalDistanceTraveledInCM}
@@ -213,6 +227,8 @@ class App extends React.Component {
               isOpen: this.state.dataModalOpen,
               toggle: this.dataModalToggle,
             }}
+            unlockValue={this.state.unlockValue}
+            setUnlockValue={this.setUnlockValue}
           />
           <Col xs={12}>
             <Map
