@@ -17,6 +17,7 @@ import Map from "./components/Map/Map";
 import BottomNav from "./components/BottomNav/BottomNav";
 import Scorecard from "./components/Scorecard/Scorecard";
 import WarningModal from "./components/WarningModal/WarningModal";
+import InstructionModal from "./components/InstructionModal/InstructionModal";
 
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();
@@ -27,6 +28,7 @@ class App extends React.Component {
 
     this.state = {
       warningModalOpen: true,
+      instructionsModalOpen: false,
       journeyTime: 0,
       dataModalOpen: false,
       geoData: {
@@ -173,7 +175,11 @@ class App extends React.Component {
   };
 
   acceptWarning = () => {
-    this.setState({ warningModalOpen: false });
+    this.setState({ warningModalOpen: false, instructionsModalOpen: true });
+  };
+
+  readInstructions = () => {
+    this.setState({ instructionsRead: true, instructionsModalOpen: false });
     this.journeyTimePoll = setInterval(this.journeyTimeTick, 1000);
   };
 
@@ -204,6 +210,10 @@ class App extends React.Component {
         <WarningModal
           toggle={this.acceptWarning}
           isOpen={this.state.warningModalOpen}
+        />
+        <InstructionModal
+          toggle={this.readInstructions}
+          isOpen={this.state.instructionsModalOpen}
         />
       </Container>
     );

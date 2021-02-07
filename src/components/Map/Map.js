@@ -43,7 +43,7 @@ class Map extends React.Component {
       const myIcon = window.L.icon({
         iconUrl: knight,
         iconSize: [75, 75],
-        iconAnchor: [22, 94],
+        // iconAnchor: [22, 94],
         popupAnchor: [-3, -76],
         shadowSize: [68, 95],
         shadowAnchor: [22, 94],

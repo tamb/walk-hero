@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { FaWalking } from "react-icons/fa";
 import { Button } from "reactstrap";
 
 import { fire } from "./../../utils";
@@ -21,11 +20,12 @@ function BottomNav(props) {
         className="BottomNav__icon"
         onClick={openData}
       >
-        <FaWalking />
+        <span className="sr-only">Settings</span>
+        ⚙️
       </Button>
     </div>
   );
-};
+}
 
 BottomNav.propTypes = {
   hasLocation: PropTypes.bool,
