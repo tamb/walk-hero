@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import "./Map.scss";
 import knight from "./../../gif/knightherov3.gif";
+import npc from "./../../gif/npc-help.png";
 
 // tile layer design:
 // http://maps.stamen.com/#watercolor/12/37.7706/-122.3782
@@ -12,6 +13,9 @@ class Map extends React.Component {
     super(props);
     this.map = null;
     this.userMarker = null;
+    this.npcIcon = null;
+    this.npcMarker = null;
+    this.myIcon = null;
   }
 
   componentDidUpdate() {
@@ -28,6 +32,7 @@ class Map extends React.Component {
         }
       ).addTo(this.map);
       this.moveUserCursor();
+      this.addNPC();
     }
 
     if (this.map) {
@@ -36,21 +41,38 @@ class Map extends React.Component {
     }
   }
 
+  // can make generic to make items etc that disappear after x seconds
+  addNPC = () => {
+    this.npcIcon = window.L.icon({
+      iconUrl: npc,
+      iconSize: [75, 75],
+      iconAnchor: [25, 65],
+    });
+    this.npcMarker = window.L.marker(this.calculateNPCCoords(), {
+      draggable: false,
+      icon: this.npcIcon,
+    }).addTo(this.map);
+  };
+
+  calculateNPCCoords = () => {
+    const rand = new Date().getSeconds % 2 === 0 ? -0.002 : 0.002;
+    const npcLat = this.props.currentLatLong[0] + rand;
+    const npcLng = this.props.currentLatLong[1] + rand;
+    return [npcLat, npcLng];
+  };
+
   moveUserCursor = () => {
     if (this.userMarker) {
       this.userMarker.setLatLng(this.props.currentLatLong);
     } else {
-      const myIcon = window.L.icon({
+      this.myIcon = window.L.icon({
         iconUrl: knight,
         iconSize: [75, 75],
         iconAnchor: [25, 65],
-        popupAnchor: [-3, -76],
-        shadowSize: [68, 95],
-        shadowAnchor: [22, 94],
       });
       this.userMarker = window.L.marker(this.props.currentLatLong, {
         draggable: false,
-        icon: myIcon,
+        icon: this.myIcon,
       }).addTo(this.map);
     }
   };
