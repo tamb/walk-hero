@@ -55,9 +55,10 @@ class Map extends React.Component {
   };
 
   calculateNPCCoords = () => {
-    const rand = new Date().getSeconds % 2 === 0 ? -0.002 : 0.002;
-    const npcLat = this.props.currentLatLong[0] + rand;
-    const npcLng = this.props.currentLatLong[1] + rand;
+    const addLat = Math.floor(Math.random() * 10) % 2 === 0 ? -0.002 : 0.002;
+    const addLng = Math.floor(Math.random() * 10) % 2 === 0 ? -0.002 : 0.002;
+    const npcLat = this.props.currentLatLong[0] + addLat;
+    const npcLng = this.props.currentLatLong[1] + addLng;
     return [npcLat, npcLng];
   };
 
@@ -85,9 +86,7 @@ class Map extends React.Component {
     // if (this.userMarker) {
     //   this.userMarker.setLatLong(toLatLong(this.props.geoData));
     // }
-    return (
-      <div id="map" data-paused={this.props.paused}></div>
-    );
+    return <div id="map" data-paused={this.props.paused}></div>;
   }
 }
 

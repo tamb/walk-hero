@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "reactstrap";
+import { version } from "./../../../package.json";
 
 import { fire } from "./../../utils";
 import { CUSTOMEVENTS } from "./../../enums";
@@ -14,7 +15,12 @@ function BottomNav(props) {
 
   return (
     <div className="BottomNav">
-      <h1 className="BottomNav__title">Walk Hero</h1>
+      <div>
+        <h1 className="BottomNav__title">Walk Hero</h1>
+        <p>
+          <small>version {version}</small>
+        </p>
+      </div>
       <Button
         disabled={!props.hasLocation}
         className="BottomNav__icon"
