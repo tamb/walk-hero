@@ -14,7 +14,8 @@ function Lockscreen(props) {
           type="range"
           name="range"
           min="0"
-          max="10"
+          max="100"
+          step="5"
           value={props.unlockValue}
           onChange={props.setUnlockValue}
           id="unlock"

@@ -80,8 +80,14 @@ class App extends React.Component {
   setUnlockValue = (e) => {
     const value = parseInt(e.target.value);
     this.setState({
-      unlockValue: value === 10 ? 0 : value,
-      isUnlocked: value === 10,
+      unlockValue: value === 100 ? 0 : value,
+      isUnlocked: value === 100,
+    }, ()=> {
+      setTimeout(()=> {
+        if(this.state.unlockValue < 100){
+          this.setState({unlockValue: 0});
+        }
+      }, 1000);
     });
   };
 
