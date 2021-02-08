@@ -12,7 +12,7 @@ function InstructionModal(props) {
       </ModalBody>
       <ModalFooter>
         <Button color="success" onClick={props.toggle}>
-          Let's Go!
+          Got it! 👍
         </Button>
       </ModalFooter>
     </Modal>

@@ -34,7 +34,7 @@ function WarningModal(props) {
           </Row>
         </Container>
       </ModalBody>
-      <ModalFooter>
+      <ModalFooter className="d-flex justify-content-between">
         <a href="https://google.com" className="btn btn-warning">
           I DO NOT Accept
         </a>
