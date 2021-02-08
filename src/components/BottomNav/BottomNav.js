@@ -17,7 +17,7 @@ function BottomNav(props) {
     <div className="BottomNav">
       <div>
         <h1 className="BottomNav__title">Walk Hero</h1>
-        <p>
+        <p className="BottomNav__version">
           <small>version {version}</small>
         </p>
       </div>

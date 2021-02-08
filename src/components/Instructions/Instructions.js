@@ -30,6 +30,8 @@ function Instructions(props) {
           </ul>
         </li>
         <li>You can adjust settings in menu ⚙️</li> */}
+        <li>Lock your screen 🔒 inside the Settings Menu ⚙️ to conserve battery and keep your game active at the same time.</li>
+        <li>Pause ⏸️ and unpause 🚶 the game</li>
       </ul>
     </div>
   );
