@@ -134,7 +134,7 @@ class App extends React.Component {
       cloneGeoData(this.state.geoData)
     ).then((value) => {
       _distTraveled = value;
-      if (_distTraveled >= 500) {
+      if (_distTraveled >= 35) {
         this.setState({
           totalDistanceTraveledInCM:
             this.state.totalDistanceTraveledInCM + _distTraveled,
