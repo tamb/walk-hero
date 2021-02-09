@@ -46,6 +46,8 @@ class App extends React.Component {
       journeyTime: 0,
       startingLocation: {},
       totalDistanceTraveledInCM: 0,
+      citiesVisited: new Set(),
+      currentCity: null,
 
       // modals
       dataModalOpen: false,
@@ -59,6 +61,7 @@ class App extends React.Component {
     this.poll = null;
   }
 
+  // Lifecycle Methods
   componentDidMount() {
     // todo when starting game, "unpause", render map before unpause so attribution is rendered correctly.
     getStartingPoint(this.setStart);
@@ -76,6 +79,7 @@ class App extends React.Component {
     );
   }
 
+  // Logic
   acceptWarning = () => {
     this.setState({ warningModalOpen: false, instructionsModalOpen: true });
   };
@@ -147,7 +151,9 @@ class App extends React.Component {
   getCurrentCity = (latLong) => {
     CityWorker.getEntryByLatLong(latLong).then((value) => {
       if (value.length !== 0) {
-        this.setState({ startingLocation: value[0] });
+        const citiesSet = new Set(this.state.citiesVisited);
+        citiesSet.add(value[0]);
+        this.setState({ startingLocation: value[0], currentCity: value[0], citiesVisited: citiesSet });
       } else {
         this.setState({
           failedAtCity: true,
@@ -166,6 +172,12 @@ class App extends React.Component {
     });
   };
 
+  killPolls = () => {
+    killPoll(this.poll);
+    clearInterval(this.cityPoll);
+    clearInterval(this.journeyTimePoll);
+  };
+
   lockScreen = () => {
     this.setState({ isUnlocked: false });
   };
@@ -177,21 +189,6 @@ class App extends React.Component {
       startModalOpen: true,
     });
   };
-
-  startPolls = () => {
-    this.poll = startPoll(this.success);
-    this.cityPoll = setInterval(
-      () => this.getCurrentCity(cloneGeoData(this.state.geoData)),
-      12000
-    );
-    this.journeyTimePoll = setInterval(this.journeyTimeTick, 1000);
-  }
-
-  killPolls = () => {
-    killPoll(this.poll);
-    clearInterval(this.cityPoll);
-    clearInterval(this.journeyTimePoll);
-  }
 
   setStart = (data) => {
     this.setState({ start: data, geoData: data, hasLocation: true }, () => {
@@ -221,6 +218,15 @@ class App extends React.Component {
     this.startPolls();
   };
 
+  startPolls = () => {
+    this.poll = startPoll(this.success);
+    this.cityPoll = setInterval(
+      () => this.getCurrentCity(cloneGeoData(this.state.geoData)),
+      12000
+    );
+    this.journeyTimePoll = setInterval(this.journeyTimeTick, 1000);
+  };
+
   success = (geoData) => {
     this.calculateFarthestGeo(geoData);
     this.calculatePointToPointFromStart(geoData);
@@ -234,19 +240,14 @@ class App extends React.Component {
   togglePaused = () => {
     this.setState({ paused: !this.state.paused }, () => {
       if (this.state.paused) {
-        // pause timer
-        // pause lat long poll
-        // pause current city poll
         this.killPolls();
       } else {
-        // continue timer
-        // continue lat long poll
-        // continue current city poll
         this.startPolls();
       }
     });
   };
 
+  // Render Methods
   render() {
     return (
       <Container fluid>

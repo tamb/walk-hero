@@ -41,8 +41,8 @@ function DisplayData(props) {
                   <tr>
                     <td>{toLatLong(props.start)[0]}</td>
                     <td>{toLatLong(props.start)[1]}</td>
-                    <td>{props.startingLocation.name}</td>
-                    <td>{props.startingLocation.country}</td>
+                    <td>{props.currentCity?.name}</td>
+                    <td>{props.currentCity?.country}</td>
                     <td>{toTime(props.start)}</td>
                   </tr>
                 </tbody>
