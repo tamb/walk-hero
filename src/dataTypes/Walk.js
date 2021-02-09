@@ -12,6 +12,7 @@ export default class Walk extends Entity{
         this.starting_geo_data = null;
         this.farthest_geo_data_from_start = null;
         this.geo_data = null; // this is readonly and needs to be converted for use with workers.
+        this.cities = []; // push city and country values into here
     }
 
     setGeoData(GeolocationPositionObject){
