@@ -44,7 +44,6 @@ class App extends React.Component {
         coords: {},
       },
       journeyTime: 0,
-      prevGeoData: {},
       startingLocation: {},
       totalDistanceTraveledInCM: 0,
 
