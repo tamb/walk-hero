@@ -61,12 +61,7 @@ class App extends React.Component {
 
   componentDidMount() {
     // todo when starting game, "unpause", render map before unpause so attribution is rendered correctly.
-    this.poll = startPoll(this.success);
     getStartingPoint(this.setStart);
-    this.cityPoll = setInterval(
-      () => this.getCurrentCity(cloneGeoData(this.state.geoData)),
-      12000
-    );
     window.addEventListener(
       CUSTOMEVENTS.DATA_MODAL_TOGGLE,
       this.dataModalToggle
@@ -74,9 +69,7 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
-    killPoll(this.poll);
-    clearInterval(this.cityPoll);
-    clearInterval(this.journeyTimePoll);
+    this.killPolls();
     window.removeEventListener(
       CUSTOMEVENTS.DATA_MODAL_TOGGLE,
       this.dataModalToggle
@@ -185,6 +178,21 @@ class App extends React.Component {
     });
   };
 
+  startPolls = () => {
+    this.poll = startPoll(this.success);
+    this.cityPoll = setInterval(
+      () => this.getCurrentCity(cloneGeoData(this.state.geoData)),
+      12000
+    );
+    this.journeyTimePoll = setInterval(this.journeyTimeTick, 1000);
+  }
+
+  killPolls = () => {
+    killPoll(this.poll);
+    clearInterval(this.cityPoll);
+    clearInterval(this.journeyTimePoll);
+  }
+
   setStart = (data) => {
     this.setState({ start: data, geoData: data, hasLocation: true }, () => {
       this.getCurrentCity(cloneGeoData(data));
@@ -209,8 +217,8 @@ class App extends React.Component {
   };
 
   startNewWalk = () => {
-    this.journeyTimePoll = setInterval(this.journeyTimeTick, 1000);
     this.setState({ startModalOpen: false });
+    this.startPolls();
   };
 
   success = (geoData) => {
@@ -229,10 +237,12 @@ class App extends React.Component {
         // pause timer
         // pause lat long poll
         // pause current city poll
+        this.killPolls();
       } else {
         // continue timer
         // continue lat long poll
         // continue current city poll
+        this.startPolls();
       }
     });
   };
