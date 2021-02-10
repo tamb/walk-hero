@@ -13,10 +13,12 @@ import cityWorker from "workerize-loader!./workers/cities"; // eslint-disable-li
 import measureWorker from "workerize-loader!./workers/measurements"; // eslint-disable-line import/no-webpack-loader-syntax
 
 import BottomNav from "./components/BottomNav/BottomNav";
+import ConfirmEndWalkModal from "./components/ConfirmEndWalkModal/ConfirmEndWalkModal";
 import DisplayData from "./components/DisplayData/DisplayData";
 import InstructionModal from "./components/InstructionModal/InstructionModal";
 import Lockscreen from "./components/Lockscreen/Lockscreen";
 import Map from "./components/Map/Map";
+import PauseModal from "./components/PauseModal/PauseModal";
 import Scorecard from "./components/Scorecard/Scorecard";
 import StartModal from "./components/StartModal/StartModal";
 import WarningModal from "./components/WarningModal/WarningModal";
@@ -24,37 +26,43 @@ import WarningModal from "./components/WarningModal/WarningModal";
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();
 
+const initialGameState = {
+  // game state
+  hasLocation: false,
+  isUnlocked: true,
+  paused: false,
+  start: false,
+  unlockValue: 0,
+  walkEnded: false,
+
+  // geo state
+  // TODO: snag walk from indexeddb or create new walk and expose in spread operator
+  distanceFromStartCM: 0,
+  distanceTraveledInCM: 0,
+  farthestGeoDataFromStart: null,
+  geoData: {
+    coords: {},
+  },
+  journeyTime: 0,
+  startingLocation: {},
+  totalDistanceTraveledInCM: 0,
+  citiesVisited: new Set(),
+  currentCity: null,
+
+  // modals
+  confirmEndWalkModalOpen: false,
+  dataModalOpen: false,
+  instructionsModalOpen: false,
+  pauseModalOpen: false,
+  startModalOpen: false,
+  warningModalOpen: true,
+};
+
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      // game state
-      hasLocation: false,
-      isUnlocked: true,
-      paused: false,
-      start: false,
-      unlockValue: 0,
-
-      // geo state
-      distanceFromStartCM: 0,
-      distanceTraveledInCM: 0,
-      farthestGeoDataFromStart: null,
-      geoData: {
-        coords: {},
-      },
-      journeyTime: 0,
-      startingLocation: {},
-      totalDistanceTraveledInCM: 0,
-      citiesVisited: new Set(),
-      currentCity: null,
-
-      // modals
-      dataModalOpen: false,
-      instructionsModalOpen: false,
-      startModalOpen: false,
-      warningModalOpen: true,
-    };
+    this.state = initialGameState;
 
     this.journeyTimePoll = null;
     this.map = null;
@@ -63,7 +71,6 @@ class App extends React.Component {
 
   // Lifecycle Methods
   componentDidMount() {
-    // todo when starting game, "unpause", render map before unpause so attribution is rendered correctly.
     getStartingPoint(this.setStart);
     window.addEventListener(
       CUSTOMEVENTS.DATA_MODAL_TOGGLE,
@@ -142,18 +149,43 @@ class App extends React.Component {
     });
   };
 
+  cancelEndWalk = () => {
+    this.setState({
+      endWalk: false,
+      confirmEndWalkModalOpen: false,
+      paused: true,
+      pauseModalOpen: true,
+    });
+  };
+
+  confirmEndWalk = () => {
+    this.killPolls();
+    this.setState(initialGameState);
+    getStartingPoint(this.setStart);
+  };
+
   dataModalToggle = () => {
     this.setState({
       dataModalOpen: !this.state.dataModalOpen,
     });
   };
 
+  endWalk = () => {
+    this.setState({
+      confirmEndWalkModalOpen: true,
+      pauseModalOpen: false,
+    });
+  };
   getCurrentCity = (latLong) => {
     CityWorker.getEntryByLatLong(latLong).then((value) => {
       if (value.length !== 0) {
         const citiesSet = new Set(this.state.citiesVisited);
         citiesSet.add(value[0]);
-        this.setState({ startingLocation: value[0], currentCity: value[0], citiesVisited: citiesSet });
+        this.setState({
+          startingLocation: value[0],
+          currentCity: value[0],
+          citiesVisited: citiesSet,
+        });
       } else {
         this.setState({
           failedAtCity: true,
@@ -240,8 +272,10 @@ class App extends React.Component {
   togglePaused = () => {
     this.setState({ paused: !this.state.paused }, () => {
       if (this.state.paused) {
+        this.setState({ pauseModalOpen: true });
         this.killPolls();
       } else {
+        this.setState({ pauseModalOpen: false });
         this.startPolls();
       }
     });
@@ -273,12 +307,14 @@ class App extends React.Component {
             lockScreen={this.lockScreen}
           />
           <Col xs={12}>
-            <Map
-              geoData={this.state.geoData}
-              paused={this.state.paused}
-              hasLocation={this.state.hasLocation}
-              currentLatLong={toLatLong(this.state.geoData)}
-            />
+            {this.state.hasLocation && (
+              <Map
+                geoData={this.state.geoData}
+                paused={this.state.paused}
+                hasLocation={this.state.hasLocation}
+                currentLatLong={toLatLong(this.state.geoData)}
+              />
+            )}
           </Col>
         </Row>
         <BottomNav
@@ -298,6 +334,16 @@ class App extends React.Component {
           startNewWalk={this.startNewWalk}
           continueOldWalk={() => alert("comming soon...")}
           isOpen={this.state.startModalOpen}
+        />
+        <PauseModal
+          isOpen={this.state.pauseModalOpen}
+          endWalk={this.endWalk}
+          continueWalk={this.togglePaused}
+        />
+        <ConfirmEndWalkModal
+          isOpen={this.state.confirmEndWalkModalOpen}
+          cancelEndWalk={this.cancelEndWalk}
+          confirmEndWalk={this.confirmEndWalk}
         />
       </Container>
     );
