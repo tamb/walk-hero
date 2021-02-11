@@ -1,0 +1,12 @@
+$container-height: 90vh;
+$bottom-nav-height: 10vh;
+$bs-margin: 15px;
+$banner-offset: 10vh;
+
+:root{
+    --banner-ad-offset: 10vh;
+}
+
+.ad-free{
+    --banner-ad-offset: 0;
+}

@@ -1,7 +1,9 @@
+@import "./../../_variables";
+
 .Scorecard {
   width: 100%;
   position: fixed;
-  top: 0;
+  top: var(--banner-ad-offset);
   left: 0;
   height: 6vh;
   z-index: 475;
