@@ -9,19 +9,20 @@ button:disabled:hover {
 }
 
 body {
-
   max-height: 100vh;
   height: 100vh;
   width: 100%;
-  background-color: #f69435;
+  background: rgb(246, 95, 53);
+  background: linear-gradient(
+    180deg,
+    rgba(246, 95, 53, 1) 0%,
+    rgba(246, 148, 53, 1) 100%
+  );
   padding-top: var(--banner-ad-offset);
 
-  .container,.container-fluid{
+  .container,
+  .container-fluid {
     height: $container-height - var(--banner-ad-offset);
     max-height: $container-height - var(--banner-ad-offset);
   }
-
-
 }
-
-

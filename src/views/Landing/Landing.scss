@@ -5,6 +5,22 @@
   flex-direction: column;
   animation: .75s fade-in;
   animation-fill-mode: forwards;
+
+  h1{
+    animation: stretch 1.4s;
+    animation-fill-mode: forwards;
+  }
+  img{
+    width: 20%
+  }
+
+  hr{
+    width: 33%;
+  }
+
+  &__version{
+    font-size: .9em;
+  }
 }
 
 @keyframes fade-in{
@@ -17,5 +33,14 @@
 
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes stretch{
+  from{
+    letter-spacing: -1px;
+  }
+  to{
+    letter-spacing: 2px;
   }
 }
