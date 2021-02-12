@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col } from "reactstrap";
+import { Row, Col } from "reactstrap";
 
 import { CUSTOMEVENTS } from "./../../enums";
 import {
@@ -53,8 +53,9 @@ const initialGameState = {
   journeyTime: 0,
   startingLocation: {},
   totalDistanceTraveledInCM: 0,
-  citiesVisited: new Set(),
+  citiesVisited: [],
   currentCity: null,
+  locationPings: 0,
 
   // modals
   confirmEndWalkModalOpen: false,
@@ -62,7 +63,7 @@ const initialGameState = {
   instructionsModalOpen: false,
   pauseModalOpen: false,
   startModalOpen: false,
-  warningModalOpen: false,
+  warningModalOpen: true,
 };
 
 class Quest extends React.Component {
@@ -188,12 +189,21 @@ class Quest extends React.Component {
   getCurrentCity = (latLong) => {
     CityWorker.getEntryByLatLong(latLong).then((value) => {
       if (value.length !== 0) {
-        const citiesSet = new Set(this.state.citiesVisited);
-        citiesSet.add(value[0]);
+        const clonedCities = [...this.state.citiesVisited, value[0]];
+        const newCitiesVisited = clonedCities.filter(city => {
+          if(value[0].lat !== city.lat && value[0].lng !== city.lng){
+            return true;
+          } else {
+            return false;
+          }
+        });
+        if(newCitiesVisited.length === 0){
+          newCitiesVisited.push(value[0]);
+        }
         this.setState({
           startingLocation: value[0],
           currentCity: value[0],
-          citiesVisited: citiesSet,
+          citiesVisited: newCitiesVisited
         });
       } else {
         this.setState({
@@ -232,7 +242,7 @@ class Quest extends React.Component {
   };
 
   setStart = (data) => {
-    this.setState({ start: data, geoData: data, hasLocation: true }, () => {
+    this.setState({ start: data, geoData: data, hasLocation: true, locationPings: this.state.locationPings + 1 }, () => {
       this.getCurrentCity(cloneGeoData(data));
     });
   };
@@ -275,6 +285,7 @@ class Quest extends React.Component {
 
     this.setState({
       geoData,
+      locationPings: this.state.locationPings + 1,
     });
   };
 
@@ -326,9 +337,10 @@ class Quest extends React.Component {
             )}
           </Col>
         </Row>
-        
+
         <WarningModal
-          toggle={this.acceptWarning}
+          acceptWarning={this.acceptWarning}
+          denyWarning={this.props.appMethods.goLanding}
           isOpen={this.state.warningModalOpen}
         />
         <InstructionModal
@@ -349,6 +361,11 @@ class Quest extends React.Component {
           isOpen={this.state.confirmEndWalkModalOpen}
           cancelEndWalk={this.cancelEndWalk}
           confirmEndWalk={this.confirmEndWalk}
+        />
+        <BottomNav
+          paused={this.state.paused}
+          togglePaused={this.togglePaused}
+          hasLocation={this.state.hasLocation}
         />
       </React.Fragment>
     );

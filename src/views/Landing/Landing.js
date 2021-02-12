@@ -13,7 +13,7 @@ const Landing = (props) => {
       <Row>
         <Col className="text-center">
           <h1>WALK HERO</h1>
-          <hr/>
+          <hr />
         </Col>
       </Row>
       <Row>
@@ -47,7 +47,7 @@ const Landing = (props) => {
       <Row>
         <Col className="text-center mt-1">
           <div>
-            <img src={knight} />
+            <img alt="knight hero" src={knight} />
           </div>
         </Col>
       </Row>

@@ -6,8 +6,8 @@ const PauseModal = (props) => {
   return (
     <Modal centered backdrop="static" isOpen={props.isOpen}>
       <ModalHeader>Pause Menu</ModalHeader>
-      <ModalBody>Your game is paused.</ModalBody>
-      <ModalFooter>
+      <ModalBody className="text-center">Your game is paused.</ModalBody>
+      <ModalFooter className="d-flex justify-content-between">
         <Button color="danger" onClick={props.endWalk}>
           End Game 🔚
         </Button>
