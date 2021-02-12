@@ -1,0 +1,10 @@
+[
+    {
+        "level": 0,
+        "shots_available": 5,
+        "shots_taken": 0,
+        "targets_types_available": [0,1,2,3,4],
+        "target_count": 2,
+        "game_types_available": [0,1,2]
+    }
+]

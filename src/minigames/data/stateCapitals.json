@@ -1,0 +1,352 @@
+[
+    {
+    "abbr": "AL",
+    "entity": "Alabama",
+    "answer": "Montgomery",
+    "lat": "32.361538",
+    "long": "-86.279118"
+    },
+    {
+    "abbr": "AK",
+    "entity": "Alaska",
+    "answer": "Juneau",
+    "lat": "58.301935",
+    "long": "-134.419740"
+    },
+    {
+    "abbr": "AZ",
+    "entity": "Arizona",
+    "answer": "Phoenix",
+    "lat": "33.448457",
+    "long": "-112.073844"
+    },
+    {
+    "abbr": "AR",
+    "entity": "Arkansas",
+    "answer": "Little Rock",
+    "lat": "34.736009",
+    "long": "-92.331122"
+    },
+    {
+    "abbr": "CA",
+    "entity": "California",
+    "answer": "Sacramento",
+    "lat": "38.555605",
+    "long": "-121.468926"
+    },
+    {
+    "abbr": "CO",
+    "entity": "Colorado",
+    "answer": "Denver",
+    "lat": "39.7391667",
+    "long": "-104.984167"
+    },
+    {
+    "abbr": "CT",
+    "entity": "Connecticut",
+    "answer": "Hartford",
+    "lat": "41.767",
+    "long": "-72.677"
+    },
+    {
+    "abbr": "DE",
+    "entity": "Delaware",
+    "answer": "Dover",
+    "lat": "39.161921",
+    "long": "-75.526755"
+    },
+    {
+    "abbr": "FL",
+    "entity": "Florida",
+    "answer": "Tallahassee",
+    "lat": "30.4518",
+    "long": "-84.27277"
+    },
+    {
+    "abbr": "GA",
+    "entity": "Georgia",
+    "answer": "Atlanta",
+    "lat": "33.76",
+    "long": "-84.39"
+    },
+    {
+    "abbr": "HI",
+    "entity": "Hawaii",
+    "answer": "Honolulu",
+    "lat": "21.30895",
+    "long": "-157.826182"
+    },
+    {
+    "abbr": "ID",
+    "entity": "Idaho",
+    "answer": "Boise",
+    "lat": "43.613739",
+    "long": "-116.237651"
+    },
+    {
+    "abbr": "IL",
+    "entity": "Illinois",
+    "answer": "Springfield",
+    "lat": "39.783250",
+    "long": "-89.650373"
+    },
+    {
+    "abbr": "IN",
+    "entity": "Indiana",
+    "answer": "Indianapolis",
+    "lat": "39.790942",
+    "long": "-86.147685"
+    },
+    {
+    "abbr": "IA",
+    "entity": "Iowa",
+    "answer": "Des Moines",
+    "lat": "41.590939",
+    "long": "-93.620866"
+    },
+    {
+    "abbr": "KS",
+    "entity": "Kansas",
+    "answer": "Topeka",
+    "lat": "39.04",
+    "long": "-95.69"
+    },
+    {
+    "abbr": "KY",
+    "entity": "Kentucky",
+    "answer": "Frankfort",
+    "lat": "38.197274",
+    "long": "-84.86311"
+    },
+    {
+    "abbr": "LA",
+    "entity": "Louisiana",
+    "answer": "Baton Rouge",
+    "lat": "30.45809",
+    "long": "-91.140229"
+    },
+    {
+    "abbr": "ME",
+    "entity": "Maine",
+    "answer": "Augusta",
+    "lat": "44.323535",
+    "long": "-69.765261"
+    },
+    {
+    "abbr": "MD",
+    "entity": "Maryland",
+    "answer": "Annapolis",
+    "lat": "38.972945",
+    "long": "-76.501157"
+    },
+    {
+    "abbr": "MA",
+    "entity": "Massachusetts",
+    "answer": "Boston",
+    "lat": "42.2352",
+    "long": "-71.0275"
+    },
+    {
+    "abbr": "MI",
+    "entity": "Michigan",
+    "answer": "Lansing",
+    "lat": "42.7335",
+    "long": "-84.5467"
+    },
+    {
+    "abbr": "MN",
+    "entity": "Minnesota",
+    "answer": "Saint Paul",
+    "lat": "44.95",
+    "long": "-93.094"
+    },
+    {
+    "abbr": "MS",
+    "entity": "Mississippi",
+    "answer": "Jackson",
+    "lat": "32.320",
+    "long": "-90.207"
+    },
+    {
+    "abbr": "MO",
+    "entity": "Missouri",
+    "answer": "Jefferson City",
+    "lat": "38.572954",
+    "long": "-92.189283"
+    },
+    {
+    "abbr": "MT",
+    "entity": "Montana",
+    "answer": "Helana",
+    "lat": "46.595805",
+    "long": "-112.027031"
+    },
+    {
+    "abbr": "NE",
+    "entity": "Nebraska",
+    "answer": "Lincoln",
+    "lat": "40.809868",
+    "long": "-96.675345"
+    },
+    {
+    "abbr": "NV",
+    "entity": "Nevada",
+    "answer": "Carson City",
+    "lat": "39.160949",
+    "long": "-119.753877"
+    },
+    {
+    "abbr": "NH",
+    "entity": "New Hampshire",
+    "answer": "Concord",
+    "lat": "43.220093",
+    "long": "-71.549127"
+    },
+    {
+    "abbr": "NJ",
+    "entity": "New Jersey",
+    "answer": "Trenton",
+    "lat": "40.221741",
+    "long": "-74.756138"
+    },
+    {
+    "abbr": "NM",
+    "entity": "New Mexico",
+    "answer": "Santa Fe",
+    "lat": "35.667231",
+    "long": "-105.964575"
+    },
+    {
+    "abbr": "NY",
+    "entity": "New York",
+    "answer": "Albany",
+    "lat": "42.659829",
+    "long": "-73.781339"
+    },
+    {
+    "abbr": "NC",
+    "entity": "North Carolina",
+    "answer": "Raleigh",
+    "lat": "35.771",
+    "long": "-78.638"
+    },
+    {
+    "abbr": "ND",
+    "entity": "North Dakota",
+    "answer": "Bismarck",
+    "lat": "48.813343",
+    "long": "-100.779004"
+    },
+    {
+    "abbr": "OH",
+    "entity": "Ohio",
+    "answer": "Columbus",
+    "lat": "39.962245",
+    "long": "-83.000647"
+    },
+    {
+    "abbr": "OK",
+    "entity": "Oklahoma",
+    "answer": "Oklahoma City",
+    "lat": "35.482309",
+    "long": "-97.534994"
+    },
+    {
+    "abbr": "OR",
+    "entity": "Oregon",
+    "answer": "Salem",
+    "lat": "44.931109",
+    "long": "-123.029159"
+    },
+    {
+    "abbr": "PA",
+    "entity": "Pennsylvania",
+    "answer": "Harrisburg",
+    "lat": "40.269789",
+    "long": "-76.875613"
+    },
+    {
+    "abbr": "RI",
+    "entity": "Rhode Island",
+    "answer": "Providence",
+    "lat": "41.82355",
+    "long": "-71.422132"
+    },
+    {
+    "abbr": "SC",
+    "entity": "South Carolina",
+    "answer": "Columbia",
+    "lat": "34.000",
+    "long": "-81.035"
+    },
+    {
+    "abbr": "SD",
+    "entity": "South Dakota",
+    "answer": "Pierre",
+    "lat": "44.367966",
+    "long": "-100.336378"
+    },
+    {
+    "abbr": "TN",
+    "entity": "Tennessee",
+    "answer": "Nashville",
+    "lat": "36.165",
+    "long": "-86.784"
+    },
+    {
+    "abbr": "TX",
+    "entity": "Texas",
+    "answer": "Austin",
+    "lat": "30.266667",
+    "long": "-97.75"
+    },
+    {
+    "abbr": "UT",
+    "entity": "Utah",
+    "answer": "Salt Lake City",
+    "lat": "40.7547",
+    "long": "-111.892622"
+    },
+    {
+    "abbr": "VT",
+    "entity": "Vermont",
+    "answer": "Montpelier",
+    "lat": "44.26639",
+    "long": "-72.57194"
+    },
+    {
+    "abbr": "VA",
+    "entity": "Virginia",
+    "answer": "Richmond",
+    "lat": "37.54",
+    "long": "-77.46"
+    },
+    {
+    "abbr": "WA",
+    "entity": "Washington",
+    "answer": "Olympia",
+    "lat": "47.042418",
+    "long": "-122.893077"
+    },
+    {
+    "abbr": "WV",
+    "entity": "West Virginia",
+    "answer": "Charleston",
+    "lat": "38.349497",
+    "long": "-81.633294"
+    },
+    {
+    "abbr": "WI",
+    "entity": "Wisconsin",
+    "answer": "Madison",
+    "lat": "43.074722",
+    "long": "-89.384444"
+    },
+    {
+    "abbr": "WY",
+    "entity": "Wyoming",
+    "answer": "Cheyenne",
+    "lat": "41.145548",
+    "long": "-104.802042"
+    }
+    ]
