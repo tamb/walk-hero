@@ -1,5 +1,5 @@
 import React from "react";
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import {
   Modal,
   ModalHeader,
@@ -35,10 +35,10 @@ function WarningModal(props) {
         </Container>
       </ModalBody>
       <ModalFooter className="d-flex justify-content-between">
-        <a href="https://google.com" className="btn btn-warning">
+        <Button color="warning" onClick={props.denyWarning}>
           I DO NOT Accept
-        </a>
-        <Button color="success" onClick={props.toggle}>
+        </Button>
+        <Button color="success" onClick={props.acceptWarning}>
           I accept
         </Button>
       </ModalFooter>
@@ -46,6 +46,10 @@ function WarningModal(props) {
   );
 }
 
-// WarningModal.propTypes = {};
+WarningModal.propTypes = {
+  acceptWarning: PropTypes.func,
+  denyWarning: PropTypes.func,
+  isOpen: PropTypes.bool,
+};
 
 export default WarningModal;
