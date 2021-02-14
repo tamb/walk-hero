@@ -11,6 +11,8 @@ import {
   Col,
 } from "reactstrap";
 
+import VibrateButton from "./../VibrateButton/VibrateButton";
+
 function WarningModal(props) {
   return (
     <Modal isOpen={props.isOpen} centered backdrop="static" keyboard={false}>
@@ -35,12 +37,12 @@ function WarningModal(props) {
         </Container>
       </ModalBody>
       <ModalFooter className="d-flex justify-content-between">
-        <Button color="warning" onClick={props.denyWarning}>
+        <VibrateButton color="warning" onClick={props.denyWarning}>
           I DO NOT Accept
-        </Button>
-        <Button color="success" onClick={props.acceptWarning}>
+        </VibrateButton>
+        <VibrateButton color="success" onClick={props.acceptWarning}>
           I accept
-        </Button>
+        </VibrateButton>
       </ModalFooter>
     </Modal>
   );
