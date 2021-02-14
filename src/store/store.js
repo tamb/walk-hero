@@ -1,5 +1,7 @@
 import substate from "substate";
 
+import { VIEWS } from "@utils/enums";
+
 const store = new substate({
   name: "WalkHero",
   state: {
@@ -13,7 +15,7 @@ const store = new substate({
       view: VIEWS.QUEST,
       WakeLockSentinel: null,
     },
-    view: "LANDING",
+    view: VIEWS.LANDING,
     modals: {
       confirmEndWalkModalOpen: false,
       dataModalOpen: false,

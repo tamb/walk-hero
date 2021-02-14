@@ -1,15 +1,14 @@
 import React from "react";
 import { Container } from "reactstrap";
+import { Provide } from "substate-connect";
 
+import store from "@store/store";
+import {VIEWS} from "@utils/enums";
 import FullPageSpinner from "@components/FullPageSpinner/FullPageSpinner";
 import Landing from "@views/Landing/Landing";
 
 const Quest = React.lazy(() => import("@views/Quest/Quest"));
-const VIEWS = {
-  LANDING: "landing",
-  QUEST: "quest",
-  MINIGAMES: "minigames",
-};
+
 
 window.WHGlobals = {
   vibrationsOn: true,
@@ -65,4 +64,6 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const WiredApp = Provide(store, ["STATE_UPDATED"], null)(App);
+
+export default WiredApp;

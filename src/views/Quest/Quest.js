@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col } from "reactstrap";
 
-import { CUSTOMEVENTS } from "@utils/enums";
+import { CUSTOMEVENTS, VIEWS } from "@utils/enums";
 import {
   toLatLong,
   startPoll,
@@ -25,12 +25,6 @@ import WarningModal from "@components/WarningModal/WarningModal";
 
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();
-
-const VIEWS = {
-  LANDING: "landing",
-  QUEST: "quest",
-  MINIGAMES: "minigames",
-};
 
 const initialGameState = {
   // game state
