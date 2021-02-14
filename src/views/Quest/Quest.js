@@ -1,6 +1,8 @@
 import React from "react";
 import { Row, Col } from "reactstrap";
+import {connect} from "substate-connect";
 
+import store from "@store/store";
 import { CUSTOMEVENTS, VIEWS } from "@utils/enums";
 import {
   toLatLong,
@@ -14,58 +16,69 @@ import measureWorker from "workerize-loader!@workers/measurements"; // eslint-di
 
 import BottomNav from "@components/BottomNav/BottomNav";
 import ConfirmEndWalkModal from "@components/ConfirmEndWalkModal/ConfirmEndWalkModal";
-import SettingsModal from "@components/SettingsModal/SettingsModal";
 import InstructionModal from "@components/InstructionModal/InstructionModal";
 import Lockscreen from "@components/Lockscreen/Lockscreen";
 import Map from "@components/Map/Map";
 import PauseModal from "@components/PauseModal/PauseModal";
 import Scorecard from "@components/Scorecard/Scorecard";
+import SettingsModal from "@components/SettingsModal/SettingsModal";
 import StartModal from "@components/StartModal/StartModal";
 import WarningModal from "@components/WarningModal/WarningModal";
+
+const WiredBottomNav = connect(store, {
+  paused: 'gameState.paused',
+  hasLocation: 'gameState.hasLocation',
+})(BottomNav);
+
+const WiredConfirmEndWalkModal = connect(store, {
+  isOpen: 'modals.confirmEndWalkModalOpen'
+})(ConfirmEndWalkModal);
+
+const WiredInstructionModal = connect(store, {
+  isOpen: 'modals.instructionsModalOpen',
+})(InstructionModal);
+
+const WiredLockscreen = connect(store, {
+  unlockValue: 'gameState.unlockValue',
+})(Lockscreen);
+
+const WiredMap = connect(store, {
+  geoData: 'geo.geoData',
+  paused: 'gameState.paused',
+  hasLocation: 'gameState.hasLocation',
+})(Map);
+
+const WiredPauseModal = connect(store, {
+  isOpen: 'modals.pauseModalOpen',
+})(PauseModal);
+
+const WiredScoreCard = connect(store, {
+  journeyTime: 'geo.journeyTime',
+  traveled: 'geo.distanceTraveledInCM',
+})(Scorecard);
+
+const WiredSettingsModal = connect(store, {
+  isOpen: 'modals.settingsModalOpen',
+  vibrationsOn: 'gameState.vibrationsOn',
+  // much more
+})(SettingsModal);
+
+const WiredStartModal = connect(store, {
+  isOpen: 'modals.startModalOpen'
+})(StartModal);
+
+const WiredWarningModal = connect(store, {
+  isOpen: 'modals.warningModalOpen',
+})(WarningModal);
 
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();
 
-const initialGameState = {
-  // game state
-  hasLocation: false,
-  isUnlocked: true,
-  paused: false,
-  start: false,
-  unlockValue: 0,
-  walkEnded: false,
-  view: VIEWS.QUEST,
-  WakeLockSentinel: null,
 
-  // geo state
-  // TODO: snag walk from indexeddb or create new walk and expose in spread operator
-  distanceFromStartCM: 0,
-  distanceTraveledInCM: 0,
-  farthestGeoDataFromStart: null,
-  geoData: {
-    coords: {},
-  },
-  journeyTime: 0,
-  startingLocation: {},
-  totalDistanceTraveledInCM: 0,
-  citiesVisited: [],
-  currentCity: null,
-  locationPings: 0,
-
-  // modals
-  confirmEndWalkModalOpen: false,
-  dataModalOpen: false,
-  instructionsModalOpen: false,
-  pauseModalOpen: false,
-  startModalOpen: false,
-  warningModalOpen: true,
-};
 
 class Quest extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = initialGameState;
 
     this.journeyTimePoll = null;
     this.map = null;
@@ -165,7 +178,7 @@ class Quest extends React.Component {
 
   confirmEndWalk = () => {
     this.killPolls();
-    this.setState(initialGameState);
+    // this.setState(initialGameState);
     getStartingPoint(this.setStart);
   };
 
@@ -341,70 +354,56 @@ class Quest extends React.Component {
     return (
       <React.Fragment>
         {!this.state.isUnlocked && (
-          <Lockscreen
-            unlockValue={this.state.unlockValue}
+          <WiredLockscreen
             setUnlockValue={this.setUnlockValue}
           />
         )}
-        <Scorecard
-          journeyTime={this.state.journeyTime}
-          traveled={this.state.totalDistanceTraveledInCM}
-        />
+        <WiredScoreCard/>
         <Row>
-          <SettingsModal
-            {...this.state}
+          <WiredSettingsModal
+            // {...this.state}
             modalProps={{
-              isOpen: this.state.dataModalOpen,
+              // isOpen: this.state.dataModalOpen,
               toggle: this.dataModalToggle,
             }}
-            unlockValue={this.state.unlockValue}
+            // unlockValue={this.state.unlockValue}
             setUnlockValue={this.setUnlockValue}
             lockScreen={this.lockScreen}
           />
           <Col xs={12}>
             {this.state.hasLocation && (
-              <Map
-                geoData={this.state.geoData}
-                paused={this.state.paused}
-                hasLocation={this.state.hasLocation}
-                currentLatLong={toLatLong(this.state.geoData)}
+              <WiredMap
+                currentLatLong={toLatLong(this.props.geoData)}
               />
             )}
           </Col>
         </Row>
 
-        <WarningModal
+        <WiredWarningModal
           acceptWarning={this.acceptWarning}
           denyWarning={this.props.appMethods.goLanding}
-          isOpen={this.state.warningModalOpen}
         />
-        <InstructionModal
+        <WiredInstructionModal
           toggle={this.readInstructions}
-          isOpen={this.state.instructionsModalOpen}
         />
-        <StartModal
+        <WiredStartModal
           startNewWalk={this.startNewWalk}
           continueOldWalk={() => alert("comming soon...")}
-          isOpen={this.state.startModalOpen}
         />
-        <PauseModal
-          isOpen={this.state.pauseModalOpen}
+        <WiredPauseModal
           endWalk={this.endWalk}
           continueWalk={this.togglePaused}
         />
-        <ConfirmEndWalkModal
-          isOpen={this.state.confirmEndWalkModalOpen}
+        <WiredConfirmEndWalkModal
           cancelEndWalk={this.cancelEndWalk}
           confirmEndWalk={this.confirmEndWalk}
         />
-        <BottomNav
-          paused={this.state.paused}
+        <WiredBottomNav
           togglePaused={this.togglePaused}
-          hasLocation={this.state.hasLocation}
         />
       </React.Fragment>
     );
   }
 }
 
-export default Quest;
+export default connect()(Quest);

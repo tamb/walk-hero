@@ -1,40 +1,26 @@
 import React from "react";
 import { Container } from "reactstrap";
-import { Provide } from "substate-connect";
+import { Provide, connect } from "substate-connect/dist/react";
 
 import store from "@store/store";
-import {VIEWS} from "@utils/enums";
+import { VIEWS } from "@utils/enums";
 import FullPageSpinner from "@components/FullPageSpinner/FullPageSpinner";
 import Landing from "@views/Landing/Landing";
 
 const Quest = React.lazy(() => import("@views/Quest/Quest"));
 
-
-window.WHGlobals = {
-  vibrationsOn: true,
-};
-
-const initialGameState = {
-  view: VIEWS.LANDING,
-};
-
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = initialGameState;
-  }
-
   // VIEW switching
   goQuest = () => {
-    this.setState({ view: VIEWS.QUEST });
+    store.emit("UPDATE_STATE", { 'gameState.view': VIEWS.QUEST })
   };
 
   goMinigames = () => {
-    this.setState({ view: VIEWS.MINIGAMES });
+    store.emit("UPDATE_STATE", { 'gameState.view': VIEWS.MINIGAMES })
   };
 
   goLanding = () => {
-    this.setState({ view: VIEWS.LANDING });
+    store.emit("UPDATE_STATE", { 'gameState.view': VIEWS.LANDING })
   };
 
   // Logic
@@ -43,7 +29,7 @@ class App extends React.Component {
   render() {
     return (
       <Container fluid>
-        {this.state.view === VIEWS.QUEST && (
+        {this.props.gameState.view === VIEWS.QUEST && (
           <React.Suspense fallback={<FullPageSpinner />}>
             <Quest
               appMethods={{
@@ -52,9 +38,9 @@ class App extends React.Component {
             />
           </React.Suspense>
         )}
-        {this.state.view === VIEWS.LANDING && (
+        {this.props.gameState.view === VIEWS.LANDING && (
           <Landing
-            isOpen={this.state.view === VIEWS.LANDING}
+            isOpen={this.props.gameState.view === VIEWS.LANDING}
             goQuest={this.goQuest}
             goMinigames={this.goMinigames}
           />
@@ -63,7 +49,13 @@ class App extends React.Component {
     );
   }
 }
+const ConnectedApp = connect(store, {
+  gameState: 'gameState',
+  geo: 'geo',
+  modals: 'modals',
 
-const WiredApp = Provide(store, ["STATE_UPDATED"], null)(App);
+})(App);
 
-export default WiredApp;
+export default Provide(store, ["STATE_UPDATED"], function () {
+  console.log("I mounted", this, store.getCurrentState());
+})(ConnectedApp);
