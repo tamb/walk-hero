@@ -6,6 +6,11 @@
 
 button:disabled:hover {
   cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+button:disabled {
+  text-decoration: line-through;
 }
 
 body {
