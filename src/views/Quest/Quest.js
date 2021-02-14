@@ -41,6 +41,7 @@ const initialGameState = {
   unlockValue: 0,
   walkEnded: false,
   view: VIEWS.QUEST,
+  WakeLockSentinel: null,
 
   // geo state
   // TODO: snag walk from indexeddb or create new walk and expose in spread operator
@@ -190,20 +191,20 @@ class Quest extends React.Component {
     CityWorker.getEntryByLatLong(latLong).then((value) => {
       if (value.length !== 0) {
         const clonedCities = [...this.state.citiesVisited, value[0]];
-        const newCitiesVisited = clonedCities.filter(city => {
-          if(value[0].lat !== city.lat && value[0].lng !== city.lng){
+        const newCitiesVisited = clonedCities.filter((city) => {
+          if (value[0].lat !== city.lat && value[0].lng !== city.lng) {
             return true;
           } else {
             return false;
           }
         });
-        if(newCitiesVisited.length === 0){
+        if (newCitiesVisited.length === 0) {
           newCitiesVisited.push(value[0]);
         }
         this.setState({
           startingLocation: value[0],
           currentCity: value[0],
-          citiesVisited: newCitiesVisited
+          citiesVisited: newCitiesVisited,
         });
       } else {
         this.setState({
@@ -231,6 +232,7 @@ class Quest extends React.Component {
 
   lockScreen = () => {
     this.setState({ isUnlocked: false });
+    this.setWakeLock();
   };
 
   readInstructions = () => {
@@ -241,10 +243,28 @@ class Quest extends React.Component {
     });
   };
 
+  releaseWakeLock = () => {
+    if (this.state.WakeLockSentinel) {
+      console.log("releasing...");
+      this.state.WakeLockSentinel.release().then(() => {
+        console.info("[WakeLock]: OFF");
+        this.setState({ WakeLockSentinel: null });
+      });
+    }
+  };
+
   setStart = (data) => {
-    this.setState({ start: data, geoData: data, hasLocation: true, locationPings: this.state.locationPings + 1 }, () => {
-      this.getCurrentCity(cloneGeoData(data));
-    });
+    this.setState(
+      {
+        start: data,
+        geoData: data,
+        hasLocation: true,
+        locationPings: this.state.locationPings + 1,
+      },
+      () => {
+        this.getCurrentCity(cloneGeoData(data));
+      }
+    );
   };
 
   setUnlockValue = (e) => {
@@ -256,12 +276,33 @@ class Quest extends React.Component {
       },
       () => {
         setTimeout(() => {
+          if (this.state.isUnlocked) {
+            this.releaseWakeLock();
+          }
           if (this.state.unlockValue < 100) {
             this.setState({ unlockValue: 0 });
           }
         }, 700);
       }
     );
+  };
+
+  setWakeLock = async () => {
+    if ("wakeLock" in navigator) {
+      try {
+        const wakeLock = await navigator.wakeLock.request("screen");
+        console.info("[WakeLock]: ON");
+        this.setState({
+          WakeLockSentinel: wakeLock,
+        });
+      } catch (err) {
+        // The wake lock request fails - usually system-related, such as low battery.
+        console.info(`${err.name}, ${err.message}`);
+        this.setState({ WakeLockSentinel: null });
+      }
+    } else {
+      console.info("no WakeLock");
+    }
   };
 
   startNewWalk = () => {
