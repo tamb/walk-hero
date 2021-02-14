@@ -23,14 +23,17 @@ class App extends React.Component {
 
   // VIEW switching
   goQuest = () => {
+    window.navigator.vibrate(200);
     this.setState({ view: VIEWS.QUEST });
   };
 
   goMinigames = () => {
+    window.navigator.vibrate(200);
     this.setState({ view: VIEWS.MINIGAMES });
   };
 
   goLanding = () => {
+    window.navigator.vibrate(200);
     this.setState({ view: VIEWS.LANDING });
   };
 
