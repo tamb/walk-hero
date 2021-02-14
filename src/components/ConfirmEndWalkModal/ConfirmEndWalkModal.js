@@ -11,18 +11,18 @@ const ConfirmEndWalkModal = (props) => {
         <VibrateButton color="warning" onClick={props.cancelEndWalk}>
           Nope. Keep Walking.
         </VibrateButton>
-        <Button color="success" onClick={props.confirmEndWalk}>
+        <VibrateButton color="success" onClick={props.confirmEndWalk}>
           Yes, End Walk.
-        </Button>
+        </VibrateButton>
       </ModalFooter>
     </Modal>
   );
 };
 
 ConfirmEndWalkModal.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    cancelEndWalk: PropTypes.func.isRequired,
-    confirmEndWalk: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  cancelEndWalk: PropTypes.func.isRequired,
+  confirmEndWalk: PropTypes.func.isRequired,
 };
 
 export default ConfirmEndWalkModal;
