@@ -8,6 +8,8 @@ import {
   Container,
   Row,
   Col,
+  Input,
+  Label,
   FormGroup,
 } from "reactstrap";
 
@@ -29,16 +31,16 @@ function SettingsModal(props) {
           <Row>
             <Col>
               <FormGroup>
-                <label>
+                <Label check>
                   Vibration
-                  <input
-                    defaultChecked={true}
+                  <Input
+                  defaultChecked={true}
                     onChange={(e) => {
-                      window.WHGlobals.vibrations = e.target.checked;
+                      window.WHGlobals.vibrationsOn = e.target.checked;
                     }}
                     type="checkbox"
                   />
-                </label>
+                </Label>
               </FormGroup>
             </Col>
           </Row>

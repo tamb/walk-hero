@@ -12,7 +12,7 @@ const VIEWS = {
 };
 
 window.WHGlobals = {
-  vibrations: true,
+  vibrationsOn: true,
 };
 
 const initialGameState = {

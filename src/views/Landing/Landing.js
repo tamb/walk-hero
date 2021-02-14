@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Row, Col, Button } from "reactstrap";
+import { Row, Col } from "reactstrap";
 
 import VibrateButton from "./../../components/VibrateButton/VibrateButton";
 import knight from "./../../gif/knightherov3.gif";

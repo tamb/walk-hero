@@ -4,7 +4,7 @@ import { Button } from "reactstrap";
 
 function VibrateButton(props) {
   function clickVibrate() {
-    if (window.WHGlobals.vibrations) {
+    if (window.WHGlobals.vibrationsOn) {
       window.navigator.vibrate(props.pattern);
     }
     props.onClick();

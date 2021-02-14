@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Modal, ModalHeader, ModalFooter, ModalBody } from "reactstrap";
 
+import VibrateButton from "./../VibrateButton/VibrateButton";
+
 const ConfirmEndWalkModal = (props) => {
   return (
     <Modal centered backdrop="static" isOpen={props.isOpen}>
