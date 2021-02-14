@@ -1,10 +1,10 @@
 import React from "react";
 import { Container } from "reactstrap";
 
-import FullPageSpinner from "./components/FullPageSpinner/FullPageSpinner";
-import Landing from "./views/Landing/Landing";
+import FullPageSpinner from "@components/FullPageSpinner/FullPageSpinner";
+import Landing from "@views/Landing/Landing";
 
-const Quest = React.lazy(() => import("./views/Quest/Quest"));
+const Quest = React.lazy(() => import("@views/Quest/Quest"));
 const VIEWS = {
   LANDING: "landing",
   QUEST: "quest",

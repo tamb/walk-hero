@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { fromS } from "hh-mm-ss";
-import {toMiles} from "./../../workers/measurements";
+
+import { toMiles } from "@workers/measurements";
 
 import "./Scorecard.scss";
 

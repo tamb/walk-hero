@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { version } from "./../../../package.json";
+import { version } from "@root/package.json";
 
-import { fire } from "./../../utils";
-import { CUSTOMEVENTS } from "./../../enums";
+import { fire } from "@utils/utils";
+import { CUSTOMEVENTS } from "@utils/enums";
 
-import VibrateButton from "./../VibrateButton/VibrateButton";
+import VibrateButton from "@components/VibrateButton/VibrateButton";
 
 import "./BottomNav.scss";
 

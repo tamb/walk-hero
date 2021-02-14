@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Modal, ModalFooter, ModalBody, ModalHeader } from "reactstrap";
-import Instructions from "./../Instructions/Instructions";
 
-import VibrateButton from "./../VibrateButton/VibrateButton";
+import Instructions from "@components/Instructions/Instructions";
+import VibrateButton from "@components/VibrateButton/VibrateButton";
 function InstructionModal(props) {
   return (
     <Modal isOpen={props.isOpen} backdrop="static" centered>

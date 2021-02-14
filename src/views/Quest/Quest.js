@@ -1,27 +1,27 @@
 import React from "react";
 import { Row, Col } from "reactstrap";
 
-import { CUSTOMEVENTS } from "./../../enums";
+import { CUSTOMEVENTS } from "@utils/enums";
 import {
   toLatLong,
   startPoll,
   killPoll,
   getStartingPoint,
   cloneGeoData,
-} from "./../../services/Geo";
-import cityWorker from "workerize-loader!./../../workers/cities"; // eslint-disable-line import/no-webpack-loader-syntax
-import measureWorker from "workerize-loader!./../../workers/measurements"; // eslint-disable-line import/no-webpack-loader-syntax
+} from "@services/Geo";
+import cityWorker from "workerize-loader!@workers/cities"; // eslint-disable-line import/no-webpack-loader-syntax
+import measureWorker from "workerize-loader!@workers/measurements"; // eslint-disable-line import/no-webpack-loader-syntax
 
-import BottomNav from "./../../components/BottomNav/BottomNav";
-import ConfirmEndWalkModal from "./../../components/ConfirmEndWalkModal/ConfirmEndWalkModal";
-import SettingsModal from "./../../components/SettingsModal/SettingsModal";
-import InstructionModal from "./../../components/InstructionModal/InstructionModal";
-import Lockscreen from "./../../components/Lockscreen/Lockscreen";
-import Map from "./../../components/Map/Map";
-import PauseModal from "./../../components/PauseModal/PauseModal";
-import Scorecard from "./../../components/Scorecard/Scorecard";
-import StartModal from "./../../components/StartModal/StartModal";
-import WarningModal from "./../../components/WarningModal/WarningModal";
+import BottomNav from "@components/BottomNav/BottomNav";
+import ConfirmEndWalkModal from "@components/ConfirmEndWalkModal/ConfirmEndWalkModal";
+import SettingsModal from "@components/SettingsModal/SettingsModal";
+import InstructionModal from "@components/InstructionModal/InstructionModal";
+import Lockscreen from "@components/Lockscreen/Lockscreen";
+import Map from "@components/Map/Map";
+import PauseModal from "@components/PauseModal/PauseModal";
+import Scorecard from "@components/Scorecard/Scorecard";
+import StartModal from "@components/StartModal/StartModal";
+import WarningModal from "@components/WarningModal/WarningModal";
 
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();

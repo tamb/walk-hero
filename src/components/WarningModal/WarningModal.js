@@ -10,7 +10,7 @@ import {
   Col,
 } from "reactstrap";
 
-import VibrateButton from "./../VibrateButton/VibrateButton";
+import VibrateButton from "@components/VibrateButton/VibrateButton";
 
 function WarningModal(props) {
   return (
