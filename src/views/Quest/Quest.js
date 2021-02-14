@@ -14,7 +14,7 @@ import measureWorker from "workerize-loader!./../../workers/measurements"; // es
 
 import BottomNav from "./../../components/BottomNav/BottomNav";
 import ConfirmEndWalkModal from "./../../components/ConfirmEndWalkModal/ConfirmEndWalkModal";
-import DisplayData from "./../../components/DisplayData/DisplayData";
+import SettingsModal from "./../../components/SettingsModal/SettingsModal";
 import InstructionModal from "./../../components/InstructionModal/InstructionModal";
 import Lockscreen from "./../../components/Lockscreen/Lockscreen";
 import Map from "./../../components/Map/Map";
@@ -357,7 +357,7 @@ class Quest extends React.Component {
           traveled={this.state.totalDistanceTraveledInCM}
         />
         <Row>
-          <DisplayData
+          <SettingsModal
             {...this.state}
             modalProps={{
               isOpen: this.state.dataModalOpen,

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Modal, ModalHeader, ModalFooter, ModalBody, Button } from "reactstrap";
+import { Modal, ModalHeader, ModalFooter, ModalBody } from "reactstrap";
 
 const ConfirmEndWalkModal = (props) => {
   return (
@@ -8,9 +8,9 @@ const ConfirmEndWalkModal = (props) => {
       <ModalHeader>End Walk</ModalHeader>
       <ModalBody>Do you want to end your walk?</ModalBody>
       <ModalFooter>
-        <Button color="warning" onClick={props.cancelEndWalk}>
+        <VibrateButton color="warning" onClick={props.cancelEndWalk}>
           Nope. Keep Walking.
-        </Button>
+        </VibrateButton>
         <Button color="success" onClick={props.confirmEndWalk}>
           Yes, End Walk.
         </Button>

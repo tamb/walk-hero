@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+
+import VibrateButton from "./../VibrateButton/VibrateButton";
 
 const StartModal = (props) => {
   return (
@@ -10,12 +12,12 @@ const StartModal = (props) => {
         Would you like to start a new walk or continue an existing one?
       </ModalBody>
       <ModalFooter className="d-flex justify-content-between">
-        <Button disabled color="secondary" onClick={props.continueOldWalk}>
+        <VibrateButton disabled color="secondary" onClick={props.continueOldWalk}>
           Existing Walk
-        </Button>
-        <Button color="success" onClick={props.startNewWalk}>
+        </VibrateButton>
+        <VibrateButton color="success" onClick={props.startNewWalk}>
           Start a NEW Walk!
-        </Button>
+        </VibrateButton>
       </ModalFooter>
     </Modal>
   );

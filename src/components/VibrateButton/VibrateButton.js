@@ -4,7 +4,9 @@ import { Button } from "reactstrap";
 
 function VibrateButton(props) {
   function clickVibrate() {
-    window.navigator.vibrate(props.pattern);
+    if (window.WHGlobals.vibrations) {
+      window.navigator.vibrate(props.pattern);
+    }
     props.onClick();
   }
 
@@ -12,7 +14,7 @@ function VibrateButton(props) {
   delete newProps.onClick;
 
   return (
-    <Button onClick={clickVibrate} {...props}>
+    <Button onClick={clickVibrate} {...newProps}>
       {props.children}
     </Button>
   );
@@ -24,7 +26,7 @@ VibrateButton.propTypes = {
 };
 
 VibrateButton.defaultProps = {
-  pattern: [50],
+  pattern: [10],
 };
 
 export default VibrateButton;

@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "reactstrap";
 import { version } from "./../../../package.json";
 
 import { fire } from "./../../utils";
 import { CUSTOMEVENTS } from "./../../enums";
+
+import VibrateButton from "./../VibrateButton/VibrateButton";
 
 import "./BottomNav.scss";
 
@@ -21,7 +22,7 @@ function BottomNav(props) {
           <small>version {version}</small>
         </p>
       </div>
-      <Button
+      <VibrateButton
         disabled={!props.hasLocation}
         className="BottomNav__icon"
         onClick={props.togglePaused}
@@ -30,15 +31,15 @@ function BottomNav(props) {
           {props.paused ? "Continue" : "Pause Game"}
         </span>
         {props.paused ? "\u{1F6B6}" : "\u{23F8}"}
-      </Button>
-      <Button
+      </VibrateButton>
+      <VibrateButton
         disabled={!props.hasLocation}
         className="BottomNav__icon"
         onClick={openData}
       >
         <span className="sr-only">Settings</span>
         ⚙️
-      </Button>
+      </VibrateButton>
     </div>
   );
 }

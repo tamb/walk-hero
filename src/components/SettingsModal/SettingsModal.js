@@ -8,12 +8,14 @@ import {
   Container,
   Row,
   Col,
-  Button,
+  FormGroup,
 } from "reactstrap";
 
-import { toTime, toLatLong } from "./../../services/Geo";
+import { toTime, toLatLong } from "../../services/Geo";
 
-function DisplayData(props) {
+import VibrateButton from "./../VibrateButton/VibrateButton";
+
+function SettingsModal(props) {
   return (
     <Modal {...props.modalProps} centered>
       <ModalHeader toggle={props.modalProps.toggle}>Data</ModalHeader>
@@ -21,7 +23,23 @@ function DisplayData(props) {
         <Container>
           <Row>
             <Col>
-              <Button onClick={props.lockScreen}>🔒 Lock Screen</Button>
+              <VibrateButton onClick={props.lockScreen}>🔒 Lock Screen</VibrateButton>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <FormGroup>
+                <label>
+                  Vibration
+                  <input
+                    defaultChecked={true}
+                    onChange={(e) => {
+                      window.WHGlobals.vibrations = e.target.checked;
+                    }}
+                    type="checkbox"
+                  />
+                </label>
+              </FormGroup>
             </Col>
           </Row>
           <Row>
@@ -85,7 +103,7 @@ function DisplayData(props) {
   );
 }
 
-DisplayData.propTypes = {
+SettingsModal.propTypes = {
   start: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   distanceFromStartCM: PropTypes.number,
   totalDistanceTraveledInCM: PropTypes.number,
@@ -93,4 +111,4 @@ DisplayData.propTypes = {
   geoData: PropTypes.object,
 };
 
-export default DisplayData;
+export default SettingsModal;

@@ -11,6 +11,10 @@ const VIEWS = {
   MINIGAMES: "minigames",
 };
 
+window.WHGlobals = {
+  vibrations: true,
+};
+
 const initialGameState = {
   view: VIEWS.LANDING,
 };

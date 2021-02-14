@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Modal, ModalFooter, ModalBody, ModalHeader, Button } from "reactstrap";
+import { Modal, ModalFooter, ModalBody, ModalHeader } from "reactstrap";
 import Instructions from "./../Instructions/Instructions";
 
+import VibrateButton from "./../VibrateButton/VibrateButton";
 function InstructionModal(props) {
   return (
     <Modal isOpen={props.isOpen} backdrop="static" centered>
@@ -11,9 +12,9 @@ function InstructionModal(props) {
         <Instructions />
       </ModalBody>
       <ModalFooter>
-        <Button color="success" onClick={props.toggle}>
+        <VibrateButton color="success" onClick={props.toggle}>
           Got it! 👍
-        </Button>
+        </VibrateButton>
       </ModalFooter>
     </Modal>
   );
