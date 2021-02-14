@@ -13,9 +13,9 @@ import {
   FormGroup,
 } from "reactstrap";
 
-import { toTime, toLatLong } from "../../services/Geo";
+import { toTime, toLatLong } from "@services/Geo";
 
-import VibrateButton from "./../VibrateButton/VibrateButton";
+import VibrateButton from "@components/VibrateButton/VibrateButton";
 
 function SettingsModal(props) {
   return (

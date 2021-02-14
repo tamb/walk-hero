@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import "./Map.scss";
-import knight from "./../../gif/knightherov3.gif";
-import npc from "./../../gif/npc-help.png";
+import knight from "@gif/knightherov3.gif";
+import npc from "@gif/npc-help.png";
 
 // tile layer design:
 // http://maps.stamen.com/#watercolor/12/37.7706/-122.3782

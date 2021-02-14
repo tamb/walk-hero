@@ -2,9 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Row, Col } from "reactstrap";
 
-import VibrateButton from "./../../components/VibrateButton/VibrateButton";
-import knight from "./../../gif/knightherov3.gif";
-import { version } from "./../../../package.json";
+import VibrateButton from "@components/VibrateButton/VibrateButton";
+import knight from "@gif/knightherov3.gif";
+import { version } from "@root/package.json";
 
 import "./Landing.scss";
 
