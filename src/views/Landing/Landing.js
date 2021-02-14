@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Row, Col, Button } from "reactstrap";
 
+import VibrateButton from "./../../components/VibrateButton/VibrateButton";
 import knight from "./../../gif/knightherov3.gif";
 import { version } from "./../../../package.json";
 
@@ -23,20 +24,20 @@ const Landing = (props) => {
       </Row>
       <Row>
         <Col>
-          <Button block color="success" onClick={props.goQuest}>
+          <VibrateButton block color="success" onClick={props.goQuest}>
             QUEST
-          </Button>
+          </VibrateButton>
         </Col>
 
         <Col>
-          <Button
+          <VibrateButton
             block
             disabled={true}
             color="primary"
             onClick={props.goMinigames}
           >
             MINIGAMES
-          </Button>
+          </VibrateButton>
         </Col>
       </Row>
       <Row>
