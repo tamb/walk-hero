@@ -12,15 +12,15 @@ const Quest = React.lazy(() => import("@views/Quest/Quest"));
 class App extends React.Component {
   // VIEW switching
   goQuest = () => {
-    store.emit("UPDATE_STATE", { 'gameState.view': VIEWS.QUEST })
+    store.emit("UPDATE_STATE", { "gameState.view": VIEWS.QUEST });
   };
 
   goMinigames = () => {
-    store.emit("UPDATE_STATE", { 'gameState.view': VIEWS.MINIGAMES })
+    store.emit("UPDATE_STATE", { "gameState.view": VIEWS.MINIGAMES });
   };
 
   goLanding = () => {
-    store.emit("UPDATE_STATE", { 'gameState.view': VIEWS.LANDING })
+    store.emit("UPDATE_STATE", { "gameState.view": VIEWS.LANDING });
   };
 
   // Logic
@@ -50,12 +50,12 @@ class App extends React.Component {
   }
 }
 const ConnectedApp = connect(store, {
-  gameState: 'gameState',
-  geo: 'geo',
-  modals: 'modals',
-
+  gameState: "gameState",
+  geo: "geo",
+  modals: "modals",
 })(App);
 
-export default Provide(store, ["STATE_UPDATED"], function () {
+// STATE_WRITTEN will be the $type that is fired when we update state and want middleware to save to IDB
+export default Provide(store, ["STATE_UPDATED", "STATE_WRITTEN"], function () {
   console.log("I mounted", this, store.getCurrentState());
 })(ConnectedApp);

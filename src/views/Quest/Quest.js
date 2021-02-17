@@ -1,9 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Row, Col } from "reactstrap";
-import {connect} from "substate-connect";
+import { connect } from "substate-connect";
 
 import store from "@store/store";
-import { CUSTOMEVENTS, VIEWS } from "@utils/enums";
+import { CUSTOMEVENTS } from "@utils/enums";
 import {
   toLatLong,
   startPoll,
@@ -15,66 +16,66 @@ import cityWorker from "workerize-loader!@workers/cities"; // eslint-disable-lin
 import measureWorker from "workerize-loader!@workers/measurements"; // eslint-disable-line import/no-webpack-loader-syntax
 
 import BottomNav from "@components/BottomNav/BottomNav";
-import ConfirmEndWalkModal from "@components/ConfirmEndWalkModal/ConfirmEndWalkModal";
-import InstructionModal from "@components/InstructionModal/InstructionModal";
 import Lockscreen from "@components/Lockscreen/Lockscreen";
 import Map from "@components/Map/Map";
-import PauseModal from "@components/PauseModal/PauseModal";
 import Scorecard from "@components/Scorecard/Scorecard";
-import SettingsModal from "@components/SettingsModal/SettingsModal";
-import StartModal from "@components/StartModal/StartModal";
-import WarningModal from "@components/WarningModal/WarningModal";
+
+// Modals
+import ConfirmEndWalkModal from "@modals/ConfirmEndWalkModal/ConfirmEndWalkModal";
+import InstructionModal from "@modals/InstructionModal/InstructionModal";
+import PauseModal from "@modals/PauseModal/PauseModal";
+import SettingsModal from "@modals/SettingsModal/SettingsModal";
+import StartModal from "@modals/StartModal/StartModal";
+import WarningModal from "@modals/WarningModal/WarningModal";
 
 const WiredBottomNav = connect(store, {
-  paused: 'gameState.paused',
-  hasLocation: 'gameState.hasLocation',
+  paused: "gameState.paused",
+  hasLocation: "gameState.hasLocation",
 })(BottomNav);
 
 const WiredConfirmEndWalkModal = connect(store, {
-  isOpen: 'modals.confirmEndWalkModalOpen'
+  isOpen: "modals.confirmEndWalkModalOpen",
 })(ConfirmEndWalkModal);
 
 const WiredInstructionModal = connect(store, {
-  isOpen: 'modals.instructionsModalOpen',
+  isOpen: "modals.instructionsModalOpen",
 })(InstructionModal);
 
 const WiredLockscreen = connect(store, {
-  unlockValue: 'gameState.unlockValue',
+  unlockValue: "gameState.unlockValue",
 })(Lockscreen);
 
 const WiredMap = connect(store, {
-  geoData: 'geo.geoData',
-  paused: 'gameState.paused',
-  hasLocation: 'gameState.hasLocation',
+  geoData: "geo.geoData",
+  paused: "gameState.paused",
+  hasLocation: "gameState.hasLocation",
 })(Map);
 
 const WiredPauseModal = connect(store, {
-  isOpen: 'modals.pauseModalOpen',
+  isOpen: "modals.pauseModalOpen",
 })(PauseModal);
 
 const WiredScoreCard = connect(store, {
-  journeyTime: 'geo.journeyTime',
-  traveled: 'geo.distanceTraveledInCM',
+  journeyTime: "geo.journeyTime",
+  traveled: "geo.distanceTraveledInCM",
 })(Scorecard);
 
 const WiredSettingsModal = connect(store, {
-  isOpen: 'modals.settingsModalOpen',
-  vibrationsOn: 'gameState.vibrationsOn',
+  isOpen: "modals.settingsModalOpen",
+  vibrationsOn: "gameState.vibrationsOn",
   // much more
 })(SettingsModal);
 
 const WiredStartModal = connect(store, {
-  isOpen: 'modals.startModalOpen'
+  isOpen: "modals.startModalOpen",
 })(StartModal);
 
 const WiredWarningModal = connect(store, {
-  isOpen: 'modals.warningModalOpen',
+  isOpen: "modals.warningModalOpen",
 })(WarningModal);
 
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();
-
-
 
 class Quest extends React.Component {
   constructor(props) {
@@ -106,30 +107,40 @@ class Quest extends React.Component {
 
   // Logic
   acceptWarning = () => {
-    this.setState({ warningModalOpen: false, instructionsModalOpen: true });
+    store.emit("UPDATE_STATE", {
+      "modals.warningModalOpen": true,
+      "modals.instructionsModalOpen": true,
+    });
+    // this.setState({ warningModalOpen: false, instructionsModalOpen: true });
   };
 
   calculateFarthestGeo = (_geoData) => {
     let _farthestGeoData = null;
 
-    if (this.state.farthestGeoDataFromStart) {
+    if (this.props.farthestGeoDataFromStart) {
       MeasurementWorker.distBetweenInCM(
-        cloneGeoData(this.state.farthestGeoDataFromStart),
-        cloneGeoData(this.state.start)
+        cloneGeoData(this.props.geo.farthestGeoDataFromStart),
+        cloneGeoData(this.props.geo.start)
       ).then((value1) => {
         MeasurementWorker.distBetweenInCM(
           cloneGeoData(_geoData),
-          cloneGeoData(this.state.farthestGeoDataFromStart)
+          cloneGeoData(this.props.geo.farthestGeoDataFromStart)
         ).then((value2) => {
           if (value2 > value1) {
             _farthestGeoData = _geoData;
-            this.setState({ farthestGeoDataFromStart: _farthestGeoData });
+            // this.setState({ farthestGeoDataFromStart: _farthestGeoData });
+            store.emit("UPDATE_STATE", {
+              "geo.farthestGeoDataFromStart": _farthestGeoData,
+            });
           }
         });
       });
     } else {
       _farthestGeoData = _geoData;
-      this.setState({ farthestGeoDataFromStart: _farthestGeoData });
+      // this.setState({ farthestGeoDataFromStart: _farthestGeoData });
+      store.emit("UPDATE_STATE", {
+        "geo.farthestGeoDataFromStart": _farthestGeoData,
+      });
     }
   };
 
@@ -137,12 +148,15 @@ class Quest extends React.Component {
     let _distFromStart = null;
 
     MeasurementWorker.distBetweenInCM(
-      cloneGeoData(this.state.start),
+      cloneGeoData(this.props.geo.start),
       cloneGeoData(_geoData)
     ).then((value) => {
       _distFromStart = value;
-      this.setState({
-        distanceFromStartCM: _distFromStart,
+      // this.setState({
+      //   distanceFromStartCM: _distFromStart,
+      // });
+      store.emit("UPDATE_STATE", {
+        "geo.distanceFromStart": _distFromStart,
       });
     });
   };
@@ -152,13 +166,13 @@ class Quest extends React.Component {
 
     MeasurementWorker.distBetweenInCM(
       cloneGeoData(_geoData),
-      cloneGeoData(this.state.geoData)
+      cloneGeoData(this.props.geo.geoData)
     ).then((value) => {
       _distTraveled = value;
       if (_distTraveled >= 35) {
         this.setState({
           totalDistanceTraveledInCM:
-            this.state.totalDistanceTraveledInCM + _distTraveled,
+            this.props.geo.totalDistanceTraveledInCM + _distTraveled,
         });
       }
       this.setState({
@@ -168,11 +182,16 @@ class Quest extends React.Component {
   };
 
   cancelEndWalk = () => {
-    this.setState({
-      endWalk: false,
-      confirmEndWalkModalOpen: false,
-      paused: true,
-      pauseModalOpen: true,
+    // this.setState({
+    //   endWalk: false,
+    //   confirmEndWalkModalOpen: false,
+    //   paused: true,
+    //   pauseModalOpen: true,
+    // });
+    store.emit("UPDATE_STATE", {
+      "gameState.paused": true,
+      "modals.pauseModalOpen": true,
+      "modals.confirmEndWalkModalOpen": false,
     });
   };
 
@@ -184,20 +203,24 @@ class Quest extends React.Component {
 
   dataModalToggle = () => {
     this.setState({
-      dataModalOpen: !this.state.dataModalOpen,
+      dataModalOpen: !this.props.modals.dataModalOpen,
     });
   };
 
   endWalk = () => {
-    this.setState({
-      confirmEndWalkModalOpen: true,
-      pauseModalOpen: false,
+    // this.setState({
+    //   confirmEndWalkModalOpen: true,
+    //   pauseModalOpen: false,
+    // });
+    store.emit("UPDATE_STATE", {
+      "modals.pauseModalOpen": false,
+      "modals.confirmEndWalkModalOpen": true,
     });
   };
   getCurrentCity = (latLong) => {
     CityWorker.getEntryByLatLong(latLong).then((value) => {
       if (value.length !== 0) {
-        const clonedCities = [...this.state.citiesVisited, value[0]];
+        const clonedCities = [...this.props.citiesVisited, value[0]];
         const newCitiesVisited = clonedCities.filter((city) => {
           if (value[0].lat !== city.lat && value[0].lng !== city.lng) {
             return true;
@@ -209,13 +232,13 @@ class Quest extends React.Component {
           newCitiesVisited.push(value[0]);
         }
         this.setState({
-          startingLocation: value[0],
-          currentCity: value[0],
-          citiesVisited: newCitiesVisited,
+          "geo.startingLocation": value[0],
+          "geo.currentCity": value[0],
+          "geo.citiesVisited": newCitiesVisited,
         });
       } else {
         this.setState({
-          failedAtCity: true,
+          "geo.failedAtCity": true,
           startingLocation: {
             name: "Could not find city",
             country: "Could not find country",
@@ -227,7 +250,7 @@ class Quest extends React.Component {
 
   journeyTimeTick = () => {
     this.setState({
-      journeyTime: this.state.journeyTime + 1,
+      journeyTime: this.props.journeyTime + 1,
     });
   };
 
@@ -251,9 +274,9 @@ class Quest extends React.Component {
   };
 
   releaseWakeLock = () => {
-    if (this.state.WakeLockSentinel) {
+    if (this.props.WakeLockSentinel) {
       console.log("releasing...");
-      this.state.WakeLockSentinel.release().then(() => {
+      this.props.WakeLockSentinel.release().then(() => {
         console.info("[WakeLock]: OFF");
         this.setState({ WakeLockSentinel: null });
       });
@@ -266,7 +289,7 @@ class Quest extends React.Component {
         start: data,
         geoData: data,
         hasLocation: true,
-        locationPings: this.state.locationPings + 1,
+        locationPings: this.props.locationPings + 1,
       },
       () => {
         this.getCurrentCity(cloneGeoData(data));
@@ -283,10 +306,10 @@ class Quest extends React.Component {
       },
       () => {
         setTimeout(() => {
-          if (this.state.isUnlocked) {
+          if (this.props.isUnlocked) {
             this.releaseWakeLock();
           }
-          if (this.state.unlockValue < 100) {
+          if (this.props.unlockValue < 100) {
             this.setState({ unlockValue: 0 });
           }
         }, 700);
@@ -320,7 +343,7 @@ class Quest extends React.Component {
   startPolls = () => {
     this.poll = startPoll(this.success);
     this.cityPoll = setInterval(
-      () => this.getCurrentCity(cloneGeoData(this.state.geoData)),
+      () => this.getCurrentCity(cloneGeoData(this.props.geoData)),
       12000
     );
     this.journeyTimePoll = setInterval(this.journeyTimeTick, 1000);
@@ -333,13 +356,13 @@ class Quest extends React.Component {
 
     this.setState({
       geoData,
-      locationPings: this.state.locationPings + 1,
+      locationPings: this.props.locationPings + 1,
     });
   };
 
   togglePaused = () => {
-    this.setState({ paused: !this.state.paused }, () => {
-      if (this.state.paused) {
+    this.setState({ paused: !this.props.gameState.paused }, () => {
+      if (this.props.gameState.paused) {
         this.setState({ pauseModalOpen: true });
         this.killPolls();
       } else {
@@ -353,28 +376,24 @@ class Quest extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {!this.state.isUnlocked && (
-          <WiredLockscreen
-            setUnlockValue={this.setUnlockValue}
-          />
+        {!this.props.gameState.isUnlocked && (
+          <WiredLockscreen setUnlockValue={this.setUnlockValue} />
         )}
-        <WiredScoreCard/>
+        <WiredScoreCard />
         <Row>
           <WiredSettingsModal
-            // {...this.state}
+            // {...this.props}
             modalProps={{
-              // isOpen: this.state.dataModalOpen,
+              // isOpen: this.props.dataModalOpen,
               toggle: this.dataModalToggle,
             }}
-            // unlockValue={this.state.unlockValue}
+            // unlockValue={this.props.unlockValue}
             setUnlockValue={this.setUnlockValue}
             lockScreen={this.lockScreen}
           />
           <Col xs={12}>
-            {this.state.hasLocation && (
-              <WiredMap
-                currentLatLong={toLatLong(this.props.geoData)}
-              />
+            {this.props.gameState.hasLocation && (
+              <WiredMap currentLatLong={toLatLong(this.props.geoData)} />
             )}
           </Col>
         </Row>
@@ -383,9 +402,7 @@ class Quest extends React.Component {
           acceptWarning={this.acceptWarning}
           denyWarning={this.props.appMethods.goLanding}
         />
-        <WiredInstructionModal
-          toggle={this.readInstructions}
-        />
+        <WiredInstructionModal toggle={this.readInstructions} />
         <WiredStartModal
           startNewWalk={this.startNewWalk}
           continueOldWalk={() => alert("comming soon...")}
@@ -398,12 +415,19 @@ class Quest extends React.Component {
           cancelEndWalk={this.cancelEndWalk}
           confirmEndWalk={this.confirmEndWalk}
         />
-        <WiredBottomNav
-          togglePaused={this.togglePaused}
-        />
+        <WiredBottomNav togglePaused={this.togglePaused} />
       </React.Fragment>
     );
   }
 }
 
-export default connect()(Quest);
+Quest.propTypes = {
+  geo: PropTypes.object,
+  gameState: PropTypes.object,
+  modals: PropTypes.object,
+};
+
+export default connect(store, {
+  geoData: "geo.geoData",
+  gameState: "gameState",
+})(Quest);
