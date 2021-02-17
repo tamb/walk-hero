@@ -55,7 +55,11 @@ const ConnectedApp = connect(store, {
   modals: "modals",
 })(App);
 
-// STATE_WRITTEN will be the $type that is fired when we update state and want middleware to save to IDB
-export default Provide(store, ["STATE_UPDATED", "STATE_WRITTEN"], function () {
-  console.log("I mounted", this, store.getCurrentState());
-})(ConnectedApp);
+// WRITE_STATE_UPDATED will be the $type that is fired when we update state and want middleware to save to IDB
+export default Provide(
+  store,
+  ["STATE_UPDATED", "WRITE_STATE_UPDATED"],
+  function () {
+    console.log("I mounted", this, store.getCurrentState());
+  }
+)(ConnectedApp);

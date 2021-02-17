@@ -4,6 +4,7 @@ import cuid from "cuid";
 import { VIEWS } from "@utils/enums";
 
 const hero = {
+  // should be saves
   id: cuid(), // pk
   name: null,
 };
@@ -33,8 +34,14 @@ const play_state = {
   paused: false,
   unlockValue: 0,
   view: VIEWS.LANDING,
-  vibrationsOn: true,
   WakeLockSentinel: null,
+};
+
+const game_settings = {
+  // save this
+  vibrations: true,
+  soundFX: true,
+  music: true,
 };
 
 // this should not need to be saved anywhere
@@ -52,6 +59,7 @@ const modals = {
 const store = new substate({
   name: "WalkHero",
   state: {
+    game_settings,
     hero, // save to IDB
     modals,
     play_state,
