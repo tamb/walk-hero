@@ -3,13 +3,18 @@ import cuid from "cuid";
 
 import { VIEWS } from "@utils/enums";
 
+// Save the following in IDB
 const hero = {
-  // should be saves
   id: cuid(), // pk
   name: null,
 };
 
-// this data is important and should be saved
+const game_settings = {
+  vibrations: true,
+  sound_fx: true,
+  music: true,
+};
+
 const quest = {
   parent_id: hero.id, // fk
   id: cuid(), // pk
@@ -18,7 +23,7 @@ const quest = {
   current_city: null,
   date_created: null,
   distance_p2p_from_origin_cm: 0,
-  distance_traveled_cm: 0,
+  distance_traveled_cm: 0, //todo- do I need this?
   farthest_geodata_from_origin: null,
   geodata: null,
   journey_time_s: 0,
@@ -27,39 +32,31 @@ const quest = {
   total_distance_traveled_cm,
 };
 
-// this should not need to be saved anywhere
+// Does NOT need to be saved in IDB
 const play_state = {
-  hasLocation: false,
-  isUnlocked: true,
+  has_location: false,
+  is_unlocked: true,
   paused: false,
-  unlockValue: 0,
+  unlock_value: 0,
   view: VIEWS.LANDING,
-  WakeLockSentinel: null,
+  wake_lock_sentinel: null,
 };
 
-const game_settings = {
-  // save this
-  vibrations: true,
-  soundFX: true,
-  music: true,
-};
-
-// this should not need to be saved anywhere
 const modals = {
   // todo: NPCModal, BattleModal, GiftModal, NotificationModal -- possible new modal types
-  confirmEndWalkModalOpen: false, // quest
-  settingsModalOpen: false, // quest & minigames
-  instructionsModalOpen: false, // 2
-  nameModalOpen: false, // 3
-  pauseModalOpen: false, // quest & minigames
-  startModalOpen: false, // 4
-  warningModalOpen: true, // 1
+  confirm_end_walk_modal_open: false, // quest
+  settings_modal_open: false, // quest & minigames
+  instructions_modal_open: false, // 2
+  name_modal_open: false, // 3
+  pause_modal_open: false, // quest & minigames
+  start_modal_open: false, // 4
+  warning_modal_open: true, // 1
 };
 
 const store = new substate({
   name: "WalkHero",
   state: {
-    game_settings,
+    game_settings, // save to IDB
     hero, // save to IDB
     modals,
     play_state,

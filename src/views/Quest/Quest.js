@@ -29,49 +29,49 @@ import StartModal from "@modals/StartModal/StartModal";
 import WarningModal from "@modals/WarningModal/WarningModal";
 
 const WiredBottomNav = connect(store, {
-  paused: "gameState.paused",
-  hasLocation: "gameState.hasLocation",
+  paused: "play_state.paused",
+  hasLocation: "play_state.has_location",
 })(BottomNav);
 
 const WiredConfirmEndWalkModal = connect(store, {
-  isOpen: "modals.confirmEndWalkModalOpen",
+  isOpen: "modals.confirm_end_walk_modal_open",
 })(ConfirmEndWalkModal);
 
 const WiredInstructionModal = connect(store, {
-  isOpen: "modals.instructionsModalOpen",
+  isOpen: "modals.instructions_modal_open",
 })(InstructionModal);
 
 const WiredLockscreen = connect(store, {
-  unlockValue: "gameState.unlockValue",
+  unlockValue: "play_state.unlock_value",
 })(Lockscreen);
 
 const WiredMap = connect(store, {
-  geoData: "geo.geoData",
-  paused: "gameState.paused",
-  hasLocation: "gameState.hasLocation",
+  geoData: "quest.geodata",
+  paused: "play_state.paused",
+  hasLocation: "play_state.has_location",
 })(Map);
 
 const WiredPauseModal = connect(store, {
-  isOpen: "modals.pauseModalOpen",
+  isOpen: "modals.pause_modal_open",
 })(PauseModal);
 
 const WiredScoreCard = connect(store, {
-  journeyTime: "geo.journeyTime",
-  traveled: "geo.distanceTraveledInCM",
+  journeyTime: "quest.journey_time",
+  traveled: "quest.total_distance_traveled_cm",
 })(Scorecard);
 
 const WiredSettingsModal = connect(store, {
-  isOpen: "modals.settingsModalOpen",
-  vibrationsOn: "gameState.vibrationsOn",
+  isOpen: "modals.settings_modal_open",
+  vibrationsOn: "game_settings.vibrations",
   // much more
 })(SettingsModal);
 
 const WiredStartModal = connect(store, {
-  isOpen: "modals.startModalOpen",
+  isOpen: "modals.start_modal_open",
 })(StartModal);
 
 const WiredWarningModal = connect(store, {
-  isOpen: "modals.warningModalOpen",
+  isOpen: "modals.warning_modal_open",
 })(WarningModal);
 
 const CityWorker = cityWorker();
@@ -428,6 +428,6 @@ Quest.propTypes = {
 };
 
 export default connect(store, {
-  geoData: "geo.geoData",
-  gameState: "gameState",
+  geoData: "quest.geodata",
+  gameState: "play_state",
 })(Quest);

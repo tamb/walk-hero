@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Container } from "reactstrap";
 import { Provide, connect } from "substate-connect/dist/react";
 
@@ -29,7 +30,7 @@ class App extends React.Component {
   render() {
     return (
       <Container fluid>
-        {this.props.gameState.view === VIEWS.QUEST && (
+        {this.props.play_state.view === VIEWS.QUEST && (
           <React.Suspense fallback={<FullPageSpinner />}>
             <Quest
               appMethods={{
@@ -38,9 +39,9 @@ class App extends React.Component {
             />
           </React.Suspense>
         )}
-        {this.props.gameState.view === VIEWS.LANDING && (
+        {this.props.play_state.view === VIEWS.LANDING && (
           <Landing
-            isOpen={this.props.gameState.view === VIEWS.LANDING}
+            isOpen={this.props.play_state.view === VIEWS.LANDING}
             goQuest={this.goQuest}
             goMinigames={this.goMinigames}
           />
@@ -49,10 +50,13 @@ class App extends React.Component {
     );
   }
 }
+
+App.propTypes = {
+  play_state: PropTypes.object,
+};
+
 const ConnectedApp = connect(store, {
-  gameState: "gameState",
-  geo: "geo",
-  modals: "modals",
+  play_state: "play_state",
 })(App);
 
 // WRITE_STATE_UPDATED will be the $type that is fired when we update state and want middleware to save to IDB
