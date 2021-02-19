@@ -62,6 +62,7 @@ class Quest extends React.Component {
     );
     store.on(EVENTS.PAUSED, this.killPolls); // pause response
     store.on(EVENTS.UNPAUSED, this.startPolls); // pause response
+    store.on(EVENTS.STARTWALK, this.startPolls);
   }
 
   componentWillUnmount() {
@@ -72,6 +73,8 @@ class Quest extends React.Component {
     );
     store.off(EVENTS.PAUSED, this.killPolls); // pause response
     store.off(EVENTS.UNPAUSED, this.startPolls); // pause response
+    store.off(EVENTS.STARTWALK, this.startPolls);
+
   }
 
   // Logic
@@ -257,13 +260,6 @@ class Quest extends React.Component {
     } else {
       console.info("no WakeLock");
     }
-  };
-
-  startNewWalk = () => {
-    store.emit("UPDATE_STATE", {
-      "modals.start_modal_open": false,
-    });
-    this.startPolls();
   };
 
   startPolls = () => {

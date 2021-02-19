@@ -33,5 +33,5 @@ VibrateButton.defaultProps = {
 };
 
 export default connect(store, {
-  vibrationsOn: "gameState.vibrationsOn",
+  vibrationsOn: "game_settings.vibrations",
 })(VibrateButton);

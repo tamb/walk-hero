@@ -10,18 +10,19 @@ import Landing from "@views/Landing/Landing";
 
 const Quest = React.lazy(() => import("@views/Quest/Quest"));
 
+console.log(store);
 class App extends React.Component {
   // VIEW switching
   goQuest = () => {
-    store.emit(EVENTS.UPDATE_STATE, { "gameState.view": VIEWS.QUEST });
+    store.emit(EVENTS.UPDATE_STATE, { "play_state.view": VIEWS.QUEST });
   };
 
   goMinigames = () => {
-    store.emit(EVENTS.UPDATE_STATE, { "gameState.view": VIEWS.MINIGAMES });
+    store.emit(EVENTS.UPDATE_STATE, { "play_state.view": VIEWS.MINIGAMES });
   };
 
   goLanding = () => {
-    store.emit(EVENTS.UPDATE_STATE, { "gameState.view": VIEWS.LANDING });
+    store.emit(EVENTS.UPDATE_STATE, { "play_state.view": VIEWS.LANDING });
   };
 
   // Logic

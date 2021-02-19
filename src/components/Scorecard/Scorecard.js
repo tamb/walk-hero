@@ -20,4 +20,9 @@ Scorecard.propTypes = {
   traveled: PropTypes.number,
 };
 
+Scorecard.defaultProps = {
+  journeyTime: 0,
+  traveled: 0,
+};
+
 export default Scorecard;

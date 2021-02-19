@@ -29,7 +29,7 @@ const quest = {
   journey_time_s: 0,
   location_pings: 0,
   origin_geodata: null,
-  total_distance_traveled_cm,
+  total_distance_traveled_cm: 0,
 };
 
 // Does NOT need to be saved in IDB
@@ -112,9 +112,11 @@ const store = new substate({
 export const EVENTS = {
   PAUSED: "PAUSED",
   UNPAUSED: "UNPAUSED",
-  STATE_UPDATED:"STATE_UPDATED",
+  STATE_UPDATED: "STATE_UPDATED",
   UPDATE_STATE: "UPDATE_STATE",
   WRITE_STATE_UPDATED: "WRITE_STATE_UPDATED",
+  START_WALK: "START_WALK",
+  END_WALK: "END_WALK",
 };
 
 export default store;

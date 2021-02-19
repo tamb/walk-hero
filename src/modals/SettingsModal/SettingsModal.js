@@ -19,8 +19,8 @@ import VibrateButton from "@components/VibrateButton/VibrateButton";
 
 function SettingsModal(props) {
   return (
-    <Modal {...props.modalProps} centered>
-      <ModalHeader toggle={props.modalProps.toggle}>Data</ModalHeader>
+    <Modal centered>
+      <ModalHeader toggle={props.toggle}>Data</ModalHeader>
       {/* {props.start && ( */}
         <Container>
           <Row>
