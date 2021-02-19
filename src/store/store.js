@@ -109,4 +109,12 @@ const store = new substate({
 //   },
 // });
 
+export const EVENTS = {
+  PAUSED: "PAUSED",
+  UNPAUSED: "UNPAUSED",
+  STATE_UPDATED:"STATE_UPDATED",
+  UPDATE_STATE: "UPDATE_STATE",
+  WRITE_STATE_UPDATED: "WRITE_STATE_UPDATED",
+};
+
 export default store;

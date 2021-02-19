@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Container } from "reactstrap";
 import { Provide, connect } from "substate-connect/dist/react";
 
-import store from "@store/store";
+import store, { EVENTS } from "@store/store";
 import { VIEWS } from "@utils/enums";
 import FullPageSpinner from "@components/FullPageSpinner/FullPageSpinner";
 import Landing from "@views/Landing/Landing";
@@ -13,15 +13,15 @@ const Quest = React.lazy(() => import("@views/Quest/Quest"));
 class App extends React.Component {
   // VIEW switching
   goQuest = () => {
-    store.emit("UPDATE_STATE", { "gameState.view": VIEWS.QUEST });
+    store.emit(EVENTS.UPDATE_STATE, { "gameState.view": VIEWS.QUEST });
   };
 
   goMinigames = () => {
-    store.emit("UPDATE_STATE", { "gameState.view": VIEWS.MINIGAMES });
+    store.emit(EVENTS.UPDATE_STATE, { "gameState.view": VIEWS.MINIGAMES });
   };
 
   goLanding = () => {
-    store.emit("UPDATE_STATE", { "gameState.view": VIEWS.LANDING });
+    store.emit(EVENTS.UPDATE_STATE, { "gameState.view": VIEWS.LANDING });
   };
 
   // Logic
@@ -62,7 +62,12 @@ const ConnectedApp = connect(store, {
 // WRITE_STATE_UPDATED will be the $type that is fired when we update state and want middleware to save to IDB
 export default Provide(
   store,
-  ["STATE_UPDATED", "WRITE_STATE_UPDATED"],
+  [
+    EVENTS.STATE_UPDATED,
+    EVENTS.WRITE_STATE_UPDATED,
+    EVENTS.PAUSED,
+    EVENTS.UNPAUSED,
+  ],
   function () {
     console.log("I mounted", this, store.getCurrentState());
   }

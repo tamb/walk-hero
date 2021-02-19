@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Row, Col } from "reactstrap";
 import { connect } from "substate-connect";
 
-import store from "@store/store";
+import store, { EVENTS } from "@store/store";
 import { CUSTOMEVENTS } from "@utils/enums";
 import {
   toLatLong,
@@ -18,28 +18,13 @@ import measureWorker from "workerize-loader!@workers/measurements"; // eslint-di
 import BottomNav from "@components/BottomNav/BottomNav";
 import Lockscreen from "@components/Lockscreen/Lockscreen";
 import Map from "@components/Map/Map";
+import ModalViewOne from "@modals/ModalViewOne/ModalViewOne";
 import Scorecard from "@components/Scorecard/Scorecard";
-
-// Modals
-import ConfirmEndWalkModal from "@modals/ConfirmEndWalkModal/ConfirmEndWalkModal";
-import InstructionModal from "@modals/InstructionModal/InstructionModal";
-import PauseModal from "@modals/PauseModal/PauseModal";
-import SettingsModal from "@modals/SettingsModal/SettingsModal";
-import StartModal from "@modals/StartModal/StartModal";
-import WarningModal from "@modals/WarningModal/WarningModal";
 
 const WiredBottomNav = connect(store, {
   paused: "play_state.paused",
   hasLocation: "play_state.has_location",
 })(BottomNav);
-
-const WiredConfirmEndWalkModal = connect(store, {
-  isOpen: "modals.confirm_end_walk_modal_open",
-})(ConfirmEndWalkModal);
-
-const WiredInstructionModal = connect(store, {
-  isOpen: "modals.instructions_modal_open",
-})(InstructionModal);
 
 const WiredLockscreen = connect(store, {
   unlockValue: "play_state.unlock_value",
@@ -51,28 +36,10 @@ const WiredMap = connect(store, {
   hasLocation: "play_state.has_location",
 })(Map);
 
-const WiredPauseModal = connect(store, {
-  isOpen: "modals.pause_modal_open",
-})(PauseModal);
-
 const WiredScoreCard = connect(store, {
   journeyTime: "quest.journey_time",
   traveled: "quest.total_distance_traveled_cm",
 })(Scorecard);
-
-const WiredSettingsModal = connect(store, {
-  isOpen: "modals.settings_modal_open",
-  vibrationsOn: "game_settings.vibrations",
-  // much more
-})(SettingsModal);
-
-const WiredStartModal = connect(store, {
-  isOpen: "modals.start_modal_open",
-})(StartModal);
-
-const WiredWarningModal = connect(store, {
-  isOpen: "modals.warning_modal_open",
-})(WarningModal);
 
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();
@@ -93,6 +60,8 @@ class Quest extends React.Component {
       CUSTOMEVENTS.DATA_MODAL_TOGGLE,
       this.dataModalToggle
     );
+    store.on(EVENTS.PAUSED, this.killPolls); // pause response
+    store.on(EVENTS.UNPAUSED, this.startPolls); // pause response
   }
 
   componentWillUnmount() {
@@ -101,18 +70,11 @@ class Quest extends React.Component {
       CUSTOMEVENTS.DATA_MODAL_TOGGLE,
       this.dataModalToggle
     );
+    store.off(EVENTS.PAUSED, this.killPolls); // pause response
+    store.off(EVENTS.UNPAUSED, this.startPolls); // pause response
   }
 
-  // VIEW switching
-
   // Logic
-  acceptWarning = () => {
-    store.emit("UPDATE_STATE", {
-      "modals.warningModalOpen": true,
-      "modals.instructionsModalOpen": true,
-    });
-    // this.setState({ warningModalOpen: false, instructionsModalOpen: true });
-  };
 
   calculateFarthestGeo = (_geoData) => {
     let _farthestGeoData = null;
@@ -181,42 +143,12 @@ class Quest extends React.Component {
     });
   };
 
-  cancelEndWalk = () => {
-    // this.setState({
-    //   endWalk: false,
-    //   confirmEndWalkModalOpen: false,
-    //   paused: true,
-    //   pauseModalOpen: true,
-    // });
-    store.emit("UPDATE_STATE", {
-      "gameState.paused": true,
-      "modals.pauseModalOpen": true,
-      "modals.confirmEndWalkModalOpen": false,
-    });
-  };
-
   confirmEndWalk = () => {
     this.killPolls();
     // this.setState(initialGameState);
     getStartingPoint(this.setStart);
   };
 
-  dataModalToggle = () => {
-    this.setState({
-      dataModalOpen: !this.props.modals.dataModalOpen,
-    });
-  };
-
-  endWalk = () => {
-    // this.setState({
-    //   confirmEndWalkModalOpen: true,
-    //   pauseModalOpen: false,
-    // });
-    store.emit("UPDATE_STATE", {
-      "modals.pauseModalOpen": false,
-      "modals.confirmEndWalkModalOpen": true,
-    });
-  };
   getCurrentCity = (latLong) => {
     CityWorker.getEntryByLatLong(latLong).then((value) => {
       if (value.length !== 0) {
@@ -263,14 +195,6 @@ class Quest extends React.Component {
   lockScreen = () => {
     this.setState({ isUnlocked: false });
     this.setWakeLock();
-  };
-
-  readInstructions = () => {
-    this.setState({
-      instructionsRead: true,
-      instructionsModalOpen: false,
-      startModalOpen: true,
-    });
   };
 
   releaseWakeLock = () => {
@@ -336,7 +260,9 @@ class Quest extends React.Component {
   };
 
   startNewWalk = () => {
-    this.setState({ startModalOpen: false });
+    store.emit("UPDATE_STATE", {
+      "modals.start_modal_open": false,
+    });
     this.startPolls();
   };
 
@@ -360,18 +286,6 @@ class Quest extends React.Component {
     });
   };
 
-  togglePaused = () => {
-    this.setState({ paused: !this.props.gameState.paused }, () => {
-      if (this.props.gameState.paused) {
-        this.setState({ pauseModalOpen: true });
-        this.killPolls();
-      } else {
-        this.setState({ pauseModalOpen: false });
-        this.startPolls();
-      }
-    });
-  };
-
   // Render Methods
   render() {
     return (
@@ -381,41 +295,14 @@ class Quest extends React.Component {
         )}
         <WiredScoreCard />
         <Row>
-          <WiredSettingsModal
-            // {...this.props}
-            modalProps={{
-              // isOpen: this.props.dataModalOpen,
-              toggle: this.dataModalToggle,
-            }}
-            // unlockValue={this.props.unlockValue}
-            setUnlockValue={this.setUnlockValue}
-            lockScreen={this.lockScreen}
-          />
           <Col xs={12}>
             {this.props.gameState.hasLocation && (
               <WiredMap currentLatLong={toLatLong(this.props.geoData)} />
             )}
           </Col>
         </Row>
-
-        <WiredWarningModal
-          acceptWarning={this.acceptWarning}
-          denyWarning={this.props.appMethods.goLanding}
-        />
-        <WiredInstructionModal toggle={this.readInstructions} />
-        <WiredStartModal
-          startNewWalk={this.startNewWalk}
-          continueOldWalk={() => alert("comming soon...")}
-        />
-        <WiredPauseModal
-          endWalk={this.endWalk}
-          continueWalk={this.togglePaused}
-        />
-        <WiredConfirmEndWalkModal
-          cancelEndWalk={this.cancelEndWalk}
-          confirmEndWalk={this.confirmEndWalk}
-        />
         <WiredBottomNav togglePaused={this.togglePaused} />
+        <ModalViewOne />
       </React.Fragment>
     );
   }
