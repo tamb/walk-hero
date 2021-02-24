@@ -15,6 +15,8 @@ function VibrateButton(props) {
 
   const newProps = { ...props };
   delete newProps.onClick;
+  delete newProps.vibrationsOn;
+  delete newProps.pattern;
 
   return (
     <Button onClick={clickVibrate} {...newProps}>

@@ -37,7 +37,7 @@ const WiredMap = connect(store, {
 })(Map);
 
 const WiredScoreCard = connect(store, {
-  journeyTime: "quest.journey_time",
+  journeyTime: "quest.journey_time_s",
   traveled: "quest.total_distance_traveled_cm",
 })(Scorecard);
 
@@ -51,6 +51,7 @@ class Quest extends React.Component {
     this.journeyTimePoll = null;
     this.map = null;
     this.poll = null;
+    this.WakeLockSentinel = null; // TODO refactor to use this sentinel
   }
 
   // Lifecycle Methods
@@ -74,7 +75,6 @@ class Quest extends React.Component {
     store.off(EVENTS.PAUSED, this.killPolls); // pause response
     store.off(EVENTS.UNPAUSED, this.startPolls); // pause response
     store.off(EVENTS.STARTWALK, this.startPolls);
-
   }
 
   // Logic
@@ -155,7 +155,7 @@ class Quest extends React.Component {
   getCurrentCity = (latLong) => {
     CityWorker.getEntryByLatLong(latLong).then((value) => {
       if (value.length !== 0) {
-        const clonedCities = [...this.props.citiesVisited, value[0]];
+        const clonedCities = [...this.props.quest.cities_visited, value[0]];
         const newCitiesVisited = clonedCities.filter((city) => {
           if (value[0].lat !== city.lat && value[0].lng !== city.lng) {
             return true;
@@ -167,9 +167,9 @@ class Quest extends React.Component {
           newCitiesVisited.push(value[0]);
         }
         this.setState({
-          "geo.startingLocation": value[0],
-          "geo.currentCity": value[0],
-          "geo.citiesVisited": newCitiesVisited,
+          "geo.starting_location": value[0],
+          "geo.current_city": value[0],
+          "geo.cities_visited": newCitiesVisited,
         });
       } else {
         this.setState({
@@ -184,8 +184,8 @@ class Quest extends React.Component {
   };
 
   journeyTimeTick = () => {
-    this.setState({
-      journeyTime: this.props.journeyTime + 1,
+    store.emit(EVENTS.UPDATE_STATE, {
+      "quest.journey_time_s": store.getProp("quest.journey_time_s") + 1,
     });
   };
 
@@ -194,22 +194,7 @@ class Quest extends React.Component {
     clearInterval(this.cityPoll);
     clearInterval(this.journeyTimePoll);
   };
-
-  lockScreen = () => {
-    this.setState({ isUnlocked: false });
-    this.setWakeLock();
-  };
-
-  releaseWakeLock = () => {
-    if (this.props.WakeLockSentinel) {
-      console.log("releasing...");
-      this.props.WakeLockSentinel.release().then(() => {
-        console.info("[WakeLock]: OFF");
-        this.setState({ WakeLockSentinel: null });
-      });
-    }
-  };
-
+  
   setStart = (data) => {
     this.setState(
       {
@@ -222,44 +207,6 @@ class Quest extends React.Component {
         this.getCurrentCity(cloneGeoData(data));
       }
     );
-  };
-
-  setUnlockValue = (e) => {
-    const value = parseInt(e.target.value);
-    this.setState(
-      {
-        unlockValue: value === 100 ? 0 : value,
-        isUnlocked: value === 100,
-      },
-      () => {
-        setTimeout(() => {
-          if (this.props.isUnlocked) {
-            this.releaseWakeLock();
-          }
-          if (this.props.unlockValue < 100) {
-            this.setState({ unlockValue: 0 });
-          }
-        }, 700);
-      }
-    );
-  };
-
-  setWakeLock = async () => {
-    if ("wakeLock" in navigator) {
-      try {
-        const wakeLock = await navigator.wakeLock.request("screen");
-        console.info("[WakeLock]: ON");
-        this.setState({
-          WakeLockSentinel: wakeLock,
-        });
-      } catch (err) {
-        // The wake lock request fails - usually system-related, such as low battery.
-        console.info(`${err.name}, ${err.message}`);
-        this.setState({ WakeLockSentinel: null });
-      }
-    } else {
-      console.info("no WakeLock");
-    }
   };
 
   startPolls = () => {
@@ -282,11 +229,66 @@ class Quest extends React.Component {
     });
   };
 
+  // LOCKSCREEN
+  lockScreen = () => {
+    store.emit(EVENTS.UPDATE_STATE, {
+      "play_state.is_unlocked": true,
+    });
+    this.setWakeLock();
+  };
+
+  releaseWakeLock = () => {
+    if (this.WakeLockSentinel) {
+      console.log("releasing...");
+      this.WakeLockSentinel.release().then(() => {
+        console.info("[WakeLock]: OFF");
+        this.WakeLockSentinel = null;
+      });
+    }
+  };
+
+  setUnlockValue = (e) => {
+    const value = parseInt(e.target.value);
+    store.emit(EVENTS.UPDATE_STATE, {
+      "play_state.unlock_value": value === 100 ? 0 : value,
+      "play_state.is_unlocked": value === 100,
+    });
+
+    if (store.getProp("play_state.is_unlocked")) {
+      this.releaseWakeLock();
+    }
+
+    setTimeout(() => {
+      if (store.getProp("play_state.unlock_value") < 100) {
+        store.emit(EVENTS.UPDATE_STATE, {
+          "play_state.unlock_value": 0,
+        });
+      }
+    }, 700);
+  };
+
+  setWakeLock = async () => {
+    if ("wakeLock" in navigator) {
+      try {
+        this.WakeLockSentinel = await navigator.wakeLock.request("screen");
+        console.info("[WakeLock]: ON");
+      } catch (err) {
+        // The wake lock request fails - usually system-related, such as low battery.
+        console.info(`${err.name}, ${err.message}`);
+        this.WakeLockSentinel = null;
+      }
+    } else {
+      console.info("no WakeLock");
+    }
+  };
+
+  // END LOCKSCREEN
+
   // Render Methods
   render() {
     return (
       <React.Fragment>
-        {!this.props.gameState.isUnlocked && (
+        {!this.props.gameState.is_unlocked && (
           <WiredLockscreen setUnlockValue={this.setUnlockValue} />
         )}
         <WiredScoreCard />
@@ -313,4 +315,5 @@ Quest.propTypes = {
 export default connect(store, {
   geoData: "quest.geodata",
   gameState: "play_state",
+  quest: "quest",
 })(Quest);

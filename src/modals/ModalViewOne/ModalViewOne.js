@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "substate-connect";
 
 import store, { EVENTS } from "@store/store";
-import {VIEWS} from "@utils/enums";
+import { VIEWS } from "@utils/enums";
 
 // Modals
 import ConfirmEndWalkModal from "@modals/ConfirmEndWalkModal/ConfirmEndWalkModal";
@@ -46,7 +46,7 @@ const ModalViewOne = () => {
     });
   }
 
-  function denyWarning(){
+  function denyWarning() {
     store.emit(EVENTS.UPDATE_STATE, {
       "modals.warning_modal_open": false,
       "play_state.view": VIEWS.LANDING,
@@ -63,7 +63,9 @@ const ModalViewOne = () => {
 
   function toggleSettings() {
     store.emit(EVENTS.UPDATE_STATE, {
-      "modals.settings_modal_open": !store.getProp("modals.settings_modal_open"),
+      "modals.settings_modal_open": !store.getProp(
+        "modals.settings_modal_open"
+      ),
     });
   }
 
@@ -81,11 +83,11 @@ const ModalViewOne = () => {
     });
   }
 
-  function startNewWalk(){
+  function startNewWalk() {
     store.emit(EVENTS.UPDATE_STATE, {
       "modals.start_modal_open": false,
     });
-  };
+  }
 
   function togglePaused() {
     const bool = !store.getProp("play_state.paused");
@@ -98,15 +100,21 @@ const ModalViewOne = () => {
   return (
     <React.Fragment>
       {/* In order */}
-      <WiredWarningModal acceptWarning={acceptWarning} denyWarning={denyWarning}/>
-      <WiredInstructionModal toggle={readInstructions}/>
+      <WiredWarningModal
+        acceptWarning={acceptWarning}
+        denyWarning={denyWarning}
+      />
+      <WiredInstructionModal toggle={readInstructions} />
       {/* name modal */}
-      <WiredStartModal toggle={startNewWalk}/>
+      <WiredStartModal startNewWalk={startNewWalk} />
 
       {/* No order here */}
-      <WiredConfirmEndWalkModal cancelEndWalk={cancelEndWalk} confirmEndWalk={endWalk}/>
-      <WiredPauseModal continueWalk={togglePaused} endWalk={endWalk}/>
-      <WiredSettingsModal toggle={toggleSettings}/>
+      <WiredConfirmEndWalkModal
+        cancelEndWalk={cancelEndWalk}
+        confirmEndWalk={endWalk}
+      />
+      <WiredPauseModal continueWalk={togglePaused} endWalk={endWalk} />
+      <WiredSettingsModal toggle={toggleSettings} />
     </React.Fragment>
   );
 };

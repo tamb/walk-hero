@@ -1,10 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { FormGroup, Label, Input } from "reactstrap";
+import {connect} from "substate-connect";
+
+import store from "@store/store";
 
 import "./Lockscreen.scss";
 
 function Lockscreen(props) {
+
+  function setUnlockValue(event){
+    store.emit("UPDATE_STATE", {"play_state.unlock_value": event.target.value});
+  }
+
+
   return (
     <div className="Lockscreen">
       <div className="Lockscreen__backdrop"></div>
@@ -17,7 +26,7 @@ function Lockscreen(props) {
           max="100"
           step="5"
           value={props.unlockValue}
-          onChange={props.setUnlockValue}
+          onChange={setUnlockValue}
           id="unlock"
         />
       </FormGroup>
@@ -27,7 +36,10 @@ function Lockscreen(props) {
 
 Lockscreen.propTypes = {
   unlockValue: PropTypes.number,
-  setlockValue: PropTypes.func,
 };
+
+const WiredLockScreen = connect(store, {
+  unlockValue: "play_state.unlock_value"
+})(Lockscreen);
 
 export default Lockscreen;
