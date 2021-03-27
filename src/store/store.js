@@ -64,6 +64,8 @@ const store = new substate({
   },
 });
 
+window.WH = store;
+
 // const store = new substate({
 //   name: "WalkHero",
 //   state: {

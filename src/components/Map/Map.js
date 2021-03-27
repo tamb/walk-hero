@@ -18,6 +18,10 @@ class Map extends React.Component {
     this.myIcon = null;
   }
 
+  componentDidMount(){
+    console.log("mount map");
+  }
+
   componentDidUpdate() {
     if (this.props.hasLocation && this.map === null) {
       this.map = window.L.map("map", {

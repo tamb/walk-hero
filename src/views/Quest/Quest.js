@@ -93,9 +93,8 @@ class Quest extends React.Component {
         ).then((value2) => {
           if (value2 > value1) {
             _farthestGeoData = _geoData;
-            // this.setState({ farthestGeoDataFromStart: _farthestGeoData });
             store.emit("UPDATE_STATE", {
-              "geo.farthestGeoDataFromStart": _farthestGeoData,
+              "quest.farthest_geodata_from_origin": _farthestGeoData,
             });
           }
         });
@@ -104,7 +103,7 @@ class Quest extends React.Component {
       _farthestGeoData = _geoData;
       // this.setState({ farthestGeoDataFromStart: _farthestGeoData });
       store.emit("UPDATE_STATE", {
-        "geo.farthestGeoDataFromStart": _farthestGeoData,
+        "quest.farthest_geodata_from_origin": _farthestGeoData,
       });
     }
   };
@@ -121,7 +120,7 @@ class Quest extends React.Component {
       //   distanceFromStartCM: _distFromStart,
       // });
       store.emit("UPDATE_STATE", {
-        "geo.distanceFromStart": _distFromStart,
+        "quest.distance.p2p_from_origin_cm": _distFromStart,
       });
     });
   };
@@ -139,9 +138,16 @@ class Quest extends React.Component {
           totalDistanceTraveledInCM:
             this.props.geo.totalDistanceTraveledInCM + _distTraveled,
         });
+        store.emit(EVENTS.UPDATE_STATE, {
+          "quest.total_distance_traveled_cm":
+            this.props.geo.totalDistanceTraveledInCM + _distTraveled,
+        });
       }
       this.setState({
         distanceTraveledInCM: _distTraveled,
+      });
+      store.emit(EVENTS.UPDATE_STATE, {
+        "quest.distance_traveled_cm": _distTraveled,
       });
     });
   };
@@ -166,11 +172,17 @@ class Quest extends React.Component {
         if (newCitiesVisited.length === 0) {
           newCitiesVisited.push(value[0]);
         }
-        this.setState({
-          "geo.starting_location": value[0],
-          "geo.current_city": value[0],
-          "geo.cities_visited": newCitiesVisited,
+        store.emit(EVENTS.UPDATE_STATE, {
+          "quest.origin_geodata": value[0],
+          "quest.current_city": value[0],
+          "quest.cities_visited": newCitiesVisited,
         });
+
+        // this.setState({
+        //   "geo.starting_location": value[0],
+        //   "geo.current_city": value[0],
+        //   "geo.cities_visited": newCitiesVisited,
+        // });
       } else {
         this.setState({
           "geo.failedAtCity": true,
@@ -194,19 +206,27 @@ class Quest extends React.Component {
     clearInterval(this.cityPoll);
     clearInterval(this.journeyTimePoll);
   };
-  
+
   setStart = (data) => {
-    this.setState(
-      {
-        start: data,
-        geoData: data,
-        hasLocation: true,
-        locationPings: this.props.locationPings + 1,
-      },
-      () => {
-        this.getCurrentCity(cloneGeoData(data));
-      }
-    );
+    store.emit(EVENTS.UPDATE_STATE, {
+      "play_state.has_location": true,
+      "quest.geodata": data,
+      "quest.origin_geodata": data,
+      "quest.location_pings": 0,
+    });
+    this.getCurrentCity(cloneGeoData(data));
+
+    // this.setState(
+    //   {
+    //     start: data,
+    //     geoData: data,
+    //     hasLocation: true,
+    //     locationPings: this.props.locationPings + 1,
+    //   },
+    //   () => {
+    //     this.getCurrentCity(cloneGeoData(data));
+    //   }
+    // );
   };
 
   startPolls = () => {
@@ -226,6 +246,11 @@ class Quest extends React.Component {
     this.setState({
       geoData,
       locationPings: this.props.locationPings + 1,
+    });
+
+    store.emit(EVENTS.UPDATE_STATE, {
+      "quest.geodata": geoData,
+      "quest.location_pings": this.props.locationPings + 1,
     });
   };
 
