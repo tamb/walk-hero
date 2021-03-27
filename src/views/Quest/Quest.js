@@ -20,6 +20,7 @@ import Lockscreen from "@components/Lockscreen/Lockscreen";
 import Map from "@components/Map/Map";
 import ModalViewOne from "@modals/ModalViewOne/ModalViewOne";
 import Scorecard from "@components/Scorecard/Scorecard";
+import SideMenu from "@components/SideMenu/SideMenu";
 
 const WiredBottomNav = connect(store, {
   paused: "play_state.paused",
@@ -243,13 +244,13 @@ class Quest extends React.Component {
     this.calculatePointToPointFromStart(geoData);
     this.calculateTotalDistanceTraveledInCM(geoData);
 
-    this.setState({
-      geoData,
-      locationPings: this.props.locationPings + 1,
-    });
+    // this.setState({
+    //   geoData,
+    //   locationPings: this.props.locationPings + 1,
+    // });
 
     store.emit(EVENTS.UPDATE_STATE, {
-      "quest.geodata": geoData,
+      "quest.geodata": cloneGeoData(geoData),
       "quest.location_pings": this.props.locationPings + 1,
     });
   };
@@ -317,10 +318,11 @@ class Quest extends React.Component {
           <WiredLockscreen setUnlockValue={this.setUnlockValue} />
         )}
         <WiredScoreCard />
+        <SideMenu/>
         <Row>
           <Col xs={12}>
-            {this.props.gameState.hasLocation && (
-              <WiredMap currentLatLong={toLatLong(this.props.geoData)} />
+            {this.props.gameState.has_location && (
+              <WiredMap/>
             )}
           </Col>
         </Row>

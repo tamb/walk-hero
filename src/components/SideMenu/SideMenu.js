@@ -13,7 +13,12 @@ class SideMenu extends React.Component {
   }
 
   render() {
-    return <div className="SideMenu">menu!</div>;
+    return (
+      <React.Fragment>
+        <div className="SideMenu SideMenu--open">menu!</div>
+        <div className="SideMenu__backdrop"></div>
+      </React.Fragment>
+    );
   }
 }
 

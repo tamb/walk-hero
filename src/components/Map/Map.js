@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import "./Map.scss";
 import knight from "@gif/knightherov3.gif";
 import npc from "@gif/npc-help.png";
+import {toLatLong} from "@services/Geo";
 
 // tile layer design:
 // http://maps.stamen.com/#watercolor/12/37.7706/-122.3782
@@ -26,7 +27,7 @@ class Map extends React.Component {
     if (this.props.hasLocation && this.map === null) {
       this.map = window.L.map("map", {
         minZoom: 10,
-      }).setView(this.props.currentLatLong, 17);
+      }).setView(toLatLong(this.props.geoData), 17);
       window.L.tileLayer(
         "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg",
         {
@@ -41,7 +42,7 @@ class Map extends React.Component {
 
     if (this.map) {
       this.moveUserCursor();
-      this.map.panTo(this.props.currentLatLong, { animate: true });
+      this.map.panTo(toLatLong(this.props.geoData), { animate: true });
     }
   }
 
@@ -61,21 +62,21 @@ class Map extends React.Component {
   calculateNPCCoords = () => {
     const addLat = Math.floor(Math.random() * 10) % 2 === 0 ? -0.002 : 0.002;
     const addLng = Math.floor(Math.random() * 10) % 2 === 0 ? -0.002 : 0.002;
-    const npcLat = this.props.currentLatLong[0] + addLat;
-    const npcLng = this.props.currentLatLong[1] + addLng;
+    const npcLat = toLatLong(this.props.geoData)[0] + addLat;
+    const npcLng = toLatLong(this.props.geoData)[1] + addLng;
     return [npcLat, npcLng];
   };
 
   moveUserCursor = () => {
     if (this.userMarker) {
-      this.userMarker.setLatLng(this.props.currentLatLong);
+      this.userMarker.setLatLng(toLatLong(this.props.geoData));
     } else {
       this.myIcon = window.L.icon({
         iconUrl: knight,
         iconSize: [75, 75],
         iconAnchor: [25, 65],
       });
-      this.userMarker = window.L.marker(this.props.currentLatLong, {
+      this.userMarker = window.L.marker(toLatLong(this.props.geoData), {
         draggable: false,
         icon: this.myIcon,
       }).addTo(this.map);
@@ -96,7 +97,6 @@ class Map extends React.Component {
 
 Map.propTypes = {
   geoData: PropTypes.object,
-  currentLatLong: PropTypes.arrayOf(PropTypes.number),
   hasLocation: PropTypes.bool,
   paused: PropTypes.bool,
 };

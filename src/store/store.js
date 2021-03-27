@@ -23,7 +23,7 @@ const quest = {
   current_city: null,
   date_created: null,
   distance_p2p_from_origin_cm: 0,
-  distance_traveled_cm: 0, //todo- do I need this?
+  distance_traveled_cm: 0,
   farthest_geodata_from_origin: null,
   geodata: null,
   journey_time_s: 0,
