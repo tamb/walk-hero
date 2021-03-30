@@ -2,18 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import { version } from "@root/package.json";
 
-import { fire } from "@utils/utils";
-import { CUSTOMEVENTS } from "@utils/enums";
+import store, { EVENTS } from "@store/store";
 
 import VibrateButton from "@components/VibrateButton/VibrateButton";
 
 import "./BottomNav.scss";
 
 function BottomNav(props) {
-  function openData() {
-    fire(CUSTOMEVENTS.DATA_MODAL_TOGGLE);
-  }
-
   return (
     <div className="BottomNav">
       <div>
@@ -35,7 +30,11 @@ function BottomNav(props) {
       <VibrateButton
         disabled={!props.hasLocation}
         className="BottomNav__icon"
-        onClick={openData}
+        onClick={() =>
+          store.emit(EVENTS.UPDATE_STATE, {
+            "ancillaries.side_menu_open": true,
+          })
+        }
       >
         <span className="sr-only">Settings</span>
         ⚙️

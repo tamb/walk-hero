@@ -10,7 +10,8 @@ const hero = {
 };
 
 const game_settings = {
-  vibrations: true,
+  game_vibrations: true,
+  haptic_feedback: true,
   sound_fx: true,
   music: true,
 };
@@ -42,7 +43,7 @@ const play_state = {
   wake_lock_sentinel: null,
 };
 
-const modals = {
+const ancillaries = {
   // todo: NPCModal, BattleModal, GiftModal, NotificationModal -- possible new modal types
   confirm_end_walk_modal_open: false, // quest
   settings_modal_open: false, // quest & minigames
@@ -51,6 +52,7 @@ const modals = {
   pause_modal_open: false, // quest & minigames
   start_modal_open: false, // 4
   warning_modal_open: true, // 1
+  side_menu_open: false,
 };
 
 const store = new substate({
@@ -58,7 +60,7 @@ const store = new substate({
   state: {
     game_settings, // save to IDB
     hero, // save to IDB
-    modals,
+    ancillaries,
     play_state,
     quest, // save to IDB
   },

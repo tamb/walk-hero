@@ -42,6 +42,12 @@ const WiredScoreCard = connect(store, {
   traveled: "quest.total_distance_traveled_cm",
 })(Scorecard);
 
+const WiredSideMenu = connect(store, {
+  vibrationsOn: "game_settings.game_vibrations",
+  hapticOn: "game_settings.haptic_feedback",
+  open: "ancillaries.side_menu_open",
+})(SideMenu);
+
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();
 
@@ -318,7 +324,7 @@ class Quest extends React.Component {
           <WiredLockscreen setUnlockValue={this.setUnlockValue} />
         )}
         <WiredScoreCard />
-        <SideMenu/>
+        <WiredSideMenu/>
         <Row>
           <Col xs={12}>
             {this.props.gameState.has_location && (
