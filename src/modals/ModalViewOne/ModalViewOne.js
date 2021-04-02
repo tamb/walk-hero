@@ -6,19 +6,13 @@ import { VIEWS } from "@utils/enums";
 
 // Modals
 import ConfirmEndWalkModal from "@modals/ConfirmEndWalkModal/ConfirmEndWalkModal";
-import InstructionModal from "@modals/InstructionModal/InstructionModal";
 import PauseModal from "@modals/PauseModal/PauseModal";
-// import SettingsModal from "@modals/SettingsModal/SettingsModal";
 import StartModal from "@modals/StartModal/StartModal";
 import WarningModal from "@modals/WarningModal/WarningModal";
 
 const WiredConfirmEndWalkModal = connect(store, {
   isOpen: "ancillaries.confirm_end_walk_modal_open",
 })(ConfirmEndWalkModal);
-
-const WiredInstructionModal = connect(store, {
-  isOpen: "ancillaries.instructions_modal_open",
-})(InstructionModal);
 
 const WiredPauseModal = connect(store, {
   isOpen: "ancillaries.pause_modal_open",
@@ -42,7 +36,7 @@ const ModalViewOne = () => {
   function acceptWarning() {
     store.emit(EVENTS.UPDATE_STATE, {
       "ancillaries.warning_modal_open": false,
-      "ancillaries.instructions_modal_open": true,
+      "ancillaries.start_modal_open": true,
     });
   }
 
@@ -61,25 +55,11 @@ const ModalViewOne = () => {
     });
   }
 
-  function toggleSettings() {
-    store.emit(EVENTS.UPDATE_STATE, {
-      "ancillaries.settings_modal_open": !store.getProp(
-        "ancillaries.settings_modal_open"
-      ),
-    });
-  }
 
   function endWalk() {
     store.emit(EVENTS.UPDATE_STATE, {
       "ancillaries.pause_modal_open": false,
       "ancillaries.confirm_end_walk_modal_open": true,
-    });
-  }
-
-  function readInstructions() {
-    store.emit(EVENTS.UPDATE_STATE, {
-      "ancillaries.instructions_modal_open": false,
-      "ancillaries.start_modal_open": true,
     });
   }
 
@@ -104,7 +84,6 @@ const ModalViewOne = () => {
         acceptWarning={acceptWarning}
         denyWarning={denyWarning}
       />
-      <WiredInstructionModal toggle={readInstructions} />
       {/* name modal */}
       <WiredStartModal startNewWalk={startNewWalk} />
 

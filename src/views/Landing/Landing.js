@@ -36,7 +36,7 @@ const Landing = (props) => {
             color="primary"
             onClick={props.goMinigames}
           >
-            MINIGAMES
+            DIVERSIONS
           </VibrateButton>
         </Col>
       </Row>

@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { FormGroup, Label, Input } from "reactstrap";
-import {connect} from "substate-connect";
 
 import store from "@store/store";
 
@@ -37,9 +36,5 @@ function Lockscreen(props) {
 Lockscreen.propTypes = {
   unlockValue: PropTypes.number,
 };
-
-const WiredLockScreen = connect(store, {
-  unlockValue: "play_state.unlock_value"
-})(Lockscreen);
 
 export default Lockscreen;

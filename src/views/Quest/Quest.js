@@ -6,7 +6,6 @@ import { connect } from "substate-connect";
 import store, { EVENTS } from "@store/store";
 import { CUSTOMEVENTS } from "@utils/enums";
 import {
-  toLatLong,
   startPoll,
   killPoll,
   getStartingPoint,

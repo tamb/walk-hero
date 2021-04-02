@@ -15,10 +15,6 @@ import VibrateButton from "@components/VibrateButton/VibrateButton";
 import "./SideMenu.scss";
 
 class SideMenu extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   closeMenu = () => {
     store.emit(EVENTS.UPDATE_STATE, { "ancillaries.side_menu_open": false });
   };
@@ -27,7 +23,11 @@ class SideMenu extends React.Component {
     return (
       <React.Fragment>
         <div className={`SideMenu ${this.props.open ? "SideMenu--open" : ""}`}>
-          <VibrateButton onClick={this.closeMenu}>❌</VibrateButton>
+          <Row>
+            <Col>
+              <VibrateButton className="float-right" onClick={this.closeMenu}>❌</VibrateButton>
+            </Col>
+          </Row>
           <Row>
             <Col>
               <VibrateButton onClick={this.props.lockScreen}>
@@ -104,18 +104,35 @@ class SideMenu extends React.Component {
             <Col xs={12}>
               <h2 id="how-to-toggler">How to Play</h2>
             </Col>
-           <UncontrolledCollapse toggler="#how-to-toggler">
-           <Col xs={12}>
-              <ol>
-                <li>Safely walk around</li>
-                <li>Interact with the people and things you find on screen.</li>
-                <li>
-                  Conquer challenges and earn experience to become The Ultimate
-                  Hero!
-                </li>
-              </ol>
-            </Col>
-           </UncontrolledCollapse>
+            <UncontrolledCollapse toggler="#how-to-toggler">
+              <Col xs={12}>
+                <ol>
+                  <li>
+                    Start your <strong>Quest</strong>.
+                  </li>
+                  <li>Safely walk around</li>
+                  <li>
+                    Interact with <strong>Quest Strangers</strong> and&nbsp;
+                    <strong>Quest Items</strong> you find on screen.
+                  </li>
+                  <li>
+                    But be careful. Some Strangers and Items could lead you to
+                    a&nbsp;
+                    <strong>Quest Contest</strong> where you must face off
+                    with&nbsp; your opponent in any number of&nbsp;
+                    <strong>Diversions</strong>.
+                  </li>
+                  <li>
+                    If you triumph, you will be showered in&nbsp;
+                    <strong>Rewards</strong>!
+                  </li>
+                  <li>
+                    Conquer your domain and become{" "}
+                    <strong>The Ultimate Walk Hero!</strong>
+                  </li>
+                </ol>
+              </Col>
+            </UncontrolledCollapse>
           </Row>
 
           <Row>
@@ -123,19 +140,43 @@ class SideMenu extends React.Component {
               <h2 id="about-toggler">About</h2>
             </Col>
             <UncontrolledCollapse toggler="#about-toggler">
-            <Col xs={12}>
-              <ul>
-                <li>
-                  Walk Hero brings retro fun to walking! Get outside and become
-                  The Ultimate Hero.
-                </li>
-                <li>
-                  Walk Hero is a mobile-only game. Walk Hero uses the latest in
-                  internet technology and works best with Chromium-based
-                  browsers like Chrome, Brave, & Edge.
-                </li>
-              </ul>
-            </Col>
+              <Col xs={12}>
+                <ul>
+                  <li>
+                    Walk Hero brings retro fun to walking! Get outside and
+                    become The Ultimate Walk Hero.
+                  </li>
+                  <li>
+                    The Quest gameplay of Walk Hero is mobile-only. Walk Hero
+                    uses the latest in Internet technology and works best with
+                    Chromium-based browsers like{" "}
+                    <a
+                      href="https://www.google.com/chrome/index.html"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Chrome
+                    </a>
+                    ,&nbsp;
+                    <a
+                      href="https://brave.com/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Brave&nbsp;
+                    </a>
+                    , &&nbsp;
+                    <a
+                      href="https://www.microsoft.com/en-us/edge"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Edge
+                    </a>
+                    .
+                  </li>
+                </ul>
+              </Col>
             </UncontrolledCollapse>
           </Row>
         </div>
