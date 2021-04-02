@@ -27,6 +27,9 @@ function BottomNav(props) {
         </span>
         {props.paused ? "\u{1F6B6}" : "\u{23F8}"}
       </VibrateButton>
+      <VibrateButton className="BottomNav__icon" onClick={props.lockScreen}>
+        🔒<span className="sr-only">Lock Screen</span>
+      </VibrateButton>
       <VibrateButton
         disabled={!props.hasLocation}
         className="BottomNav__icon"

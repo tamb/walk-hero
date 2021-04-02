@@ -23,21 +23,20 @@ class SideMenu extends React.Component {
     return (
       <React.Fragment>
         <div className={`SideMenu ${this.props.open ? "SideMenu--open" : ""}`}>
-          <Row>
-            <Col>
-              <VibrateButton className="float-right" onClick={this.closeMenu}>❌</VibrateButton>
+          <Row className="border-bottom mb-4">
+            <Col xs={10}>
+              <h2>Walk Hero</h2>
             </Col>
-          </Row>
-          <Row>
-            <Col>
-              <VibrateButton onClick={this.props.lockScreen}>
-                🔒&nbsp;Lock Screen
+            <Col xs={2}>
+              <VibrateButton className="float-right" onClick={this.closeMenu}>
+                ❌
               </VibrateButton>
             </Col>
           </Row>
-          <Row>
+
+          <Row className="border">
             <Col xs={12}>
-              <h2 id="settings-toggler">Settings </h2>
+              <h3 id="settings-toggler">Settings &gt;</h3>
             </Col>
             <UncontrolledCollapse toggler="#settings-toggler">
               <Col xs={12}>
@@ -100,9 +99,9 @@ class SideMenu extends React.Component {
               </Col>
             </UncontrolledCollapse>
           </Row>
-          <Row>
+          <Row className="border border-top-0">
             <Col xs={12}>
-              <h2 id="how-to-toggler">How to Play</h2>
+              <h3 id="how-to-toggler">How to Play &gt;</h3>
             </Col>
             <UncontrolledCollapse toggler="#how-to-toggler">
               <Col xs={12}>
@@ -127,6 +126,11 @@ class SideMenu extends React.Component {
                     <strong>Rewards</strong>!
                   </li>
                   <li>
+                    If you want to put your phone away, hit the{" "}
+                    <strong>Screen Lock</strong> 🔒 button and Walk Hero will
+                    remain open while conserving battery.
+                  </li>
+                  <li>
                     Conquer your domain and become{" "}
                     <strong>The Ultimate Walk Hero!</strong>
                   </li>
@@ -135,9 +139,9 @@ class SideMenu extends React.Component {
             </UncontrolledCollapse>
           </Row>
 
-          <Row>
+          <Row className="border border-top-0">
             <Col xs={12}>
-              <h2 id="about-toggler">About</h2>
+              <h3 id="about-toggler">About &gt;</h3>
             </Col>
             <UncontrolledCollapse toggler="#about-toggler">
               <Col xs={12}>
@@ -178,6 +182,25 @@ class SideMenu extends React.Component {
                 </ul>
               </Col>
             </UncontrolledCollapse>
+          </Row>
+          <Row className="border border-top-0">
+            <Col xs={12}>
+              <h3 id="feedback-toggler">Support &gt;</h3>
+            </Col>
+            <Col xs={12}>
+              <UncontrolledCollapse toggler="#feedback-toggler">
+                <iframe
+                  src="https://docs.google.com/forms/d/e/1FAIpQLScrMJigK0nkkP3lhL1noojcyG-Yj2ighAzJLKUe5Jv6tuS7Ww/viewform?embedded=true"
+                  width="320"
+                  height="715"
+                  frameBorder="0"
+                  marginHeight="0"
+                  marginWidth="0"
+                >
+                  Loading…
+                </iframe>
+              </UncontrolledCollapse>
+            </Col>
           </Row>
         </div>
         <div className="SideMenu__backdrop" onClick={this.closeMenu}></div>
