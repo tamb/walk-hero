@@ -1,6 +1,5 @@
-import { Component } from "inferno";
-
-import words from "./../data/words.json";
+import React from "react";
+import words from "@data/words.json";
 
 const ALPHABET = {
   A: "A",
@@ -31,7 +30,7 @@ const ALPHABET = {
   Z: "Z",
 };
 
-export default class Hangman extends Component {
+export default class Hangman extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
