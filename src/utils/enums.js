@@ -1,6 +1,4 @@
-export const CUSTOMEVENTS = {
-  DATA_MODAL_TOGGLE: "datamodaltoggle",
-};
+
 
 export const VIEWS = {
   LANDING: "landing",

@@ -64,8 +64,10 @@ const ModalViewOne = () => {
   }
 
   function startNewWalk() {
+    console.log(EVENTS)
     store.emit(EVENTS.UPDATE_STATE, {
       "ancillaries.start_modal_open": false,
+      $type: EVENTS.START_WALK,
     });
   }
 

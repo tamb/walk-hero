@@ -1,0 +1,15 @@
+.Hangman {
+  &__blank-word {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+  }
+
+  &__alphabet {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 2vw;
+    justify-content: space-evenly;
+  }
+}

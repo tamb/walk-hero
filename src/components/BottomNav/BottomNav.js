@@ -8,6 +8,21 @@ import VibrateButton from "@components/VibrateButton/VibrateButton";
 
 import "./BottomNav.scss";
 
+function pause() {
+  store.emit(EVENTS.UPDATE_STATE, {
+    "ancillaries.pause_modal_open": true,
+  });
+}
+
+function requestWakeLock() {
+  store.emit(EVENTS.REQUEST_WAKELOCK);
+}
+
+function openSettings() {
+  store.emit(EVENTS.UPDATE_STATE, {
+    "ancillaries.side_menu_open": true,
+  });
+}
 function BottomNav(props) {
   return (
     <div className="BottomNav">
@@ -20,24 +35,20 @@ function BottomNav(props) {
       <VibrateButton
         disabled={!props.hasLocation}
         className="BottomNav__icon"
-        onClick={props.togglePaused}
+        onClick={pause}
       >
         <span className="sr-only">
           {props.paused ? "Continue" : "Pause Game"}
         </span>
         {props.paused ? "\u{1F6B6}" : "\u{23F8}"}
       </VibrateButton>
-      <VibrateButton className="BottomNav__icon" onClick={props.lockScreen}>
+      <VibrateButton className="BottomNav__icon" onClick={requestWakeLock}>
         🔒<span className="sr-only">Lock Screen</span>
       </VibrateButton>
       <VibrateButton
         disabled={!props.hasLocation}
         className="BottomNav__icon"
-        onClick={() =>
-          store.emit(EVENTS.UPDATE_STATE, {
-            "ancillaries.side_menu_open": true,
-          })
-        }
+        onClick={openSettings}
       >
         <span className="sr-only">Settings</span>
         ⚙️
@@ -49,7 +60,6 @@ function BottomNav(props) {
 BottomNav.propTypes = {
   hasLocation: PropTypes.bool,
   paused: PropTypes.bool,
-  togglePaused: PropTypes.func,
 };
 
 export default BottomNav;

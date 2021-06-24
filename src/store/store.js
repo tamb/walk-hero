@@ -1,12 +1,13 @@
 import substate from "substate";
-import cuid from "cuid";
-
 import { VIEWS } from "@utils/enums";
 
 // Save the following in IDB
 const hero = {
-  id: cuid(), // pk
-  name: null,
+  hero_name: null,
+  hero_type_id: null,
+  skin_hex: null,
+  sex: null,
+  inventory: null, // object
 };
 
 const game_settings = {
@@ -17,19 +18,18 @@ const game_settings = {
 };
 
 const quest = {
-  parent_id: hero.id, // fk
-  id: cuid(), // pk
   active: false,
   cities_visited: [],
   current_city: null,
   date_created: null,
   distance_p2p_from_origin_cm: 0,
   distance_traveled_cm: 0,
-  farthest_geodata_from_origin: null,
-  geodata: null,
+  farthest_geodata_from_origin: null, // object
+  geodata: null, // object
   journey_time_s: 0,
   location_pings: 0,
-  origin_geodata: null,
+  origin_geodata: null, //object
+  origin_city: null, // object
   total_distance_traveled_cm: 0,
 };
 
@@ -41,6 +41,11 @@ const play_state = {
   unlock_value: 0,
   view: VIEWS.LANDING,
   wake_lock_sentinel: null,
+};
+
+const mini_games = {
+  cash: null,
+  resources: null,
 };
 
 const ancillaries = {
@@ -63,6 +68,7 @@ const store = new substate({
     ancillaries,
     play_state,
     quest, // save to IDB
+    mini_games,
   },
 });
 
@@ -121,6 +127,7 @@ export const EVENTS = {
   WRITE_STATE_UPDATED: "WRITE_STATE_UPDATED",
   START_WALK: "START_WALK",
   END_WALK: "END_WALK",
+  REQUEST_WAKELOCK: "REQUEST_WAKELOCK",
 };
 
 export default store;

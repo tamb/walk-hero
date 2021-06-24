@@ -1,0 +1,96 @@
+.spinner-game {
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid red; /* Blue */
+  border-radius: 50%;
+  background-color: blue;
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  animation-name: rotate;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+  animation-duration: 2s;
+
+  &.pause {
+    animation-play-state: paused;
+  }
+
+  &.spin {
+    animation-play-state: running;
+  }
+
+  &.s200 {
+    animation-duration: 2s;
+  }
+
+  &.s150 {
+    animation-duration: 1.5s;
+  }
+  &.s125 {
+    animation-duration: 1.25s;
+  }
+  &.s115 {
+    animation-duration: 1.15s;
+  }
+  &.s95 {
+    animation-duration: 0.95s;
+  }
+  &.s90 {
+    animation-duration: 0.9s;
+  }
+  &.s85 {
+    animation-duration: 0.85s;
+  }
+  &.s75 {
+    animation-duration: 0.75s;
+  }
+  &.s70 {
+    animation-duration: 0.7s;
+  }
+  &.s65 {
+    animation-duration: 0.65s;
+  }
+  &.s60 {
+    animation-duration: 0.6s;
+  }
+  &.s55 {
+    animation-duration: 0.55s;
+  }
+
+  &:active {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+    border: 18px solid #f3f3f3; /* Light grey */
+    border-top: 18px solid red;
+  }
+
+  &:active div {
+    color: white;
+    font-size: 34px;
+    height: 38px;
+    width: 38px;
+    line-height: 1;
+  }
+  &:focus {
+    outline: 0;
+  }
+  div {
+    color: white;
+    font-size: 38px;
+    height: 38px;
+    width: 38px;
+    line-height: 1;
+  }
+}

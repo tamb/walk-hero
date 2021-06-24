@@ -7,10 +7,12 @@ import store, { EVENTS } from "@store/store";
 import { VIEWS } from "@utils/enums";
 import FullPageSpinner from "@components/FullPageSpinner/FullPageSpinner";
 import Landing from "@views/Landing/Landing";
+import SliderPrecision from "@minigames/SliderPrecision/SliderPrecision";
 
 const Quest = React.lazy(() => import("@views/Quest/Quest"));
 
 console.log(store);
+window.store = store;
 class App extends React.Component {
   // VIEW switching
   goQuest = () => {
@@ -31,6 +33,7 @@ class App extends React.Component {
   render() {
     return (
       <Container fluid>
+        <SliderPrecision />
         {this.props.play_state.view === VIEWS.QUEST && (
           <React.Suspense fallback={<FullPageSpinner />}>
             <Quest
@@ -68,6 +71,7 @@ export default Provide(
     EVENTS.WRITE_STATE_UPDATED,
     EVENTS.PAUSED,
     EVENTS.UNPAUSED,
+    EVENTS.START_WALK,
   ],
   function () {
     console.log("I mounted", this, store.getCurrentState());
