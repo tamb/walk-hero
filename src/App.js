@@ -7,9 +7,9 @@ import store, { EVENTS } from "@store/store";
 import { VIEWS } from "@utils/enums";
 import FullPageSpinner from "@components/FullPageSpinner/FullPageSpinner";
 import Landing from "@views/Landing/Landing";
-import Hangman from "@minigames/Hangman/Hangman";
 
 const Quest = React.lazy(() => import("@views/Quest/Quest"));
+const MiniGames = React.lazy(() => import("@views/MiniGames/MiniGames"));
 
 console.log(store);
 window.store = store;
@@ -33,7 +33,6 @@ class App extends React.Component {
   render() {
     return (
       <Container fluid>
-        <Hangman />
         {this.props.play_state.view === VIEWS.QUEST && (
           <React.Suspense fallback={<FullPageSpinner />}>
             <Quest
@@ -41,6 +40,11 @@ class App extends React.Component {
                 goLanding: this.goLanding,
               }}
             />
+          </React.Suspense>
+        )}
+        {this.props.play_state.view === VIEWS.MINIGAMES && (
+          <React.Suspense fallback={<FullPageSpinner />}>
+            <MiniGames />
           </React.Suspense>
         )}
         {this.props.play_state.view === VIEWS.LANDING && (

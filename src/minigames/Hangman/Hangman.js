@@ -66,10 +66,10 @@ export default class Hangman extends React.Component {
     let numberOfDashes = this.state.numberOfDashes;
     const word = _word.split("").map((letter, i) => {
       if (this.state.foundLetters[letter]) {
-        return <span>{letter}&nbsp;</span>;
+        return <span key={i}>{letter}&nbsp;</span>;
       } else {
         numberOfDashes = ++i;
-        return <span>_&nbsp;</span>;
+        return <span key={i}>_&nbsp;</span>;
       }
     });
     if (!numberOfDashes === this.state.numberOfDashes) {

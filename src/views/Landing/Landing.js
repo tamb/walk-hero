@@ -8,6 +8,8 @@ import { version } from "@root/package.json";
 
 import "./Landing.scss";
 
+const noMiniGames = false;
+
 const Landing = (props) => {
   return (
     <div className="Landing">
@@ -32,7 +34,7 @@ const Landing = (props) => {
         <Col>
           <VibrateButton
             block
-            disabled={true}
+            disabled={noMiniGames}
             color="primary"
             onClick={props.goMinigames}
           >

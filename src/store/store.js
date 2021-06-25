@@ -46,6 +46,7 @@ const play_state = {
 const mini_games = {
   cash: null,
   resources: null,
+  lives: 100,
 };
 
 const ancillaries = {
