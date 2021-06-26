@@ -44,8 +44,8 @@ const play_state = {
 };
 
 const mini_games = {
-  cash: null,
-  resources: null,
+  cash: 0,
+  resources: 0,
   lives: 100,
 };
 

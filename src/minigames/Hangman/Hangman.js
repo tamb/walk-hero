@@ -1,6 +1,10 @@
 import React from "react";
 import words from "@data/words.json";
 
+import "./Hangman.scss";
+
+// FIXME: Determine when game is won or lost. Consider map for letters and amount of letters);
+
 const ALPHABET = {
   A: "A",
   B: "B",
@@ -49,53 +53,49 @@ export default class Hangman extends React.Component {
       5: "🤢",
       6: "🤮",
       7: "☠️",
-      8: "⚰️",
-      9: "🧟‍",
     };
-  }
-
-  componentDidMount() {
-    this.setState({ numberOfDashes: this.state.word.length });
   }
 
   randomWord = () => {
     return words.words[Math.floor(Math.random() * words.words.length)];
   };
 
-  makeBlanks = (_word) => {
-    let numberOfDashes = this.state.numberOfDashes;
-    const word = _word.split("").map((letter, i) => {
-      if (this.state.foundLetters[letter]) {
-        return <span key={i}>{letter}&nbsp;</span>;
-      } else {
-        numberOfDashes = ++i;
-        return <span key={i}>_&nbsp;</span>;
-      }
+  makeBlanks = () => {
+    return new Array(this.state.word.length).fill().map((item, index) => {
+      return (
+        <span key={index}>
+          {this.state.foundLetters[this.state.word[index]]
+            ? this.state.word[index]
+            : "_"}
+          &nbsp;
+        </span>
+      );
     });
-    if (!numberOfDashes === this.state.numberOfDashes) {
-      this.setState({ numberOfDashes });
-    }
-    return word;
   };
 
   notTheLetter = (_letter) => {
-    const newGL = Object.assign({}, this.state.guessedLetters);
-    newGL[_letter] = _letter;
-    this.setState({ guessedLetters: newGL }, this.checkGameStatus);
+    const newGuessedLetter = Object.assign({}, this.state.guessedLetters);
+    newGuessedLetter[_letter] = _letter;
+    this.setState({ guessedLetters: newGuessedLetter }, this.checkGameStatus);
   };
 
   thisIsTheLetter = (_letter) => {
-    const newFL = Object.assign({}, this.state.foundLetters);
-    newFL[_letter] = _letter;
-    this.setState({ foundLetters: newFL }, this.checkGameStatus);
+    const newFoundLetter = Object.assign({}, this.state.foundLetters);
+    newFoundLetter[_letter] = _letter;
+    this.setState({ foundLetters: newFoundLetter }, this.checkGameStatus);
   };
 
   checkGameStatus = () => {
     if (
-      Object.keys(this.state.guessedLetters).length === Object.keys(this.emojis)
+      Object.keys(this.state.guessedLetters).length ===
+      Object.keys(this.emojis).length
     ) {
       this.setState({ gameStatus: "lost" });
-    } else if (this.state.numberOfDashes === 0) {
+    } else if (
+      this.state.word
+        .split("")
+        .every((letter) => this.state.foundLetters[letter])
+    ) {
       this.setState({ gameStatus: "won" });
     }
   };
@@ -136,18 +136,19 @@ export default class Hangman extends React.Component {
     });
   };
 
-  render = () => {
+  render() {
     return (
       <div>
         <div className="Hangman__blank-word">
-          <div>{this.makeBlanks(this.state.word)}</div>
+          <div>{this.makeBlanks()}</div>
         </div>
         <div className="Hangman__alphabet">{this.makeAlphabet()}</div>
-        <div>
+        <div className="Hangman__guessed-letters">
           <p>Guessed Letters:</p>
           {this.showGuessedLetters()}
         </div>
+        <div className="Hangman__status">{this.state.gameStatus}</div>
       </div>
     );
-  };
+  }
 }

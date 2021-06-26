@@ -9,7 +9,10 @@
   &__alphabet {
     display: flex;
     flex-wrap: wrap;
-    padding: 2vw;
-    justify-content: space-evenly;
+    justify-content: center;
+
+    button{
+      font-size: 1.6rem;
+    }
   }
 }
