@@ -1,0 +1,41 @@
+$goal_color: lightgreen;
+
+.SliderPrecision {
+  &__range {
+    height: 20px;
+    width: 100%;
+    border: 1px solid;
+    position: relative;
+    background-color: white;
+    &::after {
+      content: "";
+      height: 40px;
+      padding: 4px;
+      background: $goal_color;
+      position: absolute;
+      left: calc(44% - 8px);
+      top: -50%;
+      z-index: 10;
+    }
+    &::before {
+      content: "";
+      height: 40px;
+      padding: 4px;
+      background: $goal_color;
+      position: absolute;
+      left: calc(56% - 8px);
+      top: -50%;
+      z-index: 10;
+    }
+  }
+
+  &__pointer {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background-color: red;
+    position: absolute;
+    border: 1px solid;
+    z-index: 12;
+  }
+}

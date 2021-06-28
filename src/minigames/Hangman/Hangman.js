@@ -1,9 +1,8 @@
 import React from "react";
 import words from "@data/words.json";
+import store from "@store/store";
 
 import "./Hangman.scss";
-
-// FIXME: Determine when game is won or lost. Consider map for letters and amount of letters);
 
 const ALPHABET = {
   A: "A",
@@ -47,12 +46,10 @@ export default class Hangman extends React.Component {
     this.emojis = {
       0: "😐",
       1: "😒",
-      2: "😢",
-      3: "😭",
-      4: "😵",
-      5: "🤢",
-      6: "🤮",
-      7: "☠️",
+      2: "😭",
+      3: "🤢",
+      4: "🤮",
+      5: "☠️",
     };
   }
 
@@ -90,13 +87,24 @@ export default class Hangman extends React.Component {
       Object.keys(this.state.guessedLetters).length ===
       Object.keys(this.emojis).length
     ) {
-      this.setState({ gameStatus: "lost" });
+      this.setState({ gameStatus: "lost" }, () => {
+        store.emit("UPDATE_STATE", {
+          "mini_games.cash": store.getProp("mini_games.cash") - 2,
+          "mini_games.resources": store.getProp("mini_games.resources") - 1,
+          "mini_games.lives": store.getProp("mini_games.lives") - 1,
+        });
+      });
     } else if (
       this.state.word
         .split("")
         .every((letter) => this.state.foundLetters[letter])
     ) {
-      this.setState({ gameStatus: "won" });
+      this.setState({ gameStatus: "won" }, () => {
+        store.emit("UPDATE_STATE", {
+          "mini_games.cash": store.getProp("mini_games.cash") + 3,
+          "mini_games.resources": store.getProp("mini_games.resources") + 1,
+        });
+      });
     }
   };
 

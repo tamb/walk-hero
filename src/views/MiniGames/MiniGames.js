@@ -4,6 +4,9 @@ import { connect } from "substate-connect";
 import store from "@store/store";
 
 const Hangman = React.lazy(() => import("@minigames/Hangman/Hangman"));
+const SliderPrecision = React.lazy(() =>
+  import("@minigames/SliderPrecision/SliderPrecision")
+);
 class MiniGames extends React.Component {
   state = {
     currentGame: null,
@@ -14,11 +17,20 @@ class MiniGames extends React.Component {
     });
   };
 
+  getSliderPrecision = () => {
+    this.setState({
+      currentGame: "sliderprecision",
+    });
+  };
+
   renderList = () => {
     return (
       <ul>
         <li>
           <button onClick={this.getHangman}>hangman</button>
+        </li>
+        <li>
+          <button onClick={this.getSliderPrecision}>slider precision</button>
         </li>
       </ul>
     );
@@ -36,6 +48,11 @@ class MiniGames extends React.Component {
         {this.state.currentGame === "hangman" && (
           <React.Suspense fallback={this.renderList()}>
             <Hangman />
+          </React.Suspense>
+        )}
+        {this.state.currentGame === "sliderprecision" && (
+          <React.Suspense fallback={this.renderList()}>
+            <SliderPrecision />
           </React.Suspense>
         )}
       </React.Fragment>
