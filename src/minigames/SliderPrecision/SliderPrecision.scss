@@ -7,26 +7,26 @@ $goal_color: lightgreen;
     border: 1px solid;
     position: relative;
     background-color: white;
-    &::after {
-      content: "";
-      height: 40px;
-      padding: 4px;
-      background: $goal_color;
-      position: absolute;
-      left: calc(44% - 8px);
-      top: -50%;
-      z-index: 10;
-    }
-    &::before {
-      content: "";
-      height: 40px;
-      padding: 4px;
-      background: $goal_color;
-      position: absolute;
-      left: calc(56% - 8px);
-      top: -50%;
-      z-index: 10;
-    }
+    border-radius: 15px;
+  }
+
+  &__final-post {
+    height: 40px;
+    width: 8px;
+    background: $goal_color;
+    position: absolute;
+    top: -50%;
+    z-index: 10;
+  }
+
+  &__first-post {
+    height: 40px;
+    width: 8px;
+    background: $goal_color;
+    position: absolute;
+    left: calc(56% - 8px);
+    top: -50%;
+    z-index: 10;
   }
 
   &__pointer {

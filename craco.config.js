@@ -1,5 +1,4 @@
 const path = require("path");
-const ESLintClearPlugin = require("./custom-plugins/ESLintClearPlugin");
 module.exports = {
   webpack: {
     alias: {
@@ -15,6 +14,5 @@ module.exports = {
       "@views": path.resolve(__dirname, "src/views/"),
       "@workers": path.resolve(__dirname, "src/workers/"),
     },
-    plugins: [new ESLintClearPlugin()]
   },
 };

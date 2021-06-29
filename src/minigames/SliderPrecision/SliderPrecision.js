@@ -1,4 +1,5 @@
 import React from "react";
+import randomInteger from "random-int";
 
 import "./SliderPrecision.scss";
 class SliderPrecision extends React.Component {
@@ -11,18 +12,29 @@ class SliderPrecision extends React.Component {
 
     // this.slider = React.createRef();
     this.pointer = React.createRef();
+    this.firstPost = React.createRef();
+    this.finalPost = React.createRef();
     this.interval = null;
-    this.lastEnd = 1;
+    this.direction = "+";
     this.pointerValue = 0;
+    this.firstPostInteger = null;
   }
 
   componentDidMount() {
-    this.state.sliding ? this.startInterval() : null;
-    const x = null;
-    // if (this.state.sliding) {
-    //   this.startInterval();
-    // }
+    this.generateGoals();
+
+    if (this.state.sliding) {
+      this.startInterval();
+    }
   }
+
+  generateGoals = () => {
+    this.firstPostInteger = randomInteger(0, 90);
+    this.firstPost.current.style.left = `calc(${this.firstPostInteger}% - 8px)`;
+    this.finalPost.current.style.left = `calc(${
+      this.firstPostInteger + 10
+    }% - 8px)`;
+  };
 
   handleClick = () => {
     this.setState(
@@ -42,22 +54,21 @@ class SliderPrecision extends React.Component {
   stopInterval = () => {
     clearInterval(this.interval);
     this.interval = null;
+    console.log(this);
+    this.setState({
+      won:
+        this.pointerValue >= this.firstPostInteger &&
+        this.pointerValue <= this.firstPostInteger + 10,
+    });
   };
 
   startInterval = () => {
     this.interval = setInterval(() => {
-      if (this.pointerValue >= 50) {
-        this.lastEnd = -1;
+      if (this.direction === "+") {
+        this.pointer.current.style.left = `${++this.pointerValue}%`;
       }
-      if (this.pointerValue <= 0) {
-        this.lastEnd = 1;
-      }
-      if (this.lastEnd > 0) {
-        this.pointer.current.style.left = `calc(${2 * this.pointerValue++}%)`;
-      } else {
-        this.pointer.current.style.left = `calc(${
-          2 * this.pointerValue--
-        }% - 20px)`;
+      if (this.direction === "-") {
+        this.pointer.current.style.left = `${--this.pointerValue}%`;
       }
     }, 1);
   };
@@ -67,11 +78,23 @@ class SliderPrecision extends React.Component {
       <div>
         <div className="SliderPrecision__range">
           <div className="SliderPrecision__pointer" ref={this.pointer}></div>
+          <div
+            className="SliderPrecision__first-post"
+            ref={this.firstPost}
+          ></div>
+          <div
+            className="SliderPrecision__final-post"
+            ref={this.finalPost}
+          ></div>
         </div>
 
         <button type="button" onClick={this.handleClick}>
           {this.state.sliding ? "Stop" : "Start"}
         </button>
+        <button type="button" onClick={this.generateGoals}>
+          New Posts
+        </button>
+        <div>{this.state.won ? "You won" : ""}</div>
       </div>
     );
   }
