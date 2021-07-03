@@ -196,6 +196,7 @@ class SideMenu extends React.Component {
                   frameBorder="0"
                   marginHeight="0"
                   marginWidth="0"
+                  title="feedback"
                 >
                   Loading…
                 </iframe>

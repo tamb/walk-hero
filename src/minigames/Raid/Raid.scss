@@ -1,0 +1,31 @@
+.Raid {
+  &__btn-row {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid;
+
+    button {
+      flex: 1;
+      font-size: 3rem;
+    }
+  }
+
+  &__chaos {
+    flex: 1;
+    display: flex;
+    animation: popup 2s ease-in-out infinite;
+  }
+}
+
+@keyframes popup {
+  0% {
+    transform: translateY(100%);
+  }
+  30% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}

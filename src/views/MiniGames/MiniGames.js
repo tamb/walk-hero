@@ -7,19 +7,17 @@ const Hangman = React.lazy(() => import("@minigames/Hangman/Hangman"));
 const SliderPrecision = React.lazy(() =>
   import("@minigames/SliderPrecision/SliderPrecision")
 );
+const RadarGame = React.lazy(() => import("@minigames/RadarGame/RadarGame"));
+const Raid = React.lazy(() => import("@minigames/Raid/Raid"));
+
 class MiniGames extends React.Component {
   state = {
     currentGame: null,
   };
-  getHangman = () => {
-    this.setState({
-      currentGame: "hangman",
-    });
-  };
 
-  getSliderPrecision = () => {
+  getMiniGame = (event) => {
     this.setState({
-      currentGame: "sliderprecision",
+      currentGame: event.target.getAttribute("data-minigame-type"),
     });
   };
 
@@ -27,10 +25,27 @@ class MiniGames extends React.Component {
     return (
       <ul>
         <li>
-          <button onClick={this.getHangman}>hangman</button>
+          <button onClick={this.getMiniGame} data-minigame-type="hangman">
+            hangman
+          </button>
         </li>
         <li>
-          <button onClick={this.getSliderPrecision}>slider precision</button>
+          <button
+            onClick={this.getMiniGame}
+            data-minigame-type="sliderprecision"
+          >
+            slider precision
+          </button>
+        </li>
+        <li>
+          <button onClick={this.getMiniGame} data-minigame-type="radargame">
+            Radar Game
+          </button>
+        </li>
+        <li>
+          <button onClick={this.getMiniGame} data-minigame-type="raid">
+            Raid
+          </button>
         </li>
       </ul>
     );
@@ -50,9 +65,19 @@ class MiniGames extends React.Component {
             <Hangman />
           </React.Suspense>
         )}
+        {this.state.currentGame === "raid" && (
+          <React.Suspense fallback={this.renderList()}>
+            <Raid />
+          </React.Suspense>
+        )}
         {this.state.currentGame === "sliderprecision" && (
           <React.Suspense fallback={this.renderList()}>
             <SliderPrecision />
+          </React.Suspense>
+        )}
+        {this.state.currentGame === "radargame" && (
+          <React.Suspense fallback={this.renderList()}>
+            <RadarGame />
           </React.Suspense>
         )}
       </React.Fragment>

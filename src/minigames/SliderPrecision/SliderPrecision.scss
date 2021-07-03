@@ -1,8 +1,9 @@
 $goal_color: lightgreen;
+$range-height: 20px;
 
 .SliderPrecision {
   &__range {
-    height: 20px;
+    height: $range-height;
     width: 100%;
     border: 1px solid;
     position: relative;
@@ -10,32 +11,37 @@ $goal_color: lightgreen;
     border-radius: 15px;
   }
 
-  &__final-post {
-    height: 40px;
-    width: 8px;
-    background: $goal_color;
+  &__goal {
+    height: $range-height * 2;
+    width: 15%;
+    background-color: transparent;
+    border: 4px solid $goal_color;
     position: absolute;
-    top: -50%;
-    z-index: 10;
-  }
-
-  &__first-post {
-    height: 40px;
-    width: 8px;
-    background: $goal_color;
-    position: absolute;
-    left: calc(56% - 8px);
     top: -50%;
     z-index: 10;
   }
 
   &__pointer {
-    height: 20px;
-    width: 20px;
+    height: $range-height;
+    width: $range-height;
     border-radius: 50%;
     background-color: red;
     position: absolute;
     border: 1px solid;
     z-index: 12;
+
+    &.perfect {
+      animation: 0.3s flash-success;
+      animation-iteration-count: 3;
+    }
+  }
+}
+
+@keyframes flash-success {
+  from {
+    background-color: red;
+  }
+  to {
+    background-color: blue;
   }
 }
