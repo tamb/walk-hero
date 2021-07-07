@@ -1,7 +1,9 @@
 import React from "react";
+
 import words from "@data/words.json";
 import store from "@store/store";
 
+import HangmanDirectionsModal from "./HangmanDirectionsModal";
 import "./Hangman.scss";
 
 const ALPHABET = {
@@ -33,90 +35,80 @@ const ALPHABET = {
   Z: "Z",
 };
 
-export default class Hangman extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      word: this.randomWord(),
-      gameStatus: "playing",
-      guessedLetters: {},
-      foundLetters: {},
-    };
+const GAMESTATUS = {
+  starting: 0,
+  playing: 1,
+  won: 2,
+  lost: 3,
+};
 
-    this.emojis = {
-      0: "😐",
-      1: "😒",
-      2: "😭",
-      3: "🤢",
-      4: "🤮",
-      5: "☠️",
-    };
+const EMOJIES = {
+  0: "😐",
+  1: "😒",
+  2: "😭",
+  3: "🤢",
+  4: "🤮",
+  5: "☠️",
+};
+function Hangman() {
+  const [word] = React.useState(randomWord());
+  const [gameStatus, setGameStatus] = React.useState(GAMESTATUS.starting);
+  const [guessedLetters, setGuessedLetters] = React.useState({});
+  const [foundLetters, setFoundLetters] = React.useState({});
+
+  React.useEffect(checkGameStatus, [guessedLetters, foundLetters, word]);
+
+  function randomWord() {
+    return words.words[Math.floor(Math.random() * words.words.length)];
   }
 
-  randomWord = () => {
-    return words.words[Math.floor(Math.random() * words.words.length)];
-  };
-
-  makeBlanks = () => {
-    return new Array(this.state.word.length).fill().map((item, index) => {
+  function makeBlanks() {
+    return new Array(word.length).fill().map((item, index) => {
       return (
         <span key={index}>
-          {this.state.foundLetters[this.state.word[index]]
-            ? this.state.word[index]
-            : "_"}
+          {foundLetters[word[index]] ? word[index] : "_"}
           &nbsp;
         </span>
       );
     });
-  };
+  }
 
-  notTheLetter = (_letter) => {
-    const newGuessedLetter = Object.assign({}, this.state.guessedLetters);
+  function notTheLetter(_letter) {
+    const newGuessedLetter = Object.assign({}, guessedLetters);
     newGuessedLetter[_letter] = _letter;
-    this.setState({ guessedLetters: newGuessedLetter }, this.checkGameStatus);
-  };
+    setGuessedLetters(newGuessedLetter);
+  }
 
-  thisIsTheLetter = (_letter) => {
-    const newFoundLetter = Object.assign({}, this.state.foundLetters);
+  function thisIsTheLetter(_letter) {
+    const newFoundLetter = Object.assign({}, foundLetters);
     newFoundLetter[_letter] = _letter;
-    this.setState({ foundLetters: newFoundLetter }, this.checkGameStatus);
-  };
+    setFoundLetters(newFoundLetter);
+  }
 
-  checkGameStatus = () => {
-    if (
-      Object.keys(this.state.guessedLetters).length ===
-      Object.keys(this.emojis).length
-    ) {
-      this.setState({ gameStatus: "lost" }, () => {
-        store.emit("UPDATE_STATE", {
-          "mini_games.cash": store.getProp("mini_games.cash") - 2,
-          "mini_games.resources": store.getProp("mini_games.resources") - 1,
-          "mini_games.lives": store.getProp("mini_games.lives") - 1,
-        });
+  function checkGameStatus() {
+    if (Object.keys(guessedLetters).length === Object.keys(EMOJIES).length) {
+      setGameStatus(GAMESTATUS.lost);
+      store.emit("UPDATE_STATE", {
+        "mini_games.cash": store.getProp("mini_games.cash") - 2,
+        "mini_games.resources": store.getProp("mini_games.resources") - 1,
+        "mini_games.lives": store.getProp("mini_games.lives") - 1,
       });
-    } else if (
-      this.state.word
-        .split("")
-        .every((letter) => this.state.foundLetters[letter])
-    ) {
-      this.setState({ gameStatus: "won" }, () => {
-        store.emit("UPDATE_STATE", {
-          "mini_games.cash": store.getProp("mini_games.cash") + 3,
-          "mini_games.resources": store.getProp("mini_games.resources") + 1,
-        });
+    } else if (word.split("").every((letter) => foundLetters[letter])) {
+      setGameStatus(GAMESTATUS.won);
+      store.emit("UPDATE_STATE", {
+        "mini_games.cash": store.getProp("mini_games.cash") + 3,
+        "mini_games.resources": store.getProp("mini_games.resources") + 1,
       });
     }
-  };
+  }
 
-  checkIfLetterIsInWord = (_letter) => {
-    const bool = this.state.word.indexOf(_letter) > -1;
-    console.log(`${_letter} is${bool ? "" : " not"} in ${this.state.word}`);
-    bool ? this.thisIsTheLetter(_letter) : this.notTheLetter(_letter);
-  };
+  function checkIfLetterIsInWord(_letter) {
+    const bool = word.indexOf(_letter) > -1;
+    console.log(`${_letter} is${bool ? "" : " not"} in ${word}`);
+    bool ? thisIsTheLetter(_letter) : notTheLetter(_letter);
+  }
 
-  makeAlphabet = () => {
-    const { guessedLetters, foundLetters } = this.state;
-
+  function makeAlphabet() {
     return Object.keys(ALPHABET).map((letter) => {
       const disabled =
         guessedLetters[letter] || foundLetters[letter] ? "disabled" : false;
@@ -125,38 +117,55 @@ export default class Hangman extends React.Component {
         <button
           key={letter}
           disabled={disabled}
-          onClick={() => this.checkIfLetterIsInWord(letter)}
+          onClick={() => checkIfLetterIsInWord(letter)}
         >
           {letter}
         </button>
       );
     });
-  };
+  }
 
-  showGuessedLetters = () => {
-    return Object.keys(this.state.guessedLetters).map((letter, index) => {
+  function showGuessedLetters() {
+    return Object.keys(guessedLetters).map((letter, index) => {
       return (
         <div>
           <span>{letter}&nbsp;</span>
-          <span>{this.emojis[index]}</span>
+          <span>{EMOJIES[index]}</span>
         </div>
       );
     });
-  };
-
-  render() {
-    return (
-      <div>
-        <div className="Hangman__blank-word">
-          <div>{this.makeBlanks()}</div>
-        </div>
-        <div className="Hangman__alphabet">{this.makeAlphabet()}</div>
-        <div className="Hangman__guessed-letters">
-          <p>Guessed Letters:</p>
-          {this.showGuessedLetters()}
-        </div>
-        <div className="Hangman__status">{this.state.gameStatus}</div>
-      </div>
-    );
   }
+
+  function startGame() {
+    setGameStatus(GAMESTATUS.playing);
+  }
+
+  return (
+    <div className="Hangman">
+      {(gameStatus === GAMESTATUS.playing || gameStatus === GAMESTATUS.won) && (
+        <div className="Hangman__blank-word">
+          <div>{makeBlanks()}</div>
+        </div>
+      )}
+      {gameStatus === GAMESTATUS.playing && (
+        <React.Fragment>
+          <div className="Hangman__alphabet">{makeAlphabet()}</div>
+          <div className="Hangman__guessed-letters">
+            <p>Guessed Letters:</p>
+            {showGuessedLetters()}
+          </div>
+          <div className="Hangman__status">{gameStatus}</div>
+        </React.Fragment>
+      )}
+      {gameStatus === GAMESTATUS.lost && <h2>You have died ☠️</h2>}
+      {gameStatus === GAMESTATUS.starting && (
+        <HangmanDirectionsModal
+          isOpen={gameStatus === GAMESTATUS.starting}
+          handleOk={startGame}
+        />
+      )}
+    </div>
+  );
 }
+
+export default Hangman;
