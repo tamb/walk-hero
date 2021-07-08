@@ -1,6 +1,12 @@
 import React from "react";
 
+import SliderPrecisionDirectionsModal from "./SliderPrecisionDirectionsModal";
 import "./SliderPrecision.scss";
+
+const PRISONER = {
+  FREE: "😈",
+  IMPRISONED: "👿",
+};
 class SliderPrecision extends React.Component {
   constructor(props) {
     super(props);
@@ -16,6 +22,8 @@ class SliderPrecision extends React.Component {
       pointerMiddle: 0,
       perfect: false,
       accuracy: 0,
+      won: false,
+      showDirections: true,
     };
 
     this.range = React.createRef();
@@ -41,6 +49,7 @@ class SliderPrecision extends React.Component {
 
   startSlide = () => {
     console.log(this);
+    this.setState({ showDirections: false });
     requestAnimationFrame(this.startPointerInterval);
     requestAnimationFrame(this.startGoalInterval);
   };
@@ -53,15 +62,9 @@ class SliderPrecision extends React.Component {
   handleClick = () => {
     this.setState(
       {
-        sliding: !this.state.sliding,
+        sliding: false,
       },
-      () => {
-        if (this.state.sliding) {
-          this.startSlide();
-        } else {
-          this.stopSlide();
-        }
-      }
+      this.stopSlide
     );
   };
 
@@ -162,12 +165,17 @@ class SliderPrecision extends React.Component {
               this.state.perfect ? "perfect" : ""
             }`}
             ref={this.pointer}
+          >
+            {this.state.won ? PRISONER.IMPRISONED : PRISONER.FREE}
+          </div>
+          <div
+            className={`SliderPrecision__goal ${this.state.won ? "won" : ""}`}
+            ref={this.goal}
           ></div>
-          <div className="SliderPrecision__goal" ref={this.goal}></div>
         </div>
 
         <button type="button" onClick={this.handleClick}>
-          {this.state.sliding ? "Stop" : "Start"}
+          Stop!
         </button>
         <div>{this.state.won ? "You won" : "You lost"}</div>
         <div>
@@ -184,6 +192,10 @@ class SliderPrecision extends React.Component {
           <p>Accuracy ={this.state.accuracy}%</p>
           <p>{this.state.perfect ? "PERFECT!" : ""}</p>
         </div>
+        <SliderPrecisionDirectionsModal
+          isOpen={this.state.showDirections}
+          handleOk={this.startSlide}
+        />
       </div>
     );
   }

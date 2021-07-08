@@ -1,4 +1,4 @@
-$goal_color: lightgreen;
+$goal_color: gray;
 $range-height: 20px;
 
 .SliderPrecision {
@@ -9,6 +9,7 @@ $range-height: 20px;
     position: relative;
     background-color: white;
     border-radius: 15px;
+    margin-bottom: 5rem;
   }
 
   &__goal {
@@ -19,20 +20,67 @@ $range-height: 20px;
     position: absolute;
     top: -50%;
     z-index: 10;
+    &::before,
+    &::after {
+      content: "";
+      background-color: $goal_color;
+      height: 100%;
+      display: block;
+      width: 4px;
+      position: absolute;
+    }
+
+    &::after {
+      left: calc(50% + 8px);
+    }
+    &:before {
+      left: calc(50% - 12px);
+    }
+
+    &.won {
+      z-index: 15;
+      opacity: 0.6;
+    }
   }
 
   &__pointer {
     height: $range-height;
     width: $range-height;
     border-radius: 50%;
-    background-color: red;
     position: absolute;
     border: 1px solid;
     z-index: 12;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &.perfect {
       animation: 0.3s flash-success;
       animation-iteration-count: 3;
+    }
+  }
+
+  &__goal-icon {
+    position: relative;
+    height: $range-height * 2;
+    width: 15%;
+    background-color: transparent;
+    border: 4px solid $goal_color;
+    z-index: 10;
+    &::before,
+    &::after {
+      content: "";
+      background-color: $goal_color;
+      height: 100%;
+      display: block;
+      width: 4px;
+      position: absolute;
+    }
+    &::after {
+      left: calc(50% + 8px);
+    }
+    &:before {
+      left: calc(50% - 12px);
     }
   }
 }

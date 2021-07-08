@@ -1,4 +1,7 @@
 .Hangman {
+  &__mage {
+    font-size: 2rem;
+  }
   &__blank-word {
     display: flex;
     justify-content: center;
@@ -11,9 +14,9 @@
     flex-wrap: wrap;
     justify-content: center;
 
-    button{
+    button {
       font-size: 1.6rem;
-      margin: .2rem;
+      margin: 0.2rem;
     }
   }
 }
