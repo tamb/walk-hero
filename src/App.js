@@ -2,27 +2,22 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Container } from "reactstrap";
 import { Provide, connect } from "substate-connect/dist/react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import store, { EVENTS } from "@store/store";
 import { VIEWS } from "@utils/enums";
 import FullPageSpinner from "@components/FullPageSpinner/FullPageSpinner";
 import Landing from "@views/Landing/Landing";
 
+import "./App.css";
+
 const Quest = React.lazy(() => import("@views/Quest/Quest"));
 const MiniGames = React.lazy(() => import("@views/MiniGames/MiniGames"));
+
 
 console.log(store);
 window.store = store;
 class App extends React.Component {
-  // VIEW switching
-  goQuest = () => {
-    store.emit(EVENTS.UPDATE_STATE, { "play_state.view": VIEWS.QUEST });
-  };
-
-  goMinigames = () => {
-    store.emit(EVENTS.UPDATE_STATE, { "play_state.view": VIEWS.MINIGAMES });
-  };
-
   goLanding = () => {
     store.emit(EVENTS.UPDATE_STATE, { "play_state.view": VIEWS.LANDING });
   };
@@ -32,29 +27,29 @@ class App extends React.Component {
   // Render Methods
   render() {
     return (
-      <Container fluid>
-        {this.props.play_state.view === VIEWS.QUEST && (
-          <React.Suspense fallback={<FullPageSpinner />}>
-            <Quest
-              appMethods={{
-                goLanding: this.goLanding,
-              }}
-            />
-          </React.Suspense>
-        )}
-        {this.props.play_state.view === VIEWS.MINIGAMES && (
-          <React.Suspense fallback={<FullPageSpinner />}>
-            <MiniGames />
-          </React.Suspense>
-        )}
-        {this.props.play_state.view === VIEWS.LANDING && (
-          <Landing
-            isOpen={this.props.play_state.view === VIEWS.LANDING}
-            goQuest={this.goQuest}
-            goMinigames={this.goMinigames}
-          />
-        )}
-      </Container>
+      <BrowserRouter>
+        <Container fluid id="app">
+          <Switch>
+            <Route path="/quest">
+              <React.Suspense fallback={<FullPageSpinner />}>
+                <Quest />
+              </React.Suspense>
+            </Route>
+            <Route path="/minigames">
+              <React.Suspense fallback={<FullPageSpinner />}>
+                <MiniGames />
+              </React.Suspense>
+            </Route>
+            <Route path="">
+              <Landing
+                isOpen={this.props.play_state.view === VIEWS.LANDING}
+                goQuest={this.goQuest}
+                goMinigames={this.goMinigames}
+              />
+            </Route>
+          </Switch>
+        </Container>
+      </BrowserRouter>
     );
   }
 }

@@ -1,88 +1,103 @@
 import React from "react";
 import { connect } from "substate-connect";
+import {
+  useRouteMatch,
+  Route,
+  Link,
+  useHistory,
+  Switch,
+} from "react-router-dom";
+import { Row, Col } from "reactstrap";
 
 import store from "@store/store";
+import VibrateLink from "@components/VibrateLink/VibrateLink";
+import VibrateButton from "@components/VibrateButton/VibrateButton";
+
+import "./MiniGames.scss";
 
 const Hangman = React.lazy(() => import("@minigames/Hangman/Hangman"));
 const SliderPrecision = React.lazy(() =>
   import("@minigames/SliderPrecision/SliderPrecision")
 );
-const RadarGame = React.lazy(() => import("@minigames/RadarGame/RadarGame"));
 const Raid = React.lazy(() => import("@minigames/Raid/Raid"));
 
-class MiniGames extends React.Component {
-  state = {
-    currentGame: null,
-  };
+function MiniGames(props) {
+  const { path, url } = useRouteMatch();
+  const browserHistory = useHistory();
 
-  getMiniGame = (event) => {
-    this.setState({
-      currentGame: event.target.getAttribute("data-minigame-type"),
-    });
-  };
-
-  renderList = () => {
+  function renderList() {
     return (
-      <ul>
-        <li>
-          <button onClick={this.getMiniGame} data-minigame-type="hangman">
-            hangman
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={this.getMiniGame}
-            data-minigame-type="sliderprecision"
-          >
-            slider precision
-          </button>
-        </li>
-        <li>
-          <button onClick={this.getMiniGame} data-minigame-type="radargame">
-            Radar Game
-          </button>
-        </li>
-        <li>
-          <button onClick={this.getMiniGame} data-minigame-type="raid">
-            Raid
-          </button>
-        </li>
-      </ul>
-    );
-  };
-  render() {
-    return (
-      <React.Fragment>
-        {this.state.currentGame === null && this.renderList()}
-
-        <div>
-          <p>Lives: {this.props.mini_games.lives}</p>
-          <p>Resources: {this.props.mini_games.resources}</p>
-          <p>Cash: {this.props.mini_games.cash}</p>
-        </div>
-        {this.state.currentGame === "hangman" && (
-          <React.Suspense fallback={this.renderList()}>
-            <Hangman />
-          </React.Suspense>
-        )}
-        {this.state.currentGame === "raid" && (
-          <React.Suspense fallback={this.renderList()}>
-            <Raid />
-          </React.Suspense>
-        )}
-        {this.state.currentGame === "sliderprecision" && (
-          <React.Suspense fallback={this.renderList()}>
-            <SliderPrecision />
-          </React.Suspense>
-        )}
-        {this.state.currentGame === "radargame" && (
-          <React.Suspense fallback={this.renderList()}>
-            <RadarGame />
-          </React.Suspense>
-        )}
-      </React.Fragment>
+      <nav className="MiniGames__nav">
+        <ul>
+          <li>
+            <VibrateLink color="info" href={`${url}/hangman`}>
+              <span>Hangman</span>
+              <span>🔡</span>
+            </VibrateLink>
+          </li>
+          <li>
+            <VibrateLink color="info" href={`${url}/targetpractice`}>
+              <span>Target</span>
+              <span>🎯</span>
+              <span>Practice</span>
+            </VibrateLink>
+          </li>
+          <li>
+            <VibrateLink color="info" href={`${url}/raid`}>
+              <span>Raid</span>
+              <span>⚔️👹</span>
+            </VibrateLink>
+          </li>
+        </ul>
+      </nav>
     );
   }
+  return (
+    <React.Fragment>
+      <Row className="MiniGames__top-nav">
+        <Col xs={8}>
+          <Link to="/">
+            <h1>Walk Hero</h1>
+          </Link>
+          <p>Minigames</p>
+        </Col>
+        <Col xs={4} className="MiniGames__back-btn">
+          <VibrateButton color="link" onClick={browserHistory.goBack}>
+            🔙
+          </VibrateButton>
+        </Col>
+      </Row>
+      <Switch>
+        <Route exact path={path}>
+          {renderList()}
+        </Route>
+
+        <Route path={`${path}/hangman`}>
+          <React.Suspense fallback={renderList()}>
+            <Hangman />
+          </React.Suspense>
+        </Route>
+        <Route path={`${path}/targetpractice`}>
+          <React.Suspense fallback={renderList()}>
+            <SliderPrecision />
+          </React.Suspense>
+        </Route>
+        <Route path={`${path}/raid`}>
+          <React.Suspense fallback={renderList()}>
+            <Raid />
+          </React.Suspense>
+        </Route>
+      </Switch>
+      <Row>
+        <Col className="MiniGames__stats">
+          <span>💰 {props.mini_games.cash}</span>
+          <span>💖 {props.mini_games.lives}</span>
+          <span>📦 {props.mini_games.resources}</span>
+          <span>⚙️</span>
+        </Col>
+      </Row>
+    </React.Fragment>
+  );
 }
 
 export default connect(store, {
