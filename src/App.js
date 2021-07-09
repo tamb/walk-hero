@@ -14,9 +14,10 @@ import "./App.css";
 const Quest = React.lazy(() => import("@views/Quest/Quest"));
 const MiniGames = React.lazy(() => import("@views/MiniGames/MiniGames"));
 
-
 console.log(store);
 window.store = store;
+
+
 class App extends React.Component {
   goLanding = () => {
     store.emit(EVENTS.UPDATE_STATE, { "play_state.view": VIEWS.LANDING });

@@ -50,10 +50,13 @@ const EMOJIES = {
   4: "🤮",
   5: "☠️",
 };
+
+const emojiList = ["😐", "😒", "😭", "🤢", "🤮", "☠️"];
+
 function Hangman() {
   const [word] = React.useState(randomWord());
   const [gameStatus, setGameStatus] = React.useState(GAMESTATUS.starting);
-  const [guessedLetters, setGuessedLetters] = React.useState({});
+  const [guessedLetters, setGuessedLetters] = React.useState([]);
   const [foundLetters, setFoundLetters] = React.useState({});
 
   React.useEffect(checkGameStatus, [guessedLetters, foundLetters, word]);
@@ -74,8 +77,7 @@ function Hangman() {
   }
 
   function notTheLetter(_letter) {
-    const newGuessedLetter = Object.assign({}, guessedLetters);
-    newGuessedLetter[_letter] = _letter;
+    const newGuessedLetter = guessedLetters.concat([_letter]);
     setGuessedLetters(newGuessedLetter);
   }
 
@@ -125,13 +127,18 @@ function Hangman() {
     });
   }
 
-  function showGuessedLetters() {
-    return Object.keys(guessedLetters).map((letter, index) => {
+  function renderEmojies() {
+    return emojiList.map((em, i) => {
       return (
-        <div>
-          <span>{letter}&nbsp;</span>
-          <span>{EMOJIES[index]}</span>
-        </div>
+        <li
+          key={i}
+          className={`list-inline-item Hangman__health-emoji ${
+            guessedLetters[i] ? "hit" : ""
+          }`}
+        >
+          <span>{guessedLetters[i]}&nbsp;</span>
+          <span>{em}</span>
+        </li>
       );
     });
   }
@@ -142,18 +149,18 @@ function Hangman() {
 
   return (
     <div className="Hangman">
+      <ul className="list-unstyled list-inline Hangman__emoji-list">
+        {renderEmojies()}
+      </ul>
       {(gameStatus === GAMESTATUS.playing || gameStatus === GAMESTATUS.won) && (
         <div className="Hangman__blank-word">
           <div>{makeBlanks()}</div>
         </div>
       )}
+
       {gameStatus === GAMESTATUS.playing && (
         <React.Fragment>
           <div className="Hangman__alphabet">{makeAlphabet()}</div>
-          <div className="Hangman__guessed-letters">
-            <p>Guessed Letters:</p>
-            {showGuessedLetters()}
-          </div>
           <div className="Hangman__status">{gameStatus}</div>
         </React.Fragment>
       )}

@@ -118,6 +118,7 @@ function Raid() {
   return (
     <div className="Raid">
       <p>Enemies Defeated: {5 - enemiesLeft}/5</p>
+      <p>Civilians Remaining: {3 - civiliansHit}/3</p>
       {directions && (
         <RaidDirectionsModal handleOk={closeDirections} isOpen={directions} />
       )}

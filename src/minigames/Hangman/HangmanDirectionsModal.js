@@ -10,7 +10,7 @@ const HangmanDirectionsModal = (props) => {
       <ModalHeader>Hangman!</ModalHeader>
       <ModalBody className="text-center">
         <p>An Evil Mage appeared...</p>
-        <hr/>
+        <hr />
         <p className="d-flex">
           <span className="Hangman__mage">🧙</span>
           <span>
@@ -18,8 +18,8 @@ const HangmanDirectionsModal = (props) => {
             ignorance!"
           </span>
         </p>
-        <hr/>
-        <p>☠️ Guess the word before The Evil Wizard poisons you! ☠️</p>
+        <hr />
+        <p>☠️ Guess the word before the Wizard poisons you! ☠️</p>
       </ModalBody>
       <ModalFooter className="d-flex justify-content-between">
         <VibrateButton color="success" onClick={props.handleOk}>

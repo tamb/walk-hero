@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col } from "reactstrap";
+import { Row, Col, Alert } from "reactstrap";
 import { useHistory } from "react-router-dom";
 
 import store, { EVENTS } from "@store/store";
@@ -11,9 +11,13 @@ import { version } from "@root/package.json";
 import "./Landing.scss";
 
 const noMiniGames = false;
+const allowDesktop = true;
 
 const Landing = (props) => {
   const browserHistory = useHistory();
+  var isMobile =
+    "ontouchstart" in document.documentElement &&
+    /mobi/i.test(navigator.userAgent);
 
   function goQuest() {
     store.emit(EVENTS.UPDATE_STATE, { "play_state.view": VIEWS.QUEST });
@@ -38,22 +42,40 @@ const Landing = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col>
-          <VibrateButton block color="success" onClick={goQuest}>
-            QUEST
-          </VibrateButton>
-        </Col>
+        {(isMobile || allowDesktop) && (
+          <React.Fragment>
+            <Col>
+              <VibrateButton block color="success" onClick={goQuest}>
+                QUEST
+              </VibrateButton>
+            </Col>
 
-        <Col>
-          <VibrateButton
-            block
-            disabled={noMiniGames}
-            color="primary"
-            onClick={goMinigames}
-          >
-            MINIGAMES
-          </VibrateButton>
-        </Col>
+            <Col>
+              <VibrateButton
+                block
+                disabled={noMiniGames}
+                color="primary"
+                onClick={goMinigames}
+              >
+                MINIGAMES
+              </VibrateButton>
+            </Col>
+          </React.Fragment>
+        )}
+        {!isMobile && !allowDesktop && (
+          <Col>
+            <Alert color="warning">
+              <p>
+                Walk Hero does <strong>not</strong> currently support desktop
+                gameplay.
+              </p>
+              <p>
+                Please play on a mobile device using the latest Chromium-based
+                browser (Chrome, Brave, Edge)
+              </p>
+            </Alert>
+          </Col>
+        )}
       </Row>
       <Row>
         <Col className="text-center mt-1 author">
