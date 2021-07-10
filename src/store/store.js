@@ -1,5 +1,5 @@
 import substate from "substate";
-import { VIEWS } from "@utils/enums";
+import { VIEWS, PLAY_STATUS } from "@utils/enums";
 
 // Save the following in IDB
 const hero = {
@@ -47,6 +47,8 @@ const mini_games = {
   cash: 0,
   resources: 0,
   lives: 100,
+  play_status: PLAY_STATUS.NOT_PLAYING,
+  msg: null,
 };
 
 const ancillaries = {
@@ -129,6 +131,7 @@ export const EVENTS = {
   START_WALK: "START_WALK",
   END_WALK: "END_WALK",
   REQUEST_WAKELOCK: "REQUEST_WAKELOCK",
+  REPLAY_MINI: "REPLAY_MINI",
 };
 
 export default store;

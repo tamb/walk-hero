@@ -1,7 +1,8 @@
 import React from "react";
 
 import words from "@data/words.json";
-import store from "@store/store";
+import store, { EVENTS } from "@store/store";
+import { PLAY_STATUS } from "@utils/enums";
 
 import HangmanDirectionsModal from "./HangmanDirectionsModal";
 import "./Hangman.scss";
@@ -53,12 +54,16 @@ const EMOJIES = {
 
 const emojiList = ["😐", "😒", "😭", "🤢", "🤮", "☠️"];
 
-function Hangman() {
+function Hangman(props) {
   const [word] = React.useState(randomWord());
-  const [gameStatus, setGameStatus] = React.useState(GAMESTATUS.starting);
   const [guessedLetters, setGuessedLetters] = React.useState([]);
   const [foundLetters, setFoundLetters] = React.useState({});
 
+  React.useEffect(() => {
+    store.emit(EVENTS.UPDATE_STATE, {
+      "mini_games.play_status": PLAY_STATUS.DIRECTIONS,
+    });
+  }, []);
   React.useEffect(checkGameStatus, [guessedLetters, foundLetters, word]);
 
   function randomWord() {
@@ -89,17 +94,29 @@ function Hangman() {
 
   function checkGameStatus() {
     if (Object.keys(guessedLetters).length === Object.keys(EMOJIES).length) {
-      setGameStatus(GAMESTATUS.lost);
       store.emit("UPDATE_STATE", {
         "mini_games.cash": store.getProp("mini_games.cash") - 2,
         "mini_games.resources": store.getProp("mini_games.resources") - 1,
         "mini_games.lives": store.getProp("mini_games.lives") - 1,
+        "mini_games.play_status": PLAY_STATUS.LOST,
+        "mini_games.msg": (
+          <p className="d-flex">
+            <span className="Hangman__mage">🧙</span>
+            <span>"You fool! I shall be taking from thee!"</span>
+          </p>
+        ),
       });
     } else if (word.split("").every((letter) => foundLetters[letter])) {
-      setGameStatus(GAMESTATUS.won);
       store.emit("UPDATE_STATE", {
         "mini_games.cash": store.getProp("mini_games.cash") + 3,
         "mini_games.resources": store.getProp("mini_games.resources") + 1,
+        "mini_games.play_status": PLAY_STATUS.WON,
+        "mini_games.msg": (
+          <p className="d-flex">
+            <span className="Hangman__mage">🧙</span>
+            <span>"A hero as wise as you should be rewarded..."</span>
+          </p>
+        ),
       });
     }
   }
@@ -113,7 +130,9 @@ function Hangman() {
   function makeAlphabet() {
     return Object.keys(ALPHABET).map((letter) => {
       const disabled =
-        guessedLetters[letter] || foundLetters[letter] ? "disabled" : false;
+        guessedLetters.includes(letter) || foundLetters[letter]
+          ? "disabled"
+          : false;
 
       return (
         <button
@@ -144,30 +163,35 @@ function Hangman() {
   }
 
   function startGame() {
-    setGameStatus(GAMESTATUS.playing);
+    store.emit(EVENTS.UPDATE_STATE, {
+      "mini_games.play_status": PLAY_STATUS.PLAYING,
+    });
   }
 
+  // FIXME: sync up play statuses and use enum
   return (
     <div className="Hangman">
       <ul className="list-unstyled list-inline Hangman__emoji-list">
         {renderEmojies()}
       </ul>
-      {(gameStatus === GAMESTATUS.playing || gameStatus === GAMESTATUS.won) && (
+      {(props.mini_games.play_status === GAMESTATUS.playing ||
+        props.mini_games.play_status === GAMESTATUS.won) && (
         <div className="Hangman__blank-word">
           <div>{makeBlanks()}</div>
         </div>
       )}
 
-      {gameStatus === GAMESTATUS.playing && (
+      {props.mini_games.play_status === GAMESTATUS.playing && (
         <React.Fragment>
           <div className="Hangman__alphabet">{makeAlphabet()}</div>
-          <div className="Hangman__status">{gameStatus}</div>
         </React.Fragment>
       )}
-      {gameStatus === GAMESTATUS.lost && <h2>You have died ☠️</h2>}
-      {gameStatus === GAMESTATUS.starting && (
+      {props.mini_games.play_status === GAMESTATUS.lost && (
+        <h2>You have died ☠️</h2>
+      )}
+      {props.mini_games.play_status === GAMESTATUS.starting && (
         <HangmanDirectionsModal
-          isOpen={gameStatus === GAMESTATUS.starting}
+          isOpen={props.mini_games.play_status === GAMESTATUS.starting}
           handleOk={startGame}
         />
       )}

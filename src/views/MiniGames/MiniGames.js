@@ -10,8 +10,10 @@ import {
 import { Row, Col } from "reactstrap";
 
 import store from "@store/store";
+import { PLAY_STATUS } from "@utils/enums";
 import VibrateLink from "@components/VibrateLink/VibrateLink";
 import VibrateButton from "@components/VibrateButton/VibrateButton";
+import MiniGameEndModal from "@modals/MiniGameEndModal/MiniGameEndModal";
 
 import "./MiniGames.scss";
 
@@ -74,7 +76,7 @@ function MiniGames(props) {
 
         <Route path={`${path}/hangman`}>
           <React.Suspense fallback={renderList()}>
-            <Hangman />
+            <Hangman mini_games={props.mini_games} />
           </React.Suspense>
         </Route>
         <Route path={`${path}/targetpractice`}>
@@ -96,6 +98,14 @@ function MiniGames(props) {
           <span>⚙️</span>
         </Col>
       </Row>
+      <MiniGameEndModal
+        isOpen={
+          props.mini_games.play_status === PLAY_STATUS.WON ||
+          props.mini_games.play_status === PLAY_STATUS.LOST
+        }
+        won={props.mini_games.play_status === PLAY_STATUS.WON}
+        msg={props.mini_games.msg}
+      />
     </React.Fragment>
   );
 }
