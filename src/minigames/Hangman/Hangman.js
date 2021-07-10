@@ -1,8 +1,8 @@
 import React from "react";
 
 import words from "@data/words.json";
-import store, { EVENTS } from "@store/store";
-import { PLAY_STATUS } from "@utils/enums";
+import store, { STORE_EVENT } from "@store/store";
+import { MINIGAME_STATUS } from "@utils/enums";
 
 import HangmanDirectionsModal from "./HangmanDirectionsModal";
 import "./Hangman.scss";
@@ -36,13 +36,6 @@ const ALPHABET = {
   Z: "Z",
 };
 
-const GAMESTATUS = {
-  starting: 0,
-  playing: 1,
-  won: 2,
-  lost: 3,
-};
-
 const EMOJIES = {
   0: "😐",
   1: "😒",
@@ -60,8 +53,8 @@ function Hangman(props) {
   const [foundLetters, setFoundLetters] = React.useState({});
 
   React.useEffect(() => {
-    store.emit(EVENTS.UPDATE_STATE, {
-      "mini_games.play_status": PLAY_STATUS.DIRECTIONS,
+    store.emit(STORE_EVENT.UPDATE_STATE, {
+      "minigames.play_status": MINIGAME_STATUS.DIRECTIONS,
     });
   }, []);
   React.useEffect(checkGameStatus, [guessedLetters, foundLetters, word]);
@@ -94,12 +87,12 @@ function Hangman(props) {
 
   function checkGameStatus() {
     if (Object.keys(guessedLetters).length === Object.keys(EMOJIES).length) {
-      store.emit("UPDATE_STATE", {
-        "mini_games.cash": store.getProp("mini_games.cash") - 2,
-        "mini_games.resources": store.getProp("mini_games.resources") - 1,
-        "mini_games.lives": store.getProp("mini_games.lives") - 1,
-        "mini_games.play_status": PLAY_STATUS.LOST,
-        "mini_games.msg": (
+      store.emit(STORE_EVENT.UPDATE_STATE, {
+        "minigames.cash": store.getProp("minigames.cash") - 2,
+        "minigames.resources": store.getProp("minigames.resources") - 1,
+        "minigames.lives": store.getProp("minigames.lives") - 1,
+        "minigames.play_status": MINIGAME_STATUS.LOST,
+        "minigames.msg": (
           <p className="d-flex">
             <span className="Hangman__mage">🧙</span>
             <span>"You fool! I shall be taking from thee!"</span>
@@ -107,11 +100,11 @@ function Hangman(props) {
         ),
       });
     } else if (word.split("").every((letter) => foundLetters[letter])) {
-      store.emit("UPDATE_STATE", {
-        "mini_games.cash": store.getProp("mini_games.cash") + 3,
-        "mini_games.resources": store.getProp("mini_games.resources") + 1,
-        "mini_games.play_status": PLAY_STATUS.WON,
-        "mini_games.msg": (
+      store.emit(STORE_EVENT.UPDATE_STATE, {
+        "minigames.cash": store.getProp("minigames.cash") + 3,
+        "minigames.resources": store.getProp("minigames.resources") + 1,
+        "minigames.play_status": MINIGAME_STATUS.WON,
+        "minigames.msg": (
           <p className="d-flex">
             <span className="Hangman__mage">🧙</span>
             <span>"A hero as wise as you should be rewarded..."</span>
@@ -163,8 +156,8 @@ function Hangman(props) {
   }
 
   function startGame() {
-    store.emit(EVENTS.UPDATE_STATE, {
-      "mini_games.play_status": PLAY_STATUS.PLAYING,
+    store.emit(STORE_EVENT.UPDATE_STATE, {
+      "minigames.play_status": MINIGAME_STATUS.PLAYING,
     });
   }
 
@@ -174,24 +167,24 @@ function Hangman(props) {
       <ul className="list-unstyled list-inline Hangman__emoji-list">
         {renderEmojies()}
       </ul>
-      {(props.mini_games.play_status === GAMESTATUS.playing ||
-        props.mini_games.play_status === GAMESTATUS.won) && (
+      {(props.minigames.play_status === MINIGAME_STATUS.PLAYING ||
+        props.minigames.play_status === MINIGAME_STATUS.WON) && (
         <div className="Hangman__blank-word">
           <div>{makeBlanks()}</div>
         </div>
       )}
 
-      {props.mini_games.play_status === GAMESTATUS.playing && (
+      {props.minigames.play_status === MINIGAME_STATUS.PLAYING && (
         <React.Fragment>
           <div className="Hangman__alphabet">{makeAlphabet()}</div>
         </React.Fragment>
       )}
-      {props.mini_games.play_status === GAMESTATUS.lost && (
+      {props.minigames.play_status === MINIGAME_STATUS.LOST && (
         <h2>You have died ☠️</h2>
       )}
-      {props.mini_games.play_status === GAMESTATUS.starting && (
+      {props.minigames.play_status === MINIGAME_STATUS.DIRECTIONS && (
         <HangmanDirectionsModal
-          isOpen={props.mini_games.play_status === GAMESTATUS.starting}
+          isOpen={props.minigames.play_status === GAMESTATUS.starting}
           handleOk={startGame}
         />
       )}

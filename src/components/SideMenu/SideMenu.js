@@ -9,14 +9,14 @@ import {
   UncontrolledCollapse,
 } from "reactstrap";
 
-import store, { EVENTS } from "@store/store";
+import store, { STORE_EVENT } from "@store/store";
 import VibrateButton from "@components/VibrateButton/VibrateButton";
 
 import "./SideMenu.scss";
 
 class SideMenu extends React.Component {
   closeMenu = () => {
-    store.emit(EVENTS.UPDATE_STATE, { "ancillaries.side_menu_open": false });
+    store.emit(STORE_EVENT.UPDATE_STATE, { "ancillaries.side_menu_open": false });
   };
 
   render() {

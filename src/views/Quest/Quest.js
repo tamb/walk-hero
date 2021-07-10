@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Row, Col } from "reactstrap";
 import { connect } from "substate-connect";
 
-import store, { EVENTS } from "@store/store";
+import store, { STORE_EVENT } from "@store/store";
 import {
   startPoll,
   killPoll,
@@ -61,19 +61,19 @@ class Quest extends React.Component {
   // Lifecycle Methods
   componentDidMount() {
     getStartingPoint(this.setStart);
-    store.on(EVENTS.PAUSED, this.killPolls); // pause response
-    store.on(EVENTS.UNPAUSED, this.startPolls); // pause response
-    store.on(EVENTS.START_WALK, this.startPolls);
-    store.on(EVENTS.REQUEST_WAKELOCK, this.requestWakeLock);
+    store.on(STORE_EVENT.PAUSED, this.killPolls); // pause response
+    store.on(STORE_EVENT.UNPAUSED, this.startPolls); // pause response
+    store.on(STORE_EVENT.START_WALK, this.startPolls);
+    store.on(STORE_EVENT.REQUEST_WAKELOCK, this.requestWakeLock);
     store.on("LOCKSCREEN_SLIDER", this.setUnlockValue);
   }
 
   componentWillUnmount() {
     this.killPolls();
-    store.off(EVENTS.PAUSED, this.killPolls); // pause response
-    store.off(EVENTS.UNPAUSED, this.startPolls); // pause response
-    store.off(EVENTS.START_WALK, this.startPolls);
-    store.off(EVENTS.REQUEST_WAKELOCK, this.requestWakeLock);
+    store.off(STORE_EVENT.PAUSED, this.killPolls); // pause response
+    store.off(STORE_EVENT.UNPAUSED, this.startPolls); // pause response
+    store.off(STORE_EVENT.START_WALK, this.startPolls);
+    store.off(STORE_EVENT.REQUEST_WAKELOCK, this.requestWakeLock);
     store.off("LOCKSCREEN_SLIDER", this.setUnlockValue);
   }
 
@@ -132,13 +132,13 @@ class Quest extends React.Component {
     ).then((value) => {
       _distTraveled = value;
       if (_distTraveled >= 35) {
-        store.emit(EVENTS.UPDATE_STATE, {
+        store.emit(STORE_EVENT.UPDATE_STATE, {
           "quest.total_distance_traveled_cm":
             this.props.questData.geodata.totalDistanceTraveledInCM +
             _distTraveled,
         });
       }
-      store.emit(EVENTS.UPDATE_STATE, {
+      store.emit(STORE_EVENT.UPDATE_STATE, {
         "quest.distance_traveled_cm": _distTraveled,
       });
     });
@@ -164,7 +164,7 @@ class Quest extends React.Component {
         if (newCitiesVisited.length === 0) {
           newCitiesVisited.push(value[0]);
         }
-        store.emit(EVENTS.UPDATE_STATE, {
+        store.emit(STORE_EVENT.UPDATE_STATE, {
           "quest.origin_geodata": value[0],
           "quest.current_city": value[0],
           "quest.cities_visited": newCitiesVisited,
@@ -176,7 +176,7 @@ class Quest extends React.Component {
   };
 
   journeyTimeTick = () => {
-    store.emit(EVENTS.UPDATE_STATE, {
+    store.emit(STORE_EVENT.UPDATE_STATE, {
       "quest.journey_time_s": store.getProp("quest.journey_time_s") + 1,
     });
   };
@@ -189,7 +189,7 @@ class Quest extends React.Component {
 
   setStart = (data) => {
     console.log("[GeoLocation Success - ", data);
-    store.emit(EVENTS.UPDATE_STATE, {
+    store.emit(STORE_EVENT.UPDATE_STATE, {
       "play_state.has_location": true,
       "quest.geodata": data,
       "quest.origin_geodata": data,
@@ -212,7 +212,7 @@ class Quest extends React.Component {
     this.calculatePointToPointFromStart(geoData);
     this.calculateTotalDistanceTraveledInCM(geoData);
 
-    store.emit(EVENTS.UPDATE_STATE, {
+    store.emit(STORE_EVENT.UPDATE_STATE, {
       "quest.geodata": cloneGeoData(geoData),
       "quest.location_pings": this.props.locationPings + 1,
     });
@@ -234,20 +234,20 @@ class Quest extends React.Component {
       try {
         this.WakeLockSentinel = await navigator.wakeLock.request("screen");
         console.info("[WakeLock]: ON");
-        store.emit(EVENTS.UPDATE_STATE, {
+        store.emit(STORE_EVENT.UPDATE_STATE, {
           "play_state.is_unlocked": false,
         });
       } catch (err) {
         // The wake lock request fails - usually system-related, such as low battery.
         console.info(`${err.name}, ${err.message}`);
         this.WakeLockSentinel = null;
-        store.emit(EVENTS.UPDATE_STATE, {
+        store.emit(STORE_EVENT.UPDATE_STATE, {
           "play_state.is_unlocked": true,
         });
       }
     } else {
       console.info("no WakeLock");
-      store.emit(EVENTS.UPDATE_STATE, {
+      store.emit(STORE_EVENT.UPDATE_STATE, {
         "play_state.is_unlocked": true,
       });
     }
@@ -255,7 +255,7 @@ class Quest extends React.Component {
 
   setUnlockValue(e) {
     const value = parseInt(e.target.value);
-    store.emit(EVENTS.UPDATE_STATE, {
+    store.emit(STORE_EVENT.UPDATE_STATE, {
       "play_state.unlock_value": value === 100 ? 0 : value,
       "play_state.is_unlocked": value === 100,
     });
@@ -266,7 +266,7 @@ class Quest extends React.Component {
 
     setTimeout(() => {
       if (store.getProp("play_state.unlock_value") < 100) {
-        store.emit(EVENTS.UPDATE_STATE, {
+        store.emit(STORE_EVENT.UPDATE_STATE, {
           "play_state.unlock_value": 0,
         });
       }

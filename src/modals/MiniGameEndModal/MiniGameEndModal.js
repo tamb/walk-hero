@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { Modal, ModalHeader, ModalFooter, ModalBody, Alert } from "reactstrap";
 import { useHistory } from "react-router-dom";
 
-import store, { EVENTS } from "@store/store";
-import { PLAY_STATUS } from "@utils/enums";
+import store, { STORE_EVENT } from "@store/store";
+import { MINIGAME_STATUS } from "@utils/enums";
 import VibrateButton from "@components/VibrateButton/VibrateButton";
 
 const PRIZE = {
@@ -18,15 +18,15 @@ const MiniGameEndModal = (props) => {
 
   function handleOk() {
     browserHistory.goBack();
-    store.emit(EVENTS.UPDATE_STATE, {
-      "mini_games.play_status": PLAY_STATUS.NOT_PLAYING,
+    store.emit(STORE_EVENT.UPDATE_STATE, {
+      "mini_games.play_status": MINIGAME_STATUS.NOT_PLAYING,
     });
   }
 
   function handlePlayAgain() {
-    store.emit(EVENTS.UPDATE_STATE, {
-      "mini_games.play_status": PLAY_STATUS.PLAYING,
-      $type: EVENTS.REPLAY_MINI
+    store.emit(STORE_EVENT.UPDATE_STATE, {
+      "mini_games.play_status": MINIGAME_STATUS.PLAYING,
+      $type: STORE_EVENT.REPLAY_MINI
     });
   }
 

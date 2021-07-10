@@ -1,37 +1,11 @@
 import substate from "substate";
-import { VIEWS, PLAY_STATUS } from "@utils/enums";
+import { VIEWS } from "@utils/enums";
 
 // Save the following in IDB
-const hero = {
-  hero_name: null,
-  hero_type_id: null,
-  skin_hex: null,
-  sex: null,
-  inventory: null, // object
-};
-
-const game_settings = {
-  game_vibrations: true,
-  haptic_feedback: true,
-  sound_fx: true,
-  music: true,
-};
-
-const quest = {
-  active: false,
-  cities_visited: [],
-  current_city: null,
-  date_created: null,
-  distance_p2p_from_origin_cm: 0,
-  distance_traveled_cm: 0,
-  farthest_geodata_from_origin: null, // object
-  geodata: null, // object
-  journey_time_s: 0,
-  location_pings: 0,
-  origin_geodata: null, //object
-  origin_city: null, // object
-  total_distance_traveled_cm: 0,
-};
+import { hero } from "./IHero";
+import { game_settings } from "./IGameSettings";
+import { quest } from "./IQuest";
+import { minigames } from "./IMiniGames";
 
 // Does NOT need to be saved in IDB
 const play_state = {
@@ -39,16 +13,8 @@ const play_state = {
   is_unlocked: true,
   paused: false,
   unlock_value: 0,
-  view: VIEWS.LANDING,
+  view: VIEWS.LANDING, // TODO: do not worry about views, use router
   wake_lock_sentinel: null,
-};
-
-const mini_games = {
-  cash: 0,
-  resources: 0,
-  lives: 100,
-  play_status: PLAY_STATUS.NOT_PLAYING,
-  msg: null,
 };
 
 const ancillaries = {
@@ -68,10 +34,10 @@ const store = new substate({
   state: {
     game_settings, // save to IDB
     hero, // save to IDB
+    quest, // save to IDB
+    minigames, // save to IDB
     ancillaries,
     play_state,
-    quest, // save to IDB
-    mini_games,
   },
 });
 
@@ -122,16 +88,16 @@ window.WH = store;
 //   },
 // });
 
-export const EVENTS = {
-  PAUSED: "PAUSED",
-  UNPAUSED: "UNPAUSED",
-  STATE_UPDATED: "STATE_UPDATED",
-  UPDATE_STATE: "UPDATE_STATE",
-  WRITE_STATE_UPDATED: "WRITE_STATE_UPDATED",
-  START_WALK: "START_WALK",
-  END_WALK: "END_WALK",
-  REQUEST_WAKELOCK: "REQUEST_WAKELOCK",
-  REPLAY_MINI: "REPLAY_MINI",
-};
+export enum STORE_EVENT {
+  PAUSED = "PAUSED",
+  UNPAUSED = "UNPAUSED",
+  STATE_UPDATED = "STATE_UPDATED",
+  UPDATE_STATE = "UPDATE_STATE",
+  WRITE_STATE_UPDATED = "WRITE_STATE_UPDATED",
+  START_WALK = "START_WALK",
+  END_WALK = "END_WALK",
+  REQUEST_WAKELOCK = "REQUEST_WAKELOCK",
+  REPLAY_MINI = "REPLAY_MINI",
+}
 
 export default store;

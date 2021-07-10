@@ -10,7 +10,7 @@ import {
 import { Row, Col } from "reactstrap";
 
 import store from "@store/store";
-import { PLAY_STATUS } from "@utils/enums";
+import { MINIGAME_STATUS } from "@utils/enums";
 import VibrateLink from "@components/VibrateLink/VibrateLink";
 import VibrateButton from "@components/VibrateButton/VibrateButton";
 import MiniGameEndModal from "@modals/MiniGameEndModal/MiniGameEndModal";
@@ -76,7 +76,7 @@ function MiniGames(props) {
 
         <Route path={`${path}/hangman`}>
           <React.Suspense fallback={renderList()}>
-            <Hangman mini_games={props.mini_games} />
+            <Hangman minigames={props.minigames} />
           </React.Suspense>
         </Route>
         <Route path={`${path}/targetpractice`}>
@@ -92,24 +92,24 @@ function MiniGames(props) {
       </Switch>
       <Row>
         <Col className="MiniGames__stats">
-          <span>💰 {props.mini_games.cash}</span>
-          <span>💖 {props.mini_games.lives}</span>
-          <span>📦 {props.mini_games.resources}</span>
+          <span>💰 {props.minigames.cash}</span>
+          <span>💖 {props.minigames.lives}</span>
+          <span>📦 {props.minigames.resources}</span>
           <span>⚙️</span>
         </Col>
       </Row>
       <MiniGameEndModal
         isOpen={
-          props.mini_games.play_status === PLAY_STATUS.WON ||
-          props.mini_games.play_status === PLAY_STATUS.LOST
+          props.minigames.play_status === MINIGAME_STATUS.WON ||
+          props.minigames.play_status === MINIGAME_STATUS.LOST
         }
-        won={props.mini_games.play_status === PLAY_STATUS.WON}
-        msg={props.mini_games.msg}
+        won={props.minigames.play_status === MINIGAME_STATUS.WON}
+        msg={props.minigames.msg}
       />
     </React.Fragment>
   );
 }
 
 export default connect(store, {
-  mini_games: "mini_games",
+  minigames: "minigames",
 })(MiniGames);

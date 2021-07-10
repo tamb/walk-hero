@@ -4,7 +4,7 @@ import { Container } from "reactstrap";
 import { Provide, connect } from "substate-connect/dist/react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
-import store, { EVENTS } from "@store/store";
+import store, { STORE_EVENT } from "@store/store";
 import { VIEWS } from "@utils/enums";
 import FullPageSpinner from "@components/FullPageSpinner/FullPageSpinner";
 import Landing from "@views/Landing/Landing";
@@ -20,7 +20,7 @@ window.store = store;
 
 class App extends React.Component {
   goLanding = () => {
-    store.emit(EVENTS.UPDATE_STATE, { "play_state.view": VIEWS.LANDING });
+    store.emit(STORE_EVENT.UPDATE_STATE, { "play_state.view": VIEWS.LANDING });
   };
 
   // Logic
@@ -67,11 +67,11 @@ const ConnectedApp = connect(store, {
 export default Provide(
   store,
   [
-    EVENTS.STATE_UPDATED,
-    EVENTS.WRITE_STATE_UPDATED,
-    EVENTS.PAUSED,
-    EVENTS.UNPAUSED,
-    EVENTS.START_WALK,
+    STORE_EVENT.STATE_UPDATED,
+    STORE_EVENT.WRITE_STATE_UPDATED,
+    STORE_EVENT.PAUSED,
+    STORE_EVENT.UNPAUSED,
+    STORE_EVENT.START_WALK,
   ],
   function () {
     console.log("I mounted", this, store.getCurrentState());

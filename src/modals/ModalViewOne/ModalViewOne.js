@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "substate-connect";
 
-import store, { EVENTS } from "@store/store";
+import store, { STORE_EVENT } from "@store/store";
 import { VIEWS } from "@utils/enums";
 
 // Modals
@@ -34,21 +34,21 @@ const WiredWarningModal = connect(store, {
 
 const ModalViewOne = () => {
   function acceptWarning() {
-    store.emit(EVENTS.UPDATE_STATE, {
+    store.emit(STORE_EVENT.UPDATE_STATE, {
       "ancillaries.warning_modal_open": false,
       "ancillaries.start_modal_open": true,
     });
   }
 
   function denyWarning() {
-    store.emit(EVENTS.UPDATE_STATE, {
+    store.emit(STORE_EVENT.UPDATE_STATE, {
       "ancillaries.warning_modal_open": false,
       "play_state.view": VIEWS.LANDING,
     });
   }
 
   function cancelEndWalk() {
-    store.emit(EVENTS.UPDATE_STATE, {
+    store.emit(STORE_EVENT.UPDATE_STATE, {
       "gameState.paused": true,
       "ancillaries.pause_modal_open": true,
       "ancillaries.confirm_end_walk_modal_open": false,
@@ -57,23 +57,23 @@ const ModalViewOne = () => {
 
 
   function endWalk() {
-    store.emit(EVENTS.UPDATE_STATE, {
+    store.emit(STORE_EVENT.UPDATE_STATE, {
       "ancillaries.pause_modal_open": false,
       "ancillaries.confirm_end_walk_modal_open": true,
     });
   }
 
   function startNewWalk() {
-    console.log(EVENTS)
-    store.emit(EVENTS.UPDATE_STATE, {
+    console.log(STORE_EVENT)
+    store.emit(STORE_EVENT.UPDATE_STATE, {
       "ancillaries.start_modal_open": false,
-      $type: EVENTS.START_WALK,
+      $type: STORE_EVENT.START_WALK,
     });
   }
 
   function togglePaused() {
     const bool = !store.getProp("play_state.paused");
-    store.emit(EVENTS.UPDATE_STATE, {
+    store.emit(STORE_EVENT.UPDATE_STATE, {
       "play_state.paused": bool,
       $type: bool ? "PAUSED" : "UNPAUSED",
     });

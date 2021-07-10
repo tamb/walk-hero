@@ -2,24 +2,24 @@ import React from "react";
 import PropTypes from "prop-types";
 import { version } from "@root/package.json";
 
-import store, { EVENTS } from "@store/store";
+import store, { STORE_EVENT } from "@store/store";
 
 import VibrateButton from "@components/VibrateButton/VibrateButton";
 
 import "./BottomNav.scss";
 
 function pause() {
-  store.emit(EVENTS.UPDATE_STATE, {
+  store.emit(STORE_EVENT.UPDATE_STATE, {
     "ancillaries.pause_modal_open": true,
   });
 }
 
 function requestWakeLock() {
-  store.emit(EVENTS.REQUEST_WAKELOCK);
+  store.emit(STORE_EVENT.REQUEST_WAKELOCK);
 }
 
 function openSettings() {
-  store.emit(EVENTS.UPDATE_STATE, {
+  store.emit(STORE_EVENT.UPDATE_STATE, {
     "ancillaries.side_menu_open": true,
   });
 }

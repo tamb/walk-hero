@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col, Alert } from "reactstrap";
 import { useHistory } from "react-router-dom";
 
-import store, { EVENTS } from "@store/store";
+import store, { STORE_EVENT } from "@store/store";
 import { VIEWS } from "@utils/enums";
 import VibrateButton from "@components/VibrateButton/VibrateButton";
 import knight from "@gif/knightherov3.gif";
@@ -20,12 +20,12 @@ const Landing = (props) => {
     /mobi/i.test(navigator.userAgent);
 
   function goQuest() {
-    store.emit(EVENTS.UPDATE_STATE, { "play_state.view": VIEWS.QUEST });
+    store.emit(STORE_EVENT.UPDATE_STATE, { "play_state.view": VIEWS.QUEST });
     browserHistory.push("/quest");
   }
 
   function goMinigames() {
-    store.emit(EVENTS.UPDATE_STATE, { "play_state.view": VIEWS.MINIGAMES });
+    store.emit(STORE_EVENT.UPDATE_STATE, { "play_state.view": VIEWS.MINIGAMES });
     browserHistory.push("/minigames");
   }
   return (
