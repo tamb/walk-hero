@@ -52,6 +52,8 @@ function Hangman(props) {
   const [guessedLetters, setGuessedLetters] = React.useState([]);
   const [foundLetters, setFoundLetters] = React.useState({});
 
+  // TODO: make this a part of all initial renders of directions
+  // for minigames
   React.useEffect(() => {
     store.emit(STORE_EVENT.UPDATE_STATE, {
       "minigames.play_status": MINIGAME_STATUS.DIRECTIONS,
