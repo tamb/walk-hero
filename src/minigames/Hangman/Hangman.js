@@ -186,7 +186,7 @@ function Hangman(props) {
       )}
       {props.minigames.play_status === MINIGAME_STATUS.DIRECTIONS && (
         <HangmanDirectionsModal
-          isOpen={props.minigames.play_status === GAMESTATUS.starting}
+          isOpen={props.minigames.play_status === MINIGAME_STATUS.starting}
           handleOk={startGame}
         />
       )}

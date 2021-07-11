@@ -2,10 +2,10 @@ import substate from "substate";
 import { VIEWS } from "@utils/enums";
 
 // Save the following in IDB
-import { hero } from "./IHero";
-import { game_settings } from "./IGameSettings";
-import { quest } from "./IQuest";
-import { minigames } from "./IMiniGames";
+import { hero } from "./hero";
+import { game_settings } from "./gameSettings";
+import { quest } from "./quest";
+import { minigames } from "./minigames";
 
 // Does NOT need to be saved in IDB
 const play_state = {
@@ -40,7 +40,6 @@ const store = new substate({
     play_state,
   },
 });
-
 
 // const store = new substate({
 //   name: "WalkHero",
@@ -87,16 +86,16 @@ const store = new substate({
 //   },
 // });
 
-export enum STORE_EVENT {
-  PAUSED = "PAUSED",
-  UNPAUSED = "UNPAUSED",
-  STATE_UPDATED = "STATE_UPDATED",
-  UPDATE_STATE = "UPDATE_STATE",
-  WRITE_STATE_UPDATED = "WRITE_STATE_UPDATED",
-  START_WALK = "START_WALK",
-  END_WALK = "END_WALK",
-  REQUEST_WAKELOCK = "REQUEST_WAKELOCK",
-  REPLAY_MINI = "REPLAY_MINI",
-}
+export const STORE_EVENT = {
+  PAUSED: "PAUSED",
+  UNPAUSED: "UNPAUSED",
+  STATE_UPDATED: "STATE_UPDATED",
+  UPDATE_STATE: "UPDATE_STATE",
+  WRITE_STATE_UPDATED: "WRITE_STATE_UPDATED",
+  START_WALK: "START_WALK",
+  END_WALK: "END_WALK",
+  REQUEST_WAKELOCK: "REQUEST_WAKELOCK",
+  REPLAY_MINI: "REPLAY_MINI",
+};
 
 export default store;
