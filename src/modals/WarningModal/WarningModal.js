@@ -25,10 +25,6 @@ function WarningModal(props) {
                 <li>
                   Please pay attention 👀 to your surroundings 🚘 at all times.
                 </li>
-                <li>
-                  We do not 🚫🕵️ share your location information 📍 with anyone
-                  else 👍.
-                </li>
                 <li>Have fun and be safe! 👌.</li>
               </ul>
             </Col>

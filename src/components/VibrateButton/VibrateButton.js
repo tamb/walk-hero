@@ -1,10 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "reactstrap";
+import { connect } from "substate-connect";
+
+import store from "@store/store";
 
 function VibrateButton(props) {
   function clickVibrate() {
-    if (window.WHGlobals.vibrationsOn) {
+    if (props.vibrationsOn) {
       window.navigator.vibrate(props.pattern);
     }
     props.onClick();
@@ -12,6 +15,8 @@ function VibrateButton(props) {
 
   const newProps = { ...props };
   delete newProps.onClick;
+  delete newProps.vibrationsOn;
+  delete newProps.pattern;
 
   return (
     <Button onClick={clickVibrate} {...newProps}>
@@ -29,4 +34,6 @@ VibrateButton.defaultProps = {
   pattern: [10],
 };
 
-export default VibrateButton;
+export default connect(store, {
+  vibrationsOn: "game_settings.vibrations",
+})(VibrateButton);

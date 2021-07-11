@@ -2,11 +2,11 @@
 
 .ad-free {
   #map {
-    height: 90vh;
+    height: 100vh - $bottom-nav-height;
   }
 }
 #map {
-  height: 90vh - $banner-offset; // calc does not work with css variable for some reason
+  height: 100vh -$bottom-nav-height - $banner-offset; // calc does not work with css variable for some reason
   // so I use scss and do it this way
   width: calc(100% + #{$bs-margin * 2});
   margin-left: -$bs-margin;
@@ -26,7 +26,7 @@
   .leaflet-control-attribution {
     font-size: 0.7em;
     position: fixed;
-    bottom: 10vh;
+    bottom: $bottom-nav-height;
     left: 0;
     width: 100%;
   }

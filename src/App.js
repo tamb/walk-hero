@@ -1,41 +1,26 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Container } from "reactstrap";
+import { Provide, connect } from "substate-connect/dist/react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
+import store, { STORE_EVENT } from "@store/store";
+import { VIEWS } from "@utils/enums";
 import FullPageSpinner from "@components/FullPageSpinner/FullPageSpinner";
 import Landing from "@views/Landing/Landing";
 
+import "./App.css";
+
 const Quest = React.lazy(() => import("@views/Quest/Quest"));
-const VIEWS = {
-  LANDING: "landing",
-  QUEST: "quest",
-  MINIGAMES: "minigames",
-};
+const MiniGames = React.lazy(() => import("@views/MiniGames/MiniGames"));
 
-window.WHGlobals = {
-  vibrationsOn: true,
-};
+console.log(store);
+window.store = store;
 
-const initialGameState = {
-  view: VIEWS.LANDING,
-};
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = initialGameState;
-  }
-
-  // VIEW switching
-  goQuest = () => {
-    this.setState({ view: VIEWS.QUEST });
-  };
-
-  goMinigames = () => {
-    this.setState({ view: VIEWS.MINIGAMES });
-  };
-
   goLanding = () => {
-    this.setState({ view: VIEWS.LANDING });
+    store.emit(STORE_EVENT.UPDATE_STATE, { "play_state.view": VIEWS.LANDING });
   };
 
   // Logic
@@ -43,26 +28,52 @@ class App extends React.Component {
   // Render Methods
   render() {
     return (
-      <Container fluid>
-        {this.state.view === VIEWS.QUEST && (
-          <React.Suspense fallback={<FullPageSpinner />}>
-            <Quest
-              appMethods={{
-                goLanding: this.goLanding,
-              }}
-            />
-          </React.Suspense>
-        )}
-        {this.state.view === VIEWS.LANDING && (
-          <Landing
-            isOpen={this.state.view === VIEWS.LANDING}
-            goQuest={this.goQuest}
-            goMinigames={this.goMinigames}
-          />
-        )}
-      </Container>
+      <BrowserRouter>
+        <Container fluid id="app">
+          <Switch>
+            <Route path="/quest">
+              <React.Suspense fallback={<FullPageSpinner />}>
+                <Quest />
+              </React.Suspense>
+            </Route>
+            <Route path="/minigames">
+              <React.Suspense fallback={<FullPageSpinner />}>
+                <MiniGames />
+              </React.Suspense>
+            </Route>
+            <Route path="">
+              <Landing
+                isOpen={this.props.play_state.view === VIEWS.LANDING}
+                goQuest={this.goQuest}
+                goMinigames={this.goMinigames}
+              />
+            </Route>
+          </Switch>
+        </Container>
+      </BrowserRouter>
     );
   }
 }
 
-export default App;
+App.propTypes = {
+  play_state: PropTypes.object,
+};
+
+const ConnectedApp = connect(store, {
+  play_state: "play_state",
+})(App);
+
+// WRITE_STATE_UPDATED will be the $type that is fired when we update state and want middleware to save to IDB
+export default Provide(
+  store,
+  [
+    STORE_EVENT.STATE_UPDATED,
+    STORE_EVENT.WRITE_STATE_UPDATED,
+    STORE_EVENT.PAUSED,
+    STORE_EVENT.UNPAUSED,
+    STORE_EVENT.START_WALK,
+  ],
+  function () {
+    console.log("I mounted", this, store.getCurrentState());
+  }
+)(ConnectedApp);

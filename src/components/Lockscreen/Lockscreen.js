@@ -2,14 +2,22 @@ import React from "react";
 import PropTypes from "prop-types";
 import { FormGroup, Label, Input } from "reactstrap";
 
+import store from "@store/store";
+
 import "./Lockscreen.scss";
 
 function Lockscreen(props) {
+  // LOCKSCREEN
+
+  function handleLockScreenSlider(e) {
+    store.emit("LOCKSCREEN_SLIDE", e);
+  }
+
   return (
     <div className="Lockscreen">
       <div className="Lockscreen__backdrop"></div>
       <FormGroup>
-        <Label for="unlock">Unlock Screen >>></Label>
+        <Label for="unlock">Unlock Screen &gt;&gt;&gt;</Label>
         <Input
           type="range"
           name="range"
@@ -17,7 +25,7 @@ function Lockscreen(props) {
           max="100"
           step="5"
           value={props.unlockValue}
-          onChange={props.setUnlockValue}
+          onChange={handleLockScreenSlider}
           id="unlock"
         />
       </FormGroup>
@@ -27,7 +35,6 @@ function Lockscreen(props) {
 
 Lockscreen.propTypes = {
   unlockValue: PropTypes.number,
-  setlockValue: PropTypes.func,
 };
 
 export default Lockscreen;

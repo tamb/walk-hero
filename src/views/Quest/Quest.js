@@ -1,9 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Row, Col } from "reactstrap";
+import { connect } from "substate-connect";
 
-import { CUSTOMEVENTS } from "@utils/enums";
+import store, { STORE_EVENT } from "@store/store";
 import {
-  toLatLong,
   startPoll,
   killPoll,
   getStartingPoint,
@@ -13,129 +14,111 @@ import cityWorker from "workerize-loader!@workers/cities"; // eslint-disable-lin
 import measureWorker from "workerize-loader!@workers/measurements"; // eslint-disable-line import/no-webpack-loader-syntax
 
 import BottomNav from "@components/BottomNav/BottomNav";
-import ConfirmEndWalkModal from "@components/ConfirmEndWalkModal/ConfirmEndWalkModal";
-import SettingsModal from "@components/SettingsModal/SettingsModal";
-import InstructionModal from "@components/InstructionModal/InstructionModal";
 import Lockscreen from "@components/Lockscreen/Lockscreen";
 import Map from "@components/Map/Map";
-import PauseModal from "@components/PauseModal/PauseModal";
+import ModalViewOne from "@modals/ModalViewOne/ModalViewOne";
 import Scorecard from "@components/Scorecard/Scorecard";
-import StartModal from "@components/StartModal/StartModal";
-import WarningModal from "@components/WarningModal/WarningModal";
+import SideMenu from "@components/SideMenu/SideMenu";
+
+const WiredBottomNav = connect(store, {
+  paused: "play_state.paused",
+  hasLocation: "play_state.has_location",
+})(BottomNav);
+
+const WiredLockscreen = connect(store, {
+  unlockValue: "play_state.unlock_value",
+})(Lockscreen);
+
+const WiredMap = connect(store, {
+  geoData: "quest.geodata",
+  paused: "play_state.paused",
+  hasLocation: "play_state.has_location",
+})(Map);
+
+const WiredScoreCard = connect(store, {
+  quest: "quest",
+})(Scorecard);
+
+const WiredSideMenu = connect(store, {
+  vibrationsOn: "game_settings.game_vibrations",
+  hapticOn: "game_settings.haptic_feedback",
+  open: "ancillaries.side_menu_open",
+})(SideMenu);
 
 const CityWorker = cityWorker();
 const MeasurementWorker = measureWorker();
-
-const VIEWS = {
-  LANDING: "landing",
-  QUEST: "quest",
-  MINIGAMES: "minigames",
-};
-
-const initialGameState = {
-  // game state
-  hasLocation: false,
-  isUnlocked: true,
-  paused: false,
-  start: false,
-  unlockValue: 0,
-  walkEnded: false,
-  view: VIEWS.QUEST,
-  WakeLockSentinel: null,
-
-  // geo state
-  // TODO: snag walk from indexeddb or create new walk and expose in spread operator
-  distanceFromStartCM: 0,
-  distanceTraveledInCM: 0,
-  farthestGeoDataFromStart: null,
-  geoData: {
-    coords: {},
-  },
-  journeyTime: 0,
-  startingLocation: {},
-  totalDistanceTraveledInCM: 0,
-  citiesVisited: [],
-  currentCity: null,
-  locationPings: 0,
-
-  // modals
-  confirmEndWalkModalOpen: false,
-  dataModalOpen: false,
-  instructionsModalOpen: false,
-  pauseModalOpen: false,
-  startModalOpen: false,
-  warningModalOpen: true,
-};
 
 class Quest extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = initialGameState;
-
     this.journeyTimePoll = null;
     this.map = null;
     this.poll = null;
+    this.WakeLockSentinel = null; // TODO refactor to use this sentinel
   }
 
   // Lifecycle Methods
   componentDidMount() {
     getStartingPoint(this.setStart);
-    window.addEventListener(
-      CUSTOMEVENTS.DATA_MODAL_TOGGLE,
-      this.dataModalToggle
-    );
+    store.on(STORE_EVENT.PAUSED, this.killPolls); // pause response
+    store.on(STORE_EVENT.UNPAUSED, this.startPolls); // pause response
+    store.on(STORE_EVENT.START_WALK, this.startPolls);
+    store.on(STORE_EVENT.REQUEST_WAKELOCK, this.requestWakeLock);
+    store.on("LOCKSCREEN_SLIDER", this.setUnlockValue);
   }
 
   componentWillUnmount() {
     this.killPolls();
-    window.removeEventListener(
-      CUSTOMEVENTS.DATA_MODAL_TOGGLE,
-      this.dataModalToggle
-    );
+    store.off(STORE_EVENT.PAUSED, this.killPolls); // pause response
+    store.off(STORE_EVENT.UNPAUSED, this.startPolls); // pause response
+    store.off(STORE_EVENT.START_WALK, this.startPolls);
+    store.off(STORE_EVENT.REQUEST_WAKELOCK, this.requestWakeLock);
+    store.off("LOCKSCREEN_SLIDER", this.setUnlockValue);
   }
 
-  // VIEW switching
-
   // Logic
-  acceptWarning = () => {
-    this.setState({ warningModalOpen: false, instructionsModalOpen: true });
-  };
 
   calculateFarthestGeo = (_geoData) => {
     let _farthestGeoData = null;
 
-    if (this.state.farthestGeoDataFromStart) {
+    if (this.props.farthestGeoDataFromStart) {
       MeasurementWorker.distBetweenInCM(
-        cloneGeoData(this.state.farthestGeoDataFromStart),
-        cloneGeoData(this.state.start)
+        cloneGeoData(this.props.geo.farthestGeoDataFromStart),
+        cloneGeoData(this.props.geo.start)
       ).then((value1) => {
         MeasurementWorker.distBetweenInCM(
           cloneGeoData(_geoData),
-          cloneGeoData(this.state.farthestGeoDataFromStart)
+          cloneGeoData(this.props.geo.farthestGeoDataFromStart)
         ).then((value2) => {
           if (value2 > value1) {
             _farthestGeoData = _geoData;
-            this.setState({ farthestGeoDataFromStart: _farthestGeoData });
+            store.emit("UPDATE_STATE", {
+              "quest.farthest_geodata_from_origin": _farthestGeoData,
+            });
           }
         });
       });
     } else {
       _farthestGeoData = _geoData;
-      this.setState({ farthestGeoDataFromStart: _farthestGeoData });
+      store.emit("UPDATE_STATE", {
+        "quest.farthest_geodata_from_origin": _farthestGeoData,
+      });
     }
   };
 
+  // TODO: origin geodata is incorrect and being set as city
+  // FIXME: origin_geodata should be geolocation object
   calculatePointToPointFromStart = (_geoData) => {
     let _distFromStart = null;
 
     MeasurementWorker.distBetweenInCM(
-      cloneGeoData(this.state.start),
+      cloneGeoData(this.props.questData.origin_geodata),
       cloneGeoData(_geoData)
     ).then((value) => {
       _distFromStart = value;
-      this.setState({
-        distanceFromStartCM: _distFromStart,
+      store.emit("UPDATE_STATE", {
+        "quest.distance.p2p_from_origin_cm": _distFromStart,
       });
     });
   };
@@ -145,52 +128,32 @@ class Quest extends React.Component {
 
     MeasurementWorker.distBetweenInCM(
       cloneGeoData(_geoData),
-      cloneGeoData(this.state.geoData)
+      cloneGeoData(this.props.questData.geodata)
     ).then((value) => {
       _distTraveled = value;
       if (_distTraveled >= 35) {
-        this.setState({
-          totalDistanceTraveledInCM:
-            this.state.totalDistanceTraveledInCM + _distTraveled,
+        store.emit(STORE_EVENT.UPDATE_STATE, {
+          "quest.total_distance_traveled_cm":
+            this.props.questData.geodata.totalDistanceTraveledInCM +
+            _distTraveled,
         });
       }
-      this.setState({
-        distanceTraveledInCM: _distTraveled,
+      store.emit(STORE_EVENT.UPDATE_STATE, {
+        "quest.distance_traveled_cm": _distTraveled,
       });
-    });
-  };
-
-  cancelEndWalk = () => {
-    this.setState({
-      endWalk: false,
-      confirmEndWalkModalOpen: false,
-      paused: true,
-      pauseModalOpen: true,
     });
   };
 
   confirmEndWalk = () => {
     this.killPolls();
-    this.setState(initialGameState);
     getStartingPoint(this.setStart);
   };
 
-  dataModalToggle = () => {
-    this.setState({
-      dataModalOpen: !this.state.dataModalOpen,
-    });
-  };
-
-  endWalk = () => {
-    this.setState({
-      confirmEndWalkModalOpen: true,
-      pauseModalOpen: false,
-    });
-  };
-  getCurrentCity = (latLong) => {
-    CityWorker.getEntryByLatLong(latLong).then((value) => {
+  getCurrentCity = (geoData) => {
+    console.log(geoData);
+    CityWorker.getCityByGeoData(geoData).then((value) => {
       if (value.length !== 0) {
-        const clonedCities = [...this.state.citiesVisited, value[0]];
+        const clonedCities = [...this.props.questData.cities_visited, value[0]];
         const newCitiesVisited = clonedCities.filter((city) => {
           if (value[0].lat !== city.lat && value[0].lng !== city.lng) {
             return true;
@@ -201,26 +164,20 @@ class Quest extends React.Component {
         if (newCitiesVisited.length === 0) {
           newCitiesVisited.push(value[0]);
         }
-        this.setState({
-          startingLocation: value[0],
-          currentCity: value[0],
-          citiesVisited: newCitiesVisited,
+        store.emit(STORE_EVENT.UPDATE_STATE, {
+          "quest.origin_geodata": value[0],
+          "quest.current_city": value[0],
+          "quest.cities_visited": newCitiesVisited,
         });
       } else {
-        this.setState({
-          failedAtCity: true,
-          startingLocation: {
-            name: "Could not find city",
-            country: "Could not find country",
-          },
-        });
+        // failed to get city
       }
     });
   };
 
   journeyTimeTick = () => {
-    this.setState({
-      journeyTime: this.state.journeyTime + 1,
+    store.emit(STORE_EVENT.UPDATE_STATE, {
+      "quest.journey_time_s": store.getProp("quest.journey_time_s") + 1,
     });
   };
 
@@ -230,90 +187,21 @@ class Quest extends React.Component {
     clearInterval(this.journeyTimePoll);
   };
 
-  lockScreen = () => {
-    this.setState({ isUnlocked: false });
-    this.setWakeLock();
-  };
-
-  readInstructions = () => {
-    this.setState({
-      instructionsRead: true,
-      instructionsModalOpen: false,
-      startModalOpen: true,
-    });
-  };
-
-  releaseWakeLock = () => {
-    if (this.state.WakeLockSentinel) {
-      console.log("releasing...");
-      this.state.WakeLockSentinel.release().then(() => {
-        console.info("[WakeLock]: OFF");
-        this.setState({ WakeLockSentinel: null });
-      });
-    }
-  };
-
   setStart = (data) => {
-    this.setState(
-      {
-        start: data,
-        geoData: data,
-        hasLocation: true,
-        locationPings: this.state.locationPings + 1,
-      },
-      () => {
-        this.getCurrentCity(cloneGeoData(data));
-      }
-    );
-  };
-
-  setUnlockValue = (e) => {
-    const value = parseInt(e.target.value);
-    this.setState(
-      {
-        unlockValue: value === 100 ? 0 : value,
-        isUnlocked: value === 100,
-      },
-      () => {
-        setTimeout(() => {
-          if (this.state.isUnlocked) {
-            this.releaseWakeLock();
-          }
-          if (this.state.unlockValue < 100) {
-            this.setState({ unlockValue: 0 });
-          }
-        }, 700);
-      }
-    );
-  };
-
-  setWakeLock = async () => {
-    if ("wakeLock" in navigator) {
-      try {
-        const wakeLock = await navigator.wakeLock.request("screen");
-        console.info("[WakeLock]: ON");
-        this.setState({
-          WakeLockSentinel: wakeLock,
-        });
-      } catch (err) {
-        // The wake lock request fails - usually system-related, such as low battery.
-        console.info(`${err.name}, ${err.message}`);
-        this.setState({ WakeLockSentinel: null });
-      }
-    } else {
-      console.info("no WakeLock");
-    }
-  };
-
-  startNewWalk = () => {
-    this.setState({ startModalOpen: false });
-    this.startPolls();
+    console.log("[GeoLocation Success - ", data);
+    store.emit(STORE_EVENT.UPDATE_STATE, {
+      "play_state.has_location": true,
+      "quest.geodata": data,
+      "quest.origin_geodata": data,
+      "quest.location_pings": 0,
+    });
+    this.getCurrentCity(cloneGeoData(data));
   };
 
   startPolls = () => {
     this.poll = startPoll(this.success);
     this.cityPoll = setInterval(
-      () => this.getCurrentCity(cloneGeoData(this.state.geoData)),
+      () => this.getCurrentCity(cloneGeoData(this.props.questData.geodata)),
       12000
     );
     this.journeyTimePoll = setInterval(this.journeyTimeTick, 1000);
@@ -324,93 +212,93 @@ class Quest extends React.Component {
     this.calculatePointToPointFromStart(geoData);
     this.calculateTotalDistanceTraveledInCM(geoData);
 
-    this.setState({
-      geoData,
-      locationPings: this.state.locationPings + 1,
+    store.emit(STORE_EVENT.UPDATE_STATE, {
+      "quest.geodata": cloneGeoData(geoData),
+      "quest.location_pings": this.props.locationPings + 1,
     });
   };
 
-  togglePaused = () => {
-    this.setState({ paused: !this.state.paused }, () => {
-      if (this.state.paused) {
-        this.setState({ pauseModalOpen: true });
-        this.killPolls();
-      } else {
-        this.setState({ pauseModalOpen: false });
-        this.startPolls();
-      }
-    });
+  // wakelock
+  releaseWakeLock = () => {
+    if (this.WakeLockSentinel) {
+      console.log("releasing...");
+      this.WakeLockSentinel.release().then(() => {
+        console.info("[WakeLock]: OFF");
+        this.WakeLockSentinel = null;
+      });
+    }
   };
+
+  requestWakeLock = async () => {
+    if ("wakeLock" in navigator) {
+      try {
+        this.WakeLockSentinel = await navigator.wakeLock.request("screen");
+        console.info("[WakeLock]: ON");
+        store.emit(STORE_EVENT.UPDATE_STATE, {
+          "play_state.is_unlocked": false,
+        });
+      } catch (err) {
+        // The wake lock request fails - usually system-related, such as low battery.
+        console.info(`${err.name}, ${err.message}`);
+        this.WakeLockSentinel = null;
+        store.emit(STORE_EVENT.UPDATE_STATE, {
+          "play_state.is_unlocked": true,
+        });
+      }
+    } else {
+      console.info("no WakeLock");
+      store.emit(STORE_EVENT.UPDATE_STATE, {
+        "play_state.is_unlocked": true,
+      });
+    }
+  };
+
+  setUnlockValue(e) {
+    const value = parseInt(e.target.value);
+    store.emit(STORE_EVENT.UPDATE_STATE, {
+      "play_state.unlock_value": value === 100 ? 0 : value,
+      "play_state.is_unlocked": value === 100,
+    });
+
+    if (store.getProp("play_state.is_unlocked")) {
+      this.releaseWakeLock();
+    }
+
+    setTimeout(() => {
+      if (store.getProp("play_state.unlock_value") < 100) {
+        store.emit(STORE_EVENT.UPDATE_STATE, {
+          "play_state.unlock_value": 0,
+        });
+      }
+    }, 700);
+  }
 
   // Render Methods
+  // TODO: remove ModalViewOne
   render() {
     return (
       <React.Fragment>
-        {!this.state.isUnlocked && (
-          <Lockscreen
-            unlockValue={this.state.unlockValue}
-            setUnlockValue={this.setUnlockValue}
-          />
-        )}
-        <Scorecard
-          journeyTime={this.state.journeyTime}
-          traveled={this.state.totalDistanceTraveledInCM}
-        />
+        {!this.props.playState.is_unlocked && <WiredLockscreen />}
+        <WiredScoreCard />
+        <WiredSideMenu />
         <Row>
-          <SettingsModal
-            {...this.state}
-            modalProps={{
-              isOpen: this.state.dataModalOpen,
-              toggle: this.dataModalToggle,
-            }}
-            unlockValue={this.state.unlockValue}
-            setUnlockValue={this.setUnlockValue}
-            lockScreen={this.lockScreen}
-          />
-          <Col xs={12}>
-            {this.state.hasLocation && (
-              <Map
-                geoData={this.state.geoData}
-                paused={this.state.paused}
-                hasLocation={this.state.hasLocation}
-                currentLatLong={toLatLong(this.state.geoData)}
-              />
-            )}
-          </Col>
+          <Col xs={12}>{this.props.playState.has_location && <WiredMap />}</Col>
         </Row>
-
-        <WarningModal
-          acceptWarning={this.acceptWarning}
-          denyWarning={this.props.appMethods.goLanding}
-          isOpen={this.state.warningModalOpen}
-        />
-        <InstructionModal
-          toggle={this.readInstructions}
-          isOpen={this.state.instructionsModalOpen}
-        />
-        <StartModal
-          startNewWalk={this.startNewWalk}
-          continueOldWalk={() => alert("comming soon...")}
-          isOpen={this.state.startModalOpen}
-        />
-        <PauseModal
-          isOpen={this.state.pauseModalOpen}
-          endWalk={this.endWalk}
-          continueWalk={this.togglePaused}
-        />
-        <ConfirmEndWalkModal
-          isOpen={this.state.confirmEndWalkModalOpen}
-          cancelEndWalk={this.cancelEndWalk}
-          confirmEndWalk={this.confirmEndWalk}
-        />
-        <BottomNav
-          paused={this.state.paused}
-          togglePaused={this.togglePaused}
-          hasLocation={this.state.hasLocation}
-        />
+        <WiredBottomNav togglePaused={this.togglePaused} />
+        <ModalViewOne />
       </React.Fragment>
     );
   }
 }
 
-export default Quest;
+Quest.propTypes = {
+  // ancillarieState: PropTypes.object,
+  playState: PropTypes.object,
+  questData: PropTypes.object,
+};
+
+export default connect(store, {
+  // ancillarieState: "ancillaries",
+  playState: "play_state",
+  questData: "quest",
+})(Quest);

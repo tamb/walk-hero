@@ -19,9 +19,9 @@ import VibrateButton from "@components/VibrateButton/VibrateButton";
 
 function SettingsModal(props) {
   return (
-    <Modal {...props.modalProps} centered>
-      <ModalHeader toggle={props.modalProps.toggle}>Data</ModalHeader>
-      {props.start && (
+    <Modal centered>
+      <ModalHeader toggle={props.toggle}>Data</ModalHeader>
+      {/* {props.start && ( */}
         <Container>
           <Row>
             <Col>
@@ -34,9 +34,9 @@ function SettingsModal(props) {
                 <Label check>
                   Vibration
                   <Input
-                  defaultChecked={true}
+                  defaultChecked={props.vibrationsOn}
                     onChange={(e) => {
-                      window.WHGlobals.vibrationsOn = e.target.checked;
+                      return e.target.checked;
                     }}
                     type="checkbox"
                   />
@@ -44,7 +44,7 @@ function SettingsModal(props) {
               </FormGroup>
             </Col>
           </Row>
-          <Row>
+          {/* <Row>
             <Col>
               <h2>Starting Data</h2>
               <Table responsive>
@@ -98,9 +98,9 @@ function SettingsModal(props) {
                 </div>
               </section>
             </Col>
-          </Row>
+          </Row> */}
         </Container>
-      )}
+      {/* )} */}
     </Modal>
   );
 }
@@ -111,6 +111,7 @@ SettingsModal.propTypes = {
   totalDistanceTraveledInCM: PropTypes.number,
   startingLocation: PropTypes.object,
   geoData: PropTypes.object,
+  vibrationsOn: PropTypes.bool,
 };
 
 export default SettingsModal;

@@ -1,0 +1,38 @@
+.Hangman {
+  &__mage {
+    font-size: 2rem;
+  }
+  &__blank-word {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+  }
+
+  &__alphabet {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    button {
+      font-size: 1.6rem;
+      margin: 0.2rem;
+    }
+  }
+
+  &__emoji-list {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__health-emoji {
+    opacity: 0.25;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &.hit {
+      opacity: 1;
+    }
+  }
+}

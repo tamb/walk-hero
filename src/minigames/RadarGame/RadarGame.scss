@@ -1,0 +1,129 @@
+.RadarGame {
+  &__tier {
+    height: 1px;
+    width: 1px;
+    border-color: black;
+    border-radius: 50%;
+    position: absolute;
+    opacity: 0.6;
+    // animation: spin infinite linear;
+    // overflow: hidden;
+
+    // &--sm {
+    //   z-index: 90;
+    //   border: 40vw solid gray;
+    //   clip-path: polygon(
+    //     0% 0%,
+    //     100% 0%,
+    //     100% 100%,
+    //     0% 100%,
+    //     0% 50%,
+    //     20% 50%,
+    //     20% 80%,
+    //     40% 70%,
+    //     40% 55%,
+    //     50% 50%,
+    //     40% 45%,
+    //     40% 30%,
+    //     20% 20%,
+    //     20% 50%,
+    //     0% 50%
+    //   );
+    //   // animation-duration: 1.5s;
+    // }
+
+    // &--md {
+    //   z-index: 90;
+    //   border: 40vw solid gray;
+    //   clip-path: polygon(
+    //     0% 0%,
+    //     100% 0%,
+    //     100% 100%,
+    //     0% 100%,
+    //     0% 50%,
+    //     20% 50%,
+    //     20% 80%,
+    //     40% 70%,
+    //     40% 55%,
+    //     50% 50%,
+    //     40% 45%,
+    //     40% 30%,
+    //     20% 20%,
+    //     20% 50%,
+    //     0% 50%
+    //   );
+    //   // animation-duration: 1s;
+    // }
+
+    // &--lg {
+    //   z-index: 90;
+    //   border: 40vw solid gray;
+    //   clip-path: polygon(
+    //     0% 0%,
+    //     100% 0%,
+    //     100% 100%,
+    //     0% 100%,
+    //     0% 50%,
+    //     20% 50%,
+    //     20% 80%,
+    //     40% 70%,
+    //     40% 55%,
+    //     50% 50%,
+    //     40% 45%,
+    //     40% 30%,
+    //     20% 20%,
+    //     20% 50%,
+    //     0% 50%
+    //   );
+    //   // animation-duration: 0.75s;
+    // }
+  }
+
+  &__stage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid;
+    height: 80vw;
+    max-height: 80vw;
+    max-width: 80vw;
+    width: 80vw;
+    background-color: white;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__btn-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2vh;
+  }
+
+  &__blip {
+    position: absolute;
+    font-size: 6vw;
+    z-index: 60;
+    &::after {
+      content: "👹";
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes blink {
+  from {
+    opacity: 0;
+    transform: scale(0.1) translate(50px, -50px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translate(50px, -50px);
+  }
+}
