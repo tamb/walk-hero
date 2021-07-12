@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { Modal, ModalHeader, ModalFooter, ModalBody, Alert } from "reactstrap";
 import { useHistory } from "react-router-dom";
 
-import store, { STORE_EVENT } from "@store/store";
-import { MINIGAME_STATUS } from "@utils/enums";
-import VibrateButton from "@components/VibrateButton/VibrateButton";
+import store, { STORE_EVENT } from "./../../store/store";
+import { MINIGAME_STATUS } from "./../../utils/enums";
+import VibrateButton from "./../../components/VibrateButton/VibrateButton";
 
 const PRIZE = {
   cash: [4, -3],

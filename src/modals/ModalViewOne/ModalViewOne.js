@@ -1,14 +1,14 @@
 import React from "react";
 import { connect } from "substate-connect";
 
-import store, { STORE_EVENT } from "@store/store";
-import { VIEWS } from "@utils/enums";
+import store, { STORE_EVENT } from "./../../store/store";
+import { VIEWS } from "./../../utils/enums";
 
 // Modals
-import ConfirmEndWalkModal from "@modals/ConfirmEndWalkModal/ConfirmEndWalkModal";
-import PauseModal from "@modals/PauseModal/PauseModal";
-import StartModal from "@modals/StartModal/StartModal";
-import WarningModal from "@modals/WarningModal/WarningModal";
+import ConfirmEndWalkModal from "./../../modals/ConfirmEndWalkModal/ConfirmEndWalkModal";
+import PauseModal from "./../../modals/PauseModal/PauseModal";
+import StartModal from "./../../modals/StartModal/StartModal";
+import WarningModal from "./../../modals/WarningModal/WarningModal";
 
 const WiredConfirmEndWalkModal = connect(store, {
   isOpen: "ancillaries.confirm_end_walk_modal_open",

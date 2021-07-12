@@ -1,4 +1,4 @@
-import { MINIGAME_STATUS } from "@utils/enums";
+import { MINIGAME_STATUS } from "./../utils/enums";
 
 export const minigames = {
   cash: 0,

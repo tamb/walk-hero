@@ -1,9 +1,9 @@
 import React from "react";
 import randomInteger from "random-int";
 
-import store, {STORE_EVENT} from "@store/store";
-import Countdown from "@components/Countdown/Countdown";
-import VibrateButton from "@components/VibrateButton/VibrateButton";
+import store, {STORE_EVENT} from "./../../store/store";
+import Countdown from "./../../components/Countdown/Countdown";
+import VibrateButton from "./../../components/VibrateButton/VibrateButton";
 import RaidDirectionsModal from "./RaidDirectionsModal";
 import RaidGameStatusModal from "./RaidGameStatusModal";
 import "./Raid.scss";

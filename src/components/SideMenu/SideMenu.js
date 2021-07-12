@@ -9,8 +9,8 @@ import {
   UncontrolledCollapse,
 } from "reactstrap";
 
-import store, { STORE_EVENT } from "@store/store";
-import VibrateButton from "@components/VibrateButton/VibrateButton";
+import store, { STORE_EVENT } from "./../../store/store";
+import VibrateButton from "./../../components/VibrateButton/VibrateButton";
 
 import "./SideMenu.scss";
 

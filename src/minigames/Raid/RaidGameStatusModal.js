@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Modal, ModalFooter, ModalBody, Alert } from "reactstrap";
 
-import VibrateButton from "@components/VibrateButton/VibrateButton";
+import VibrateButton from "./../../components/VibrateButton/VibrateButton";
 
 const RaidGameStatusModal = (props) => {
   const [isOpen, setIsOpen] = React.useState(true);

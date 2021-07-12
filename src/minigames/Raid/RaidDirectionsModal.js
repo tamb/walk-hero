@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Modal, ModalHeader, ModalFooter, ModalBody, Alert } from "reactstrap";
 
-import VibrateButton from "@components/VibrateButton/VibrateButton";
+import VibrateButton from "./../../components/VibrateButton/VibrateButton";
 
 const RaidDirectionsModal = (props) => {
   return (

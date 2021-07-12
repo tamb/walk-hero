@@ -1,5 +1,5 @@
 import substate from "substate";
-import { VIEWS } from "@utils/enums";
+import { VIEWS } from "./../utils/enums";
 
 // Save the following in IDB
 import { hero } from "./hero";

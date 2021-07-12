@@ -4,18 +4,17 @@ import { Container } from "reactstrap";
 import { Provide, connect } from "substate-connect/dist/react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
-import store, { STORE_EVENT } from "@store/store";
-import { VIEWS } from "@utils/enums";
-import FullPageSpinner from "@components/FullPageSpinner/FullPageSpinner";
-import Landing from "@views/Landing/Landing";
+import store, { STORE_EVENT } from "./store/store";
+import { VIEWS } from "./utils/enums";
+import FullPageSpinner from "./components/FullPageSpinner/FullPageSpinner";
+import Landing from "./views/Landing/Landing";
 
 import "./App.css";
 
-const Quest = React.lazy(() => import("@views/Quest/Quest"));
-const MiniGames = React.lazy(() => import("@views/MiniGames/MiniGames"));
+const Quest = React.lazy(() => import("./views/Quest/Quest"));
+const MiniGames = React.lazy(() => import("./views/MiniGames/MiniGames"));
 
 console.log(store);
-window.store = store;
 
 
 class App extends React.Component {
@@ -43,9 +42,6 @@ class App extends React.Component {
             </Route>
             <Route path="">
               <Landing
-                isOpen={this.props.play_state.view === VIEWS.LANDING}
-                goQuest={this.goQuest}
-                goMinigames={this.goMinigames}
               />
             </Route>
           </Switch>
@@ -55,9 +51,7 @@ class App extends React.Component {
   }
 }
 
-App.propTypes = {
-  play_state: PropTypes.object,
-};
+
 
 const ConnectedApp = connect(store, {
   play_state: "play_state",
@@ -74,6 +68,6 @@ export default Provide(
     STORE_EVENT.START_WALK,
   ],
   function () {
-    console.log("I mounted", this, store.getCurrentState());
+    console.log("I mounted", store.getCurrentState());
   }
 )(ConnectedApp);

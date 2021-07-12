@@ -3,22 +3,22 @@ import PropTypes from "prop-types";
 import { Row, Col } from "reactstrap";
 import { connect } from "substate-connect";
 
-import store, { STORE_EVENT } from "@store/store";
+import store, { STORE_EVENT } from "./../../store/store";
 import {
   startPoll,
   killPoll,
   getStartingPoint,
   cloneGeoData,
-} from "@services/Geo";
-import cityWorker from "workerize-loader!@workers/cities"; // eslint-disable-line import/no-webpack-loader-syntax
-import measureWorker from "workerize-loader!@workers/measurements"; // eslint-disable-line import/no-webpack-loader-syntax
+} from "./../../services/Geo";
+import cityWorker from "workerize-loader!./../../workers/cities"; // eslint-disable-line import/no-webpack-loader-syntax
+import measureWorker from "workerize-loader!./../../workers/measurements"; // eslint-disable-line import/no-webpack-loader-syntax
 
-import BottomNav from "@components/BottomNav/BottomNav";
-import Lockscreen from "@components/Lockscreen/Lockscreen";
-import Map from "@components/Map/Map";
-import ModalViewOne from "@modals/ModalViewOne/ModalViewOne";
-import Scorecard from "@components/Scorecard/Scorecard";
-import SideMenu from "@components/SideMenu/SideMenu";
+import BottomNav from "./../../components/BottomNav/BottomNav";
+import Lockscreen from "./../../components/Lockscreen/Lockscreen";
+import Map from "./../../components/Map/Map";
+import ModalViewOne from "./../../modals/ModalViewOne/ModalViewOne";
+import Scorecard from "./../../components/Scorecard/Scorecard";
+import SideMenu from "./../../components/SideMenu/SideMenu";
 
 const WiredBottomNav = connect(store, {
   paused: "play_state.paused",

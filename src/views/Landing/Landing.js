@@ -2,11 +2,11 @@ import React from "react";
 import { Row, Col, Alert } from "reactstrap";
 import { useHistory } from "react-router-dom";
 
-import store, { STORE_EVENT } from "@store/store";
-import { VIEWS } from "@utils/enums";
-import VibrateButton from "@components/VibrateButton/VibrateButton";
-import knight from "@gif/knightherov3.gif";
-import { version } from "@root/package.json";
+import store, { STORE_EVENT } from "./../../store/store";
+import { VIEWS } from "./../../utils/enums";
+import VibrateButton from "./../../components/VibrateButton/VibrateButton";
+import knight from "./../../gif/knightherov3.gif";
+import { version } from "./../../../package.json";
 
 import "./Landing.scss";
 

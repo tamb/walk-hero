@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "substate-connect";
 import { Link } from "react-router-dom";
 
-import store from "@store/store";
+import store from "./../../store/store";
 
 function VibrateLink(props) {
   function clickVibrate() {
