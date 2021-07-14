@@ -1,13 +1,26 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "substate-connect";
+import { connect } from "substate-connect/dist/react";
 import { Link } from "react-router-dom";
 
-import store from "./../../store/store";
+import store from "../../store/store";
 
-function VibrateLink(props) {
-  function clickVibrate() {
-    if (props.vibrationsOn) {
+function VibrateLink(props: {
+  onClick?: React.MouseEventHandler;
+  vibrationsOn: any;
+  pattern?: number | number[];
+  href: string;
+  color: any;
+  children:
+    | boolean
+    | React.ReactChild
+    | React.ReactFragment
+    | React.ReactPortal
+    | null
+    | undefined;
+}) {
+  function clickVibrate(): void {
+    if (props.vibrationsOn && props.pattern !== undefined) {
       window.navigator.vibrate(props.pattern);
     }
   }

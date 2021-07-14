@@ -1,7 +1,7 @@
 import distFrom from "distance-from";
 
 // eslint-disable-next-line
-import { toLatLong } from "./../services/Geo"; // eslint-disable-line
+import { toLatLong } from "../services/Geo"; // eslint-disable-line
 
 export function toFeet(cm) {
   return cm / 30.48;

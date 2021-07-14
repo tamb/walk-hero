@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Container } from "reactstrap";
 import { Provide, connect } from "substate-connect/dist/react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";

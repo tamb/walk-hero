@@ -1,8 +1,8 @@
 import React from "react";
 
-import words from "./../../data/words.json";
-import store, { STORE_EVENT } from "./../../store/store";
-import { MINIGAME_STATUS } from "./../../utils/enums";
+import words from "../../data/words.json";
+import store, { STORE_EVENT } from "../../store/store";
+import { MINIGAME_STATUS } from "../../utils/enums";
 
 import HangmanDirectionsModal from "./HangmanDirectionsModal";
 import "./Hangman.scss";

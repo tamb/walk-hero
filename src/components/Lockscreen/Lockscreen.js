@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { FormGroup, Label, Input } from "reactstrap";
 
-import store from "./../../store/store";
+import store from "../../store/store";
 
 import "./Lockscreen.scss";
 
