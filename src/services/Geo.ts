@@ -1,6 +1,6 @@
-export const toTime = (geoData) => {
-  try{
-    const o = new Intl.DateTimeFormat(navigator.languages, {
+export const toTime = (geoData: GeolocationPosition): string | undefined => {
+  try {
+    const o = new Intl.DateTimeFormat([...navigator.languages], {
       timeStyle: "medium",
       dateStyle: "short",
     });
@@ -10,31 +10,35 @@ export const toTime = (geoData) => {
   }
 };
 
-export const toLatLong = (geoData) => {
-  try{
+export const toLatLong = (
+  geoData: GeolocationPosition
+): number[] | undefined => {
+  try {
     return [geoData.coords.latitude, geoData.coords.longitude];
   } catch (err) {
     console.error("[toLatLong] ", err);
   }
 };
 
-export function getStartingPoint(startingPointCB) {
+export function getStartingPoint(startingPointCB: PositionCallback) {
   navigator.geolocation.getCurrentPosition(startingPointCB);
 }
 
-export function startPoll(successCB) {
-  return navigator.geolocation.watchPosition(successCB, null, {
+export function startPoll(successCB: PositionCallback) {
+  return navigator.geolocation.watchPosition(successCB, undefined, {
     enableHighAccuracy: true,
     timeout: 1000,
   });
 }
 
-export function killPoll(poll) {
+export function killPoll(poll: number): void {
   navigator.geolocation.clearWatch(poll);
 }
 
-export function cloneGeoData(geoData) {
-  try{
+export function cloneGeoData(
+  geoData: GeolocationPosition
+): GeolocationPosition | undefined {
+  try {
     return {
       timestamp: geoData.timestamp,
       coords: {
@@ -47,7 +51,7 @@ export function cloneGeoData(geoData) {
         speed: geoData.coords.speed,
       },
     };
-  } catch (err){
+  } catch (err) {
     console.error("[cloneGeoData] ", err);
   }
 }

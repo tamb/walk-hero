@@ -1,5 +1,5 @@
 import Entity from "./Entity";
-import {cloneGeoData} from "./../services/Geo";
+import {cloneGeoData} from "../services/Geo";
 
 export default class Walk extends Entity{
     constructor(walkName){

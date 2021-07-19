@@ -9,19 +9,19 @@ import {
 } from "react-router-dom";
 import { Row, Col } from "reactstrap";
 
-import store from "@store/store";
-import { MINIGAME_STATUS } from "@utils/enums";
-import VibrateLink from "@components/VibrateLink/VibrateLink";
-import VibrateButton from "@components/VibrateButton/VibrateButton";
-import MiniGameEndModal from "@modals/MiniGameEndModal/MiniGameEndModal";
+import store from "../../store/store";
+import { MINIGAME_STATUS } from "../../utils/enums";
+import VibrateLink from "../../components/VibrateLink/VibrateLink";
+import VibrateButton from "../../components/VibrateButton/VibrateButton";
+import MiniGameEndModal from "../../modals/MiniGameEndModal/MiniGameEndModal";
 
 import "./MiniGames.scss";
 
-const Hangman = React.lazy(() => import("@minigames/Hangman/Hangman"));
+const Hangman = React.lazy(() => import("../../minigames/Hangman/Hangman"));
 const SliderPrecision = React.lazy(() =>
-  import("@minigames/SliderPrecision/SliderPrecision")
+  import("../../minigames/SliderPrecision/SliderPrecision")
 );
-const Raid = React.lazy(() => import("@minigames/Raid/Raid"));
+const Raid = React.lazy(() => import("../../minigames/Raid/Raid"));
 
 function MiniGames(props) {
   const { path, url } = useRouteMatch();

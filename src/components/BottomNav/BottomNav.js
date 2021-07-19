@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { version } from "@root/package.json";
+import { version } from "../../../package.json";
 
-import store, { STORE_EVENT } from "@store/store";
+import store, { STORE_EVENT } from "../../store/store";
 
-import VibrateButton from "@components/VibrateButton/VibrateButton";
+import VibrateButton from "../VibrateButton/VibrateButton";
 
 import "./BottomNav.scss";
 

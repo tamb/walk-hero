@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import { connect } from "substate-connect";
 
-import store from "@store/store";
+import store from "../../store/store";
 
 function VibrateButton(props) {
   function clickVibrate() {

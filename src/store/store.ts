@@ -1,5 +1,5 @@
 import substate from "substate";
-import { VIEWS } from "@utils/enums";
+import { VIEWS } from "../utils/enums";
 
 // Save the following in IDB
 import { hero } from "./hero";
@@ -40,51 +40,6 @@ const store = new substate({
     play_state,
   },
 });
-
-// const store = new substate({
-//   name: "WalkHero",
-//   state: {
-//     // gameState: {
-//     //   hasLocation: false,
-//     //   isUnlocked: true,
-//     //   paused: false,
-//     //   start: false,
-//     //   unlockValue: 0,
-//     //   walkEnded: false,
-//     //   vibrationsOn: true,
-//     //   view: VIEWS.LANDING,
-//     //   WakeLockSentinel: null,
-//     // },
-//     ...modals,
-//     // modals: {
-//     //   confirmEndWalkModalOpen: false,
-//     //   settingsModalOpen: false,
-//     //   instructionsModalOpen: false,
-//     //   pauseModalOpen: false,
-//     //   startModalOpen: false,
-//     //   warningModalOpen: true,
-//     // },
-
-//     // geo is now quest_data:
-//     ...quest,
-//     // geo: {
-//     //   // geo state
-//     //   // TODO: snag walk from indexeddb or create new walk and expose in spread operator
-//     //   distanceFromStartCM: 0,
-//     //   distanceTraveledInCM: 0,
-//     //   farthestGeoDataFromStart: null,
-//     //   geoData: {
-//     //     coords: {},
-//     //   },
-//     //   journeyTime: 0,
-//     //   startingLocation: {},
-//     //   totalDistanceTraveledInCM: 0,
-//     //   citiesVisited: [],
-//     //   currentCity: null,
-//     //   locationPings: 0,
-//     // },
-//   },
-// });
 
 export const STORE_EVENT = {
   PAUSED: "PAUSED",

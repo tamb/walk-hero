@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { Modal, ModalHeader, ModalFooter, ModalBody, Alert } from "reactstrap";
 import { useHistory } from "react-router-dom";
 
-import store, { STORE_EVENT } from "@store/store";
-import { MINIGAME_STATUS } from "@utils/enums";
-import VibrateButton from "@components/VibrateButton/VibrateButton";
+import store, { STORE_EVENT } from "../../store/store";
+import { MINIGAME_STATUS } from "../../utils/enums";
+import VibrateButton from "../../components/VibrateButton/VibrateButton";
 
 const PRIZE = {
   cash: [4, -3],
@@ -13,20 +13,30 @@ const PRIZE = {
   resources: [1, -1],
 };
 
-const MiniGameEndModal = (props) => {
+const STORE_FIELDS = {
+  status: "minigames.play_status",
+};
+
+interface IMiniGameEndModalProps {
+  isOpen: boolean;
+  won: boolean;
+  msg: string | React.ReactNode | null;
+}
+
+const MiniGameEndModal = (props: IMiniGameEndModalProps) => {
   const browserHistory = useHistory();
 
-  function handleOk() {
+  function handleOk(): void {
     browserHistory.goBack();
     store.emit(STORE_EVENT.UPDATE_STATE, {
-      "mini_games.play_status": MINIGAME_STATUS.NOT_PLAYING,
+      [STORE_FIELDS.status]: MINIGAME_STATUS.NOT_PLAYING,
     });
   }
 
-  function handlePlayAgain() {
+  function handlePlayAgain(): void {
     store.emit(STORE_EVENT.UPDATE_STATE, {
-      "mini_games.play_status": MINIGAME_STATUS.PLAYING,
-      $type: STORE_EVENT.REPLAY_MINI
+      [STORE_FIELDS.status]: MINIGAME_STATUS.PLAYING,
+      $type: STORE_EVENT.REPLAY_MINI,
     });
   }
 
@@ -67,11 +77,13 @@ const MiniGameEndModal = (props) => {
 MiniGameEndModal.propTypes = {
   won: PropTypes.bool.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  msg: PropTypes.node,
 };
 
 MiniGameEndModal.defaultProps = {
   isOpen: false,
   won: false,
+  msg: null,
 };
 
 export default MiniGameEndModal;
