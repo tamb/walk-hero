@@ -1,7 +1,7 @@
 import React from "react";
 
 import words from "../../data/words.json";
-import store, { STORE_EVENT } from "../../store/store";
+import store from "../../store/store";
 import { MINIGAME_STATUS } from "../../utils/enums";
 
 import HangmanDirectionsModal from "./HangmanDirectionsModal";
@@ -55,7 +55,7 @@ function Hangman(props) {
   // TODO: make this a part of all initial renders of directions
   // for minigames
   React.useEffect(() => {
-    store.emit(STORE_EVENT.UPDATE_STATE, {
+    store.updateState({
       "minigames.play_status": MINIGAME_STATUS.DIRECTIONS,
     });
   }, []);
@@ -89,7 +89,7 @@ function Hangman(props) {
 
   function checkGameStatus() {
     if (Object.keys(guessedLetters).length === Object.keys(EMOJIES).length) {
-      store.emit(STORE_EVENT.UPDATE_STATE, {
+      store.updateState({
         "minigames.cash": store.getProp("minigames.cash") - 2,
         "minigames.resources": store.getProp("minigames.resources") - 1,
         "minigames.lives": store.getProp("minigames.lives") - 1,
@@ -102,7 +102,7 @@ function Hangman(props) {
         ),
       });
     } else if (word.split("").every((letter) => foundLetters[letter])) {
-      store.emit(STORE_EVENT.UPDATE_STATE, {
+      store.updateState({
         "minigames.cash": store.getProp("minigames.cash") + 3,
         "minigames.resources": store.getProp("minigames.resources") + 1,
         "minigames.play_status": MINIGAME_STATUS.WON,
@@ -158,7 +158,7 @@ function Hangman(props) {
   }
 
   function startGame() {
-    store.emit(STORE_EVENT.UPDATE_STATE, {
+    store.updateState({
       "minigames.play_status": MINIGAME_STATUS.PLAYING,
     });
   }

@@ -1,0 +1,29 @@
+.prime-number{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &__question{
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+
+        .number{
+            font-size: 2em;
+        }
+    }
+
+    &__buttons{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        padding: 1vw 1vw;
+        
+        button{
+            margin: 1vw 3vw;
+            flex:1;
+        }
+    }
+}

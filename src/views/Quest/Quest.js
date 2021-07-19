@@ -117,7 +117,7 @@ class Quest extends React.Component {
       cloneGeoData(_geoData)
     ).then((value) => {
       _distFromStart = value;
-      store.emit("UPDATE_STATE", {
+      store.emit( {
         "quest.distance.p2p_from_origin_cm": _distFromStart,
       });
     });
