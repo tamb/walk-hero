@@ -1,5 +1,14 @@
 import React from "react";
-import { Row, Col, Alert } from "reactstrap";
+import {
+  Row,
+  Col,
+  Alert,
+  Form,
+  Input,
+  Label,
+  FormGroup,
+  Button,
+} from "reactstrap";
 import { useHistory } from "react-router-dom";
 
 import store, { STORE_EVENT } from "../../store/store";
@@ -15,6 +24,7 @@ const allowDesktop = true;
 
 const Landing = (props) => {
   const browserHistory = useHistory();
+  const [loggedIn, setLoggedIn] = React.useState(false); // TODO: add actual check
   var isMobile =
     "ontouchstart" in document.documentElement &&
     /mobi/i.test(navigator.userAgent);
@@ -25,8 +35,25 @@ const Landing = (props) => {
   }
 
   function goMinigames() {
-    store.emit(STORE_EVENT.UPDATE_STATE, { "play_state.view": VIEWS.MINIGAMES });
+    store.emit(STORE_EVENT.UPDATE_STATE, {
+      "play_state.view": VIEWS.MINIGAMES,
+    });
     browserHistory.push("/minigames");
+  }
+
+  function handleOTPRequestSubmit(event) {
+    event.preventDefault();
+
+    const options = {
+      method: "POST",
+      body: JSON.stringify({ email: "t.saporito@gmail.com" }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    fetch("http://localhost:8888/login", options)
+      .then((res) => res.json())
+      .then((res) => console.log(res));
   }
   return (
     <div className="Landing">
@@ -42,7 +69,17 @@ const Landing = (props) => {
         </Col>
       </Row>
       <Row>
-        {(isMobile || allowDesktop) && (
+        {isMobile ||
+          (allowDesktop && !loggedIn && (
+            <Form onSubmit={handleOTPRequestSubmit}>
+              <FormGroup>
+                <Label>Email</Label>
+                <Input type="email" />
+              </FormGroup>
+              <Button>Get OTP</Button>
+            </Form>
+          ))}
+        {(isMobile || allowDesktop) && loggedIn && (
           <React.Fragment>
             <Col>
               <VibrateButton block color="success" onClick={goQuest}>
