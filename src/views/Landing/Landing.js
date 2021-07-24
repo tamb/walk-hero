@@ -69,16 +69,28 @@ const Landing = (props) => {
         </Col>
       </Row>
       <Row>
-        {isMobile ||
-          (allowDesktop && !loggedIn && (
+        {(isMobile || allowDesktop) && !loggedIn && (
+          <Col>
             <Form onSubmit={handleOTPRequestSubmit}>
-              <FormGroup>
-                <Label>Email</Label>
-                <Input type="email" />
-              </FormGroup>
-              <Button>Get OTP</Button>
+              <Col xs={12}>
+                <FormGroup>
+                  <Label for="email" className="sr-only">
+                    Email
+                  </Label>
+                  <Input
+                    id="email"
+                    placeholder="Your email"
+                    bsSize="lg"
+                    type="email"
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={12}>
+                <Button block={true}>Get OTP</Button>
+              </Col>
             </Form>
-          ))}
+          </Col>
+        )}
         {(isMobile || allowDesktop) && loggedIn && (
           <React.Fragment>
             <Col>
