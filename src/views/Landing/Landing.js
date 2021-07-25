@@ -7,7 +7,10 @@ import {
   Input,
   Label,
   FormGroup,
+  FormFeedback,
   Button,
+  Tooltip,
+  Collapse,
 } from "reactstrap";
 import { useHistory } from "react-router-dom";
 
@@ -25,10 +28,18 @@ const allowDesktop = true;
 const Landing = (props) => {
   const browserHistory = useHistory();
   const [loggedIn, setLoggedIn] = React.useState(false); // TODO: add actual check
+  const [otpReqRes, setOTPReqResp] = React.useState(false);
+  const [otpReqResStatus, setOTPReqRespStatus] = React.useState(false);
+  const [otpTooltipOpen, setOTPTooltipOpen] = React.useState(false);
+  const [requestingOTP, setRequestingOTP] = React.useState(false);
+
   var isMobile =
     "ontouchstart" in document.documentElement &&
     /mobi/i.test(navigator.userAgent);
 
+  function toggleTooltip() {
+    setOTPTooltipOpen(!otpTooltipOpen);
+  }
   function goQuest() {
     store.emit(STORE_EVENT.UPDATE_STATE, { "play_state.view": VIEWS.QUEST });
     browserHistory.push("/quest");
@@ -43,6 +54,7 @@ const Landing = (props) => {
 
   function handleOTPRequestSubmit(event) {
     event.preventDefault();
+    setRequestingOTP(true);
 
     const options = {
       method: "POST",
@@ -52,8 +64,21 @@ const Landing = (props) => {
       },
     };
     fetch("http://localhost:8888/login", options)
-      .then((res) => res.json())
-      .then((res) => console.log(res));
+      .then((res) => {
+        setOTPReqRespStatus(res.status);
+        setRequestingOTP(false);
+        return res.json();
+      })
+      .then((res) => {
+        setOTPReqResp("Please check your email.");
+      })
+      .catch((err) => {
+        setOTPReqResp(
+          "There was an error on our end.  Please try again.  If this error persists please contact XXXXX"
+        );
+        setRequestingOTP(false);
+        setLoggedIn(false);
+      });
   }
   return (
     <div className="Landing">
@@ -71,24 +96,51 @@ const Landing = (props) => {
       <Row>
         {(isMobile || allowDesktop) && !loggedIn && (
           <Col>
-            <Form onSubmit={handleOTPRequestSubmit}>
-              <Col xs={12}>
-                <FormGroup>
-                  <Label for="email" className="sr-only">
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    placeholder="Your email"
-                    bsSize="lg"
-                    type="email"
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={12}>
-                <Button block={true}>Get OTP</Button>
-              </Col>
-            </Form>
+            <Collapse
+              isOpen={
+                (!loggedIn && !requestingOTP) ||
+                (otpReqResStatus === 200 && !requestingOTP)
+              }
+            >
+              <Form onSubmit={handleOTPRequestSubmit}>
+                <Col xs={12}>
+                  <FormGroup className={otpReqRes ? "was-validated" : ""}>
+                    <Label for="email" className="sr-only">
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      placeholder="Your email"
+                      name="email"
+                      required
+                      bsSize="lg"
+                      type="email"
+                      readOnly={otpReqResStatus === 200}
+                    />
+                    <FormFeedback>{otpReqRes}</FormFeedback>
+                  </FormGroup>
+                </Col>
+                <Col xs={12}>
+                  <Button type="submit" block={true}>
+                    Send my One-Time Password
+                  </Button>
+                  <Button id="otpTooltip" color="link" type="button">
+                    <small>What is a One-Time Password ?</small>
+                  </Button>
+                  <Tooltip
+                    placement="bottom"
+                    isOpen={otpTooltipOpen}
+                    target="otpTooltip"
+                    toggle={toggleTooltip}
+                    fade={false}
+                  >
+                    A <strong>One-Time Password</strong> (OPT) is a single-use
+                    password that is sent to your email. You then use it to log
+                    into Walk Hero.
+                  </Tooltip>
+                </Col>
+              </Form>
+            </Collapse>
           </Col>
         )}
         {(isMobile || allowDesktop) && loggedIn && (
