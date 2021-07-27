@@ -7,10 +7,10 @@ import {
   Input,
   Label,
   FormGroup,
-  FormFeedback,
   Button,
   Tooltip,
   Collapse,
+  Spinner,
 } from "reactstrap";
 import { useHistory } from "react-router-dom";
 
@@ -22,15 +22,20 @@ import { version } from "../../../package.json";
 
 import "./Landing.scss";
 
+// FIXME: Redo Row and Col
+
 const noMiniGames = false;
 const allowDesktop = true;
 
 const Landing = (props) => {
   const browserHistory = useHistory();
+
   const [loggedIn, setLoggedIn] = React.useState(false); // TODO: add actual check
-  const [otpReqRes, setOTPReqResp] = React.useState(false);
-  const [otpReqResStatus, setOTPReqRespStatus] = React.useState(false);
   const [otpTooltipOpen, setOTPTooltipOpen] = React.useState(false);
+
+  // Requesting OTP sets the following:
+  const [otpReqResMsg, setOTPReqResMsg] = React.useState(false);
+  const [otpReqResStatus, setOTPReqResStatus] = React.useState(false);
   const [requestingOTP, setRequestingOTP] = React.useState(false);
 
   var isMobile =
@@ -52,6 +57,26 @@ const Landing = (props) => {
     browserHistory.push("/minigames");
   }
 
+  function renderOTPTooltip() {
+    return (
+      <Col xs={12}>
+        <Button id="otpTooltip" color="link" type="button">
+          <small>What is a One-Time Password ?</small>
+        </Button>
+        <Tooltip
+          placement="bottom"
+          isOpen={otpTooltipOpen}
+          target="otpTooltip"
+          toggle={toggleTooltip}
+          fade={false}
+        >
+          A <strong>One-Time Password</strong> (OPT) is a single-use password
+          that is sent to your email. You then use it to log into Walk Hero.
+        </Tooltip>
+      </Col>
+    );
+  }
+
   function handleOTPRequestSubmit(event) {
     event.preventDefault();
     setRequestingOTP(true);
@@ -65,15 +90,15 @@ const Landing = (props) => {
     };
     fetch("http://localhost:8888/login", options)
       .then((res) => {
-        setOTPReqRespStatus(res.status);
+        setOTPReqResStatus(res.status);
         setRequestingOTP(false);
         return res.json();
       })
       .then((res) => {
-        setOTPReqResp("Please check your email.");
+        setOTPReqResMsg("Please check your email.");
       })
       .catch((err) => {
-        setOTPReqResp(
+        setOTPReqResMsg(
           "There was an error on our end.  Please try again.  If this error persists please contact XXXXX"
         );
         setRequestingOTP(false);
@@ -93,19 +118,24 @@ const Landing = (props) => {
           <small className="Landing__version">v{version}</small>
         </Col>
       </Row>
-      <Row>
-        {(isMobile || allowDesktop) && !loggedIn && (
-          <Col>
-            <Collapse
-              isOpen={
-                (!loggedIn && !requestingOTP) ||
-                (otpReqResStatus === 200 && !requestingOTP)
-              }
-            >
-              <Form onSubmit={handleOTPRequestSubmit}>
+      {(isMobile || allowDesktop) && !loggedIn && (
+        <React.Fragment>
+          {requestingOTP && (
+            <div className="w-100 d-flex justify-content-center align-items-center">
+              <Spinner color="secondary" />
+            </div>
+          )}
+          <Collapse
+            isOpen={
+              (!loggedIn && !requestingOTP) ||
+              (otpReqResStatus === 200 && !requestingOTP)
+            }
+          >
+            <Form onSubmit={handleOTPRequestSubmit}>
+              <Row>
                 <Col xs={12}>
-                  <FormGroup className={otpReqRes ? "was-validated" : ""}>
-                    <Label for="email" className="sr-only">
+                  <FormGroup>
+                    <Label htmlFor="email" className="sr-only">
                       Email
                     </Label>
                     <Input
@@ -117,67 +147,71 @@ const Landing = (props) => {
                       type="email"
                       readOnly={otpReqResStatus === 200}
                     />
-                    <FormFeedback>{otpReqRes}</FormFeedback>
+                    <p>
+                      <small>{otpReqResMsg}</small>
+                    </p>
                   </FormGroup>
                 </Col>
-                <Col xs={12}>
-                  <Button type="submit" block={true}>
-                    Send my One-Time Password
-                  </Button>
-                  <Button id="otpTooltip" color="link" type="button">
-                    <small>What is a One-Time Password ?</small>
-                  </Button>
-                  <Tooltip
-                    placement="bottom"
-                    isOpen={otpTooltipOpen}
-                    target="otpTooltip"
-                    toggle={toggleTooltip}
-                    fade={false}
-                  >
-                    A <strong>One-Time Password</strong> (OPT) is a single-use
-                    password that is sent to your email. You then use it to log
-                    into Walk Hero.
-                  </Tooltip>
-                </Col>
-              </Form>
-            </Collapse>
-          </Col>
-        )}
-        {(isMobile || allowDesktop) && loggedIn && (
-          <React.Fragment>
-            <Col>
-              <VibrateButton block color="success" onClick={goQuest}>
-                QUEST
-              </VibrateButton>
-            </Col>
-
-            <Col>
-              <VibrateButton
-                block
-                disabled={noMiniGames}
-                color="primary"
-                onClick={goMinigames}
-              >
-                MINIGAMES
-              </VibrateButton>
-            </Col>
-          </React.Fragment>
-        )}
-        {!isMobile && !allowDesktop && (
+                {otpReqResStatus !== 200 && (
+                  <Col xs={12}>
+                    <Button type="submit" block={true}>
+                      Send my One-Time Password
+                    </Button>
+                  </Col>
+                )}
+                {otpReqResStatus === 200 && (
+                  <Col xs={12}>
+                    <FormGroup>
+                      <Label htmlFor="password" className="sr-only">
+                        One-time password
+                      </Label>
+                      <Input type="password" placeholder="OTP" bsSize="lg" />
+                    </FormGroup>
+                    <Button type="submit" block={true} color="success">
+                      Log in!
+                    </Button>
+                  </Col>
+                )}
+              </Row>
+            </Form>
+          </Collapse>
+        </React.Fragment>
+      )}
+      <Row>{renderOTPTooltip()}</Row>
+      {(isMobile || allowDesktop) && loggedIn && (
+        <React.Fragment>
           <Col>
-            <Alert color="warning">
-              <p>
-                Walk Hero does <strong>not</strong> currently support desktop
-                gameplay.
-              </p>
-              <p>
-                Please play on a mobile device using the latest Chromium-based
-                browser (Chrome, Brave, Edge)
-              </p>
-            </Alert>
+            <VibrateButton block color="success" onClick={goQuest}>
+              QUEST
+            </VibrateButton>
           </Col>
-        )}
-      </Row>
+
+          <Col>
+            <VibrateButton
+              block
+              disabled={noMiniGames}
+              color="primary"
+              onClick={goMinigames}
+            >
+              MINIGAMES
+            </VibrateButton>
+          </Col>
+        </React.Fragment>
+      )}
+      {!isMobile && !allowDesktop && (
+        <Col>
+          <Alert color="warning">
+            <p>
+              Walk Hero does <strong>not</strong> currently support desktop
+              gameplay.
+            </p>
+            <p>
+              Please play on a mobile device using the latest Chromium-based
+              browser (Chrome, Brave, Edge)
+            </p>
+          </Alert>
+        </Col>
+      )}
       <Row>
         <Col className="text-center mt-1 author">
           <small>by Tamb</small>
