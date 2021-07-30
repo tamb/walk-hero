@@ -95,7 +95,7 @@ const Landing = (props) => {
         return res.json();
       })
       .then((res) => {
-        setOTPReqResMsg("Please check your email.");
+        setOTPReqResMsg(res.msg);
       })
       .catch((err) => {
         setOTPReqResMsg(
