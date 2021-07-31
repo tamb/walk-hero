@@ -88,7 +88,7 @@ const Landing = (props) => {
         "Content-Type": "application/json",
       },
     };
-    fetch("http://localhost:8888/login", options)
+    fetch("http://localhost:8888/auth/email", options)
       .then((res) => {
         setOTPReqResStatus(res.status);
         setRequestingOTP(false);
