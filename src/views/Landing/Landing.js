@@ -38,6 +38,8 @@ const Landing = (props) => {
   const [otpReqResStatus, setOTPReqResStatus] = React.useState(false);
   const [requestingOTP, setRequestingOTP] = React.useState(false);
 
+  const [otp, setOTP] = React.useState(null);
+
   var isMobile =
     "ontouchstart" in document.documentElement &&
     /mobi/i.test(navigator.userAgent);
@@ -77,8 +79,34 @@ const Landing = (props) => {
     );
   }
 
-  function handleOTPRequestSubmit(event) {
-    event.preventDefault();
+  function submitEmailAndOTP(){
+    const options = {
+      method: "POST",
+      body: JSON.stringify({ email: "t.saporito@gmail.com", app: "walkhero", otp }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    fetch("http://localhost:8888/auth/otp", options)
+      .then((res) => {
+        setOTPReqResStatus(res.status);
+        setRequestingOTP(false);
+        return res.json();
+      })
+      .then((res) => {
+        setOTPReqResMsg(res.msg);
+      })
+      .catch((err) => {
+        setOTPReqResMsg(
+          "There was an error on our end.  Please try again.  If this error persists please contact XXXXX"
+        );
+        setRequestingOTP(false);
+        setLoggedIn(false);
+      });
+  }
+
+  function submitEmailForOTP(){
     setRequestingOTP(true);
 
     const options = {
@@ -104,6 +132,19 @@ const Landing = (props) => {
         setRequestingOTP(false);
         setLoggedIn(false);
       });
+  }
+
+  function handleOTPRequestSubmit(event) {
+    event.preventDefault();
+    if(otp){
+      submitEmailAndOTP();
+    } else {
+      submitEmailForOTP();
+    }
+  }
+
+  function setOTPInForm(event){
+    setOTP(event.target.value);
   }
   return (
     <div className="Landing">
@@ -165,7 +206,7 @@ const Landing = (props) => {
                       <Label htmlFor="password" className="sr-only">
                         One-time password
                       </Label>
-                      <Input type="password" placeholder="OTP" bsSize="lg" />
+                      <Input type="password" onChange={setOTPInForm} placeholder="OTP" bsSize="lg" />
                     </FormGroup>
                     <Button type="submit" block={true} color="success">
                       Log in!
