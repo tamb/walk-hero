@@ -83,7 +83,7 @@ const Landing = (props) => {
 
     const options = {
       method: "POST",
-      body: JSON.stringify({ email: "t.saporito@gmail.com" }),
+      body: JSON.stringify({ email: "t.saporito@gmail.com", app: "walkhero" }),
       headers: {
         "Content-Type": "application/json",
       },
