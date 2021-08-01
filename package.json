@@ -13,6 +13,7 @@
     "bootstrap": "^4.6.0",
     "bootswatch": "^4.6.0",
     "distance-from": "^1.1.2",
+    "dompurify": "^2.3.0",
     "hh-mm-ss": "^1.2.0",
     "prop-types": "^15.7.2",
     "random-int": "^3.0.0",

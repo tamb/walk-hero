@@ -1,4 +1,5 @@
 import React from "react";
+import DOMPurify from "dompurify";
 import {
   Row,
   Col,
@@ -39,6 +40,7 @@ const Landing = (props) => {
   const [requestingOTP, setRequestingOTP] = React.useState(false);
 
   const [otp, setOTP] = React.useState(null);
+  const [requestingEmail, setRequestingEmail] = React.useState(null);
 
   var isMobile =
     "ontouchstart" in document.documentElement &&
@@ -144,7 +146,11 @@ const Landing = (props) => {
   }
 
   function setOTPInForm(event){
-    setOTP(event.target.value);
+    setOTP(DOMPurify.sanitize(event.target.value));
+  }
+
+  function handleEmailChange(event){
+    setRequestingEmail(DOMPurify(event.target.value));
   }
   return (
     <div className="Landing">
