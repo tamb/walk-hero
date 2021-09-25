@@ -10,6 +10,7 @@
     "@types/node": "^12.20.16",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
+    "array-shuffle": "^3.0.0",
     "bootstrap": "^4.6.0",
     "bootswatch": "^4.6.0",
     "distance-from": "^1.1.2",
@@ -24,6 +25,7 @@
     "reactstrap": "^8.9.0",
     "substate": "^8.2.3",
     "substate-connect": "^3.1.0",
+    "tocada": "^1.0.0-beta.2",
     "typescript": "^4.3.5",
     "web-vitals": "^1.1.2"
   },

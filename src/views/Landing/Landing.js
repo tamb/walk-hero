@@ -31,7 +31,7 @@ const allowDesktop = true;
 const Landing = (props) => {
   const browserHistory = useHistory();
 
-  const [loggedIn, setLoggedIn] = React.useState(false); // TODO: add actual check
+  const [loggedIn, setLoggedIn] = React.useState(true); // TODO: add actual check
   const [otpTooltipOpen, setOTPTooltipOpen] = React.useState(false);
 
   // Requesting OTP sets the following:

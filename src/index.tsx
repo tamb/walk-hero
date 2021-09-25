@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import WiredApp from "./App";
 import reportWebVitals from "./reportWebVitals";
+import "tocada";
+
 
 ReactDOM.render(
   <React.StrictMode>
