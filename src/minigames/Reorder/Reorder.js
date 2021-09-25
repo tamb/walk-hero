@@ -11,18 +11,26 @@ class Reorder extends React.Component {
       SUPERMAX: 36,
     };
     this.state = {
-      level: LEVELS.SUPERMAX,
+      level: LEVELS.EASY,
     };
     this.game = React.createRef();
     console.log(this);
   }
 
   componentDidMount() {
-    this.game.current.addEventListener("swipeleft", console.log);
-    this.game.current.addEventListener("swiperight", console.log);
-    this.game.current.addEventListener("swipeup", console.log);
-    this.game.current.addEventListener("swipedown", console.log);
+    this.game.current.addEventListener("swipeleft", this.swapTile);
+    this.game.current.addEventListener("swiperight", this.swapTile);
+    this.game.current.addEventListener("swipeup", this.swapTile);
+    this.game.current.addEventListener("swipedown", this.swapTile);
   }
+
+  swapTile = (e) => {
+    console.log(e);
+    const x = e.target.previousElementSibling;
+    const y = e.target.nextElementSibling;
+    console.log(x);
+    console.log(y);
+  };
 
   renderTiles = () => {
     const numbers = arrayShuffle(
@@ -32,6 +40,8 @@ class Reorder extends React.Component {
     return new Array(this.state.level).fill().map((x, i) => {
       return (
         <div
+          data-number={numbers[i]}
+          data-order-index={i}
           className="border d-flex justify-content-center align-items-center"
           style={{
             width: `${100 / Math.sqrt(this.state.level)}%`,
@@ -47,14 +57,17 @@ class Reorder extends React.Component {
 
   render() {
     return (
-      <div
-        id="testswipe"
-        ref={this.game}
-        className="d-flex flex-wrap"
-        style={{ height: "50vh" }}
-      >
-        {this.renderTiles()}
-      </div>
+      <React.Fragment>
+        <h2>Order the Tiles</h2>
+        <div
+          id="testswipe"
+          ref={this.game}
+          className="d-flex flex-wrap"
+          style={{ height: "50vh" }}
+        >
+          {this.renderTiles()}
+        </div>
+      </React.Fragment>
     );
   }
 }
