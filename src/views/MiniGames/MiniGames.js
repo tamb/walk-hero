@@ -22,6 +22,7 @@ const SliderPrecision = React.lazy(() =>
   import("../../minigames/SliderPrecision/SliderPrecision")
 );
 const Raid = React.lazy(() => import("../../minigames/Raid/Raid"));
+const Reorder = React.lazy(() => import("../../minigames/Reorder/Reorder"));
 
 function MiniGames(props) {
   const { path, url } = useRouteMatch();
@@ -48,6 +49,12 @@ function MiniGames(props) {
             <VibrateLink color="info" href={`${url}/raid`}>
               <span>Raid</span>
               <span>⚔️👹</span>
+            </VibrateLink>
+          </li>
+          <li>
+            <VibrateLink color="info" href={`${url}/reorder`}>
+              <span>Reorder</span>
+              <span>🔀</span>
             </VibrateLink>
           </li>
         </ul>
@@ -87,6 +94,11 @@ function MiniGames(props) {
         <Route path={`${path}/raid`}>
           <React.Suspense fallback={renderList()}>
             <Raid />
+          </React.Suspense>
+        </Route>
+        <Route path={`${path}/reorder`}>
+          <React.Suspense fallback={renderList()}>
+            <Reorder />
           </React.Suspense>
         </Route>
       </Switch>
