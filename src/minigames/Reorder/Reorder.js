@@ -12,6 +12,7 @@ class Reorder extends React.Component {
     };
     this.state = {
       level: LEVELS.EASY,
+      numbers: arrayShuffle(new Array(LEVELS.EASY).fill().map((x, i) => i + 1)),
     };
     this.game = React.createRef();
     console.log(this);
@@ -26,21 +27,25 @@ class Reorder extends React.Component {
 
   swapTile = (e) => {
     console.log(e);
-    const x = e.target.previousElementSibling;
-    const y = e.target.nextElementSibling;
-    console.log(x);
-    console.log(y);
+    const startingIndex =
+      e.detail.startingElement.getAttribute("data-order-index");
+    const endingIndex = e.detail.endingElement.getAttribute("data-order-index");
+    const newNumbers = this.state.numbers.slice();
+    const newNumbers2 = this.state.numbers.slice();
+    const out1 = newNumbers.splice(startingIndex, 1);
+    const out2 = newNumbers.splice(endingIndex -1 , 1);
+    newNumbers2[startingIndex] = out2;
+    newNumbers2[endingIndex] = out1;
+
+    this.setState({numbers: newNumbers2});
+
   };
 
   renderTiles = () => {
-    const numbers = arrayShuffle(
-      new Array(this.state.level).fill().map((x, i) => i + 1)
-    );
-
     return new Array(this.state.level).fill().map((x, i) => {
       return (
         <div
-          data-number={numbers[i]}
+          data-number={this.state.numbers[i]}
           data-order-index={i}
           className="border d-flex justify-content-center align-items-center"
           style={{
@@ -49,7 +54,7 @@ class Reorder extends React.Component {
           }}
           key={i}
         >
-          {numbers[i]}
+          {this.state.numbers[i]}
         </div>
       );
     });
