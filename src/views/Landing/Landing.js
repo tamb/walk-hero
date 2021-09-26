@@ -226,8 +226,8 @@ const Landing = (props) => {
       )}
       <Row>{renderOTPTooltip()}</Row>
       {(isMobile || allowDesktop) && loggedIn && (
-        <React.Fragment>
-          <Col>
+        <Row>
+          <Col xs={12} className="mb-3">
             <VibrateButton block color="success" onClick={goQuest}>
               QUEST
             </VibrateButton>
@@ -243,7 +243,7 @@ const Landing = (props) => {
               MINIGAMES
             </VibrateButton>
           </Col>
-        </React.Fragment>
+        </Row>
       )}
       {!isMobile && !allowDesktop && (
         <Col>
