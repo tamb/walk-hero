@@ -25,7 +25,7 @@
     "reactstrap": "^8.9.0",
     "substate": "^8.2.3",
     "substate-connect": "^3.1.0",
-    "tocada": "^1.0.0-beta.2",
+    "tocada": "^1.0.0-beta.3",
     "typescript": "^4.3.5",
     "web-vitals": "^1.1.2"
   },
