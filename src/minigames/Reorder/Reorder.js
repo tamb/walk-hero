@@ -1,5 +1,6 @@
 import React from "react";
 import arrayShuffle from "array-shuffle";
+import isArraySorted from "is-array-sorted";
 
 class Reorder extends React.Component {
   constructor(props) {
@@ -11,34 +12,42 @@ class Reorder extends React.Component {
       SUPERMAX: 36,
     };
     this.state = {
-      level: LEVELS.EASY,
-      numbers: arrayShuffle(new Array(LEVELS.EASY).fill().map((x, i) => i + 1)),
+      level: LEVELS.MEDIUM,
+      numbers: arrayShuffle(
+        new Array(LEVELS.MEDIUM).fill().map((x, i) => i + 1)
+      ),
+      gameWon: false,
     };
     this.game = React.createRef();
     console.log(this);
   }
 
   componentDidMount() {
-    this.game.current.addEventListener("swipeleft", this.swapTile);
-    this.game.current.addEventListener("swiperight", this.swapTile);
-    this.game.current.addEventListener("swipeup", this.swapTile);
-    this.game.current.addEventListener("swipedown", this.swapTile);
+    this.game.current.addEventListener("swipe", this.swapTile);
   }
 
   swapTile = (e) => {
-    console.log(e);
+    if (!e.detail.endingElement.closest("#testswipe")) return;
     const startingIndex =
       e.detail.startingElement.getAttribute("data-order-index");
     const endingIndex = e.detail.endingElement.getAttribute("data-order-index");
     const newNumbers = this.state.numbers.slice();
     const newNumbers2 = this.state.numbers.slice();
+    const newNumbers3 = this.state.numbers.slice();
     const out1 = newNumbers.splice(startingIndex, 1);
-    const out2 = newNumbers.splice(endingIndex -1 , 1);
-    newNumbers2[startingIndex] = out2;
-    newNumbers2[endingIndex] = out1;
+    const out2 = newNumbers2.splice(endingIndex, 1);
+    newNumbers3[startingIndex] = out2[0];
+    newNumbers3[endingIndex] = out1[0];
 
-    this.setState({numbers: newNumbers2});
+    this.setState({ numbers: newNumbers3 }, this.isInOrder);
+    navigator.vibrate(10);
+  };
 
+  isInOrder = () => {
+    if (isArraySorted(this.state.numbers)) {
+      this.game.current.removeEventListener("swipe", this.swapTile);
+      this.setState({ gameWon: true });
+    }
   };
 
   renderTiles = () => {
@@ -64,6 +73,7 @@ class Reorder extends React.Component {
     return (
       <React.Fragment>
         <h2>Order the Tiles</h2>
+        {this.state.gameWon && <p class="lead">YOU DID IT!</p>}
         <div
           id="testswipe"
           ref={this.game}
