@@ -1,5 +1,5 @@
-import cities from "./../../data/cities.json";
-import { toLatLong } from "./../../services/Geo";
+import cities from "./../data/cities.json";
+import { toLatLong } from "./../services/Geo";
 
 export function getCityByGeoData(geoData) {
   // 5 decimal

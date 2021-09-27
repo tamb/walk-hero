@@ -26,7 +26,7 @@ import "./Landing.scss";
 // FIXME: Redo Row and Col
 
 const noMiniGames = false;
-const allowDesktop = true;
+const allowDesktop = false;
 
 const Landing = (props) => {
   const browserHistory = useHistory();
@@ -81,10 +81,14 @@ const Landing = (props) => {
     );
   }
 
-  function submitEmailAndOTP(){
+  function submitEmailAndOTP() {
     const options = {
       method: "POST",
-      body: JSON.stringify({ email: "t.saporito@gmail.com", app: "walkhero", otp }),
+      body: JSON.stringify({
+        email: "t.saporito@gmail.com",
+        app: "walkhero",
+        otp,
+      }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -108,7 +112,7 @@ const Landing = (props) => {
       });
   }
 
-  function submitEmailForOTP(){
+  function submitEmailForOTP() {
     setRequestingOTP(true);
 
     const options = {
@@ -138,18 +142,18 @@ const Landing = (props) => {
 
   function handleOTPRequestSubmit(event) {
     event.preventDefault();
-    if(otp){
+    if (otp) {
       submitEmailAndOTP();
     } else {
       submitEmailForOTP();
     }
   }
 
-  function setOTPInForm(event){
+  function setOTPInForm(event) {
     setOTP(DOMPurify.sanitize(event.target.value));
   }
 
-  function handleEmailChange(event){
+  function handleEmailChange(event) {
     setRequestingEmail(DOMPurify(event.target.value));
   }
   return (
@@ -212,7 +216,12 @@ const Landing = (props) => {
                       <Label htmlFor="password" className="sr-only">
                         One-time password
                       </Label>
-                      <Input type="password" onChange={setOTPInForm} placeholder="OTP" bsSize="lg" />
+                      <Input
+                        type="password"
+                        onChange={setOTPInForm}
+                        placeholder="OTP"
+                        bsSize="lg"
+                      />
                     </FormGroup>
                     <Button type="submit" block={true} color="success">
                       Log in!
