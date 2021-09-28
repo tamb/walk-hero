@@ -231,9 +231,10 @@ const Landing = (props) => {
               </Row>
             </Form>
           </Collapse>
+          <Row>{renderOTPTooltip()}</Row>
         </React.Fragment>
       )}
-      <Row>{renderOTPTooltip()}</Row>
+      
       {(isMobile || allowDesktop) && loggedIn && (
         <Row>
           <Col xs={12} className="mb-3">
