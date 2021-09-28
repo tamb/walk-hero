@@ -10,3 +10,10 @@ $banner-offset: 10vh;
 .ad-free{
     --banner-ad-offset: 0;
 }
+
+$theme-colors: (
+  "secondary": rgb(113, 202, 243),
+  "secondary-light": rgba(113, 202, 243, 0.5),
+
+);
+$font-size-lg: 2rem;

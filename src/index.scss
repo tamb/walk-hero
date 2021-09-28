@@ -1,8 +1,10 @@
 @import "~bootswatch/dist/sketchy/variables";
-@import "~bootstrap/scss/bootstrap";
-@import "~bootswatch/dist/sketchy/bootswatch";
 
 @import "./_variables";
+
+
+
+
 
 button:disabled:hover {
   cursor: not-allowed;
@@ -48,13 +50,13 @@ body {
     }
   }
 
-  .fs-2 {
-    font-size: 2rem;
-  }
-
   input,
   select,
   button:not(.btn-link) {
     letter-spacing: 2px;
   }
 }
+
+@import "./_utility-classes.scss";
+@import "~bootstrap/scss/bootstrap";
+@import "~bootswatch/dist/sketchy/bootswatch";

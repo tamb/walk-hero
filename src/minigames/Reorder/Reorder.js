@@ -17,6 +17,8 @@ class Reorder extends React.Component {
         new Array(LEVELS.MEDIUM).fill().map((x, i) => i + 1)
       ),
       gameWon: false,
+      tapOne: null,
+      tapTwo: null,
     };
     this.game = React.createRef();
     console.log(this);
@@ -24,9 +26,28 @@ class Reorder extends React.Component {
 
   componentDidMount() {
     this.game.current.addEventListener("swipe", this.swapTile);
+    this.game.current.addEventListener("tap", this.swapFromTap);
+    this.game.current.addEventListener("touchstart", function (e) {
+      e.preventDefault();
+    });
   }
 
+  swapFromTap = (e) => {
+    this.setState({
+      tapOne: this.state.tapOne
+        ? this.state.tapOne
+        : parseInt(e.target.getAttribute("data-order-index")),
+      tapTwo: this.state.tapOne
+        ? parseInt(e.target.getAttribute("data-order-index"))
+        : null,
+    });
+  };
+
   swapTile = (e) => {
+    this.setState({
+      tapOne: null,
+      tapTwo: null,
+    });
     if (!e.detail.endingElement.closest("#testswipe")) return;
     const startingIndex =
       e.detail.startingElement.getAttribute("data-order-index");
@@ -50,13 +71,22 @@ class Reorder extends React.Component {
     }
   };
 
+  isTapped = (index) => {
+    if (index === this.state.tapOne || index === this.state.tapTwo) {
+      return "bg-secondary-light shadow-sm";
+    }
+    return "";
+  };
+
   renderTiles = () => {
     return new Array(this.state.level).fill().map((x, i) => {
       return (
         <div
           data-number={this.state.numbers[i]}
           data-order-index={i}
-          className="border d-flex justify-content-center align-items-center"
+          className={`border d-flex justify-content-center align-items-center text-lg ${this.isTapped(
+            i
+          )}`}
           style={{
             width: `${100 / Math.sqrt(this.state.level)}%`,
             height: `${100 / Math.sqrt(this.state.level)}%`,
@@ -77,7 +107,7 @@ class Reorder extends React.Component {
         <div
           id="testswipe"
           ref={this.game}
-          className="d-flex flex-wrap"
+          className="d-flex flex-wrap bg-light"
           style={{ height: "50vh" }}
         >
           {this.renderTiles()}

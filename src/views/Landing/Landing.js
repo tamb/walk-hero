@@ -26,7 +26,7 @@ import "./Landing.scss";
 // FIXME: Redo Row and Col
 
 const noMiniGames = false;
-const allowDesktop = false;
+const allowDesktop = true;
 
 const Landing = (props) => {
   const browserHistory = useHistory();
