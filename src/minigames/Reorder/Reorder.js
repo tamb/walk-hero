@@ -41,6 +41,7 @@ class Reorder extends React.Component {
         ? parseInt(e.target.getAttribute("data-order-index"))
         : null,
     });
+    navigator.vibrate(10);
   };
 
   swapTile = (e) => {
@@ -67,7 +68,9 @@ class Reorder extends React.Component {
   isInOrder = () => {
     if (isArraySorted(this.state.numbers)) {
       this.game.current.removeEventListener("swipe", this.swapTile);
-      this.setState({ gameWon: true });
+      this.setState({ gameWon: true }, () => {
+        navigator.vibrate(10, 10, 10, 100, 100);
+      });
     }
   };
 
