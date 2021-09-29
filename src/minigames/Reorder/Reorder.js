@@ -69,7 +69,7 @@ class Reorder extends React.Component {
     if (isArraySorted(this.state.numbers)) {
       this.game.current.removeEventListener("swipe", this.swapTile);
       this.setState({ gameWon: true }, () => {
-        navigator.vibrate(10, 10, 10, 100, 100);
+        navigator.vibrate([10, 10, 10, 100, 100, 10, 100]);
       });
     }
   };
