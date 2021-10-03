@@ -2,6 +2,8 @@ import React from "react";
 import arrayShuffle from "array-shuffle";
 import isArraySorted from "is-array-sorted";
 
+import ReorderDirectionsModal from "./ReorderDirectionsModal";
+
 class Reorder extends React.Component {
   constructor(props) {
     super(props);
@@ -12,6 +14,7 @@ class Reorder extends React.Component {
       SUPERMAX: 36,
     };
     this.state = {
+      gameStarted: false,
       level: LEVELS.MEDIUM,
       numbers: arrayShuffle(
         new Array(LEVELS.MEDIUM).fill().map((x, i) => i + 1)
@@ -30,6 +33,10 @@ class Reorder extends React.Component {
     this.game.current.addEventListener("touchstart", function (e) {
       e.preventDefault();
     });
+  }
+
+  startGame = () => {
+    this.setState({gameStarted: true});
   }
 
   swapFromTap = (e) => {
@@ -96,6 +103,7 @@ class Reorder extends React.Component {
           }}
           key={i}
         >
+          <span className="text-xl d-inline-block">🌾</span>
           {this.state.numbers[i]}
         </div>
       );
@@ -105,7 +113,7 @@ class Reorder extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <h2>Order the Tiles</h2>
+        <h2>Order the Bottles</h2>
         {this.state.gameWon && <p class="lead">YOU DID IT!</p>}
         <div
           id="testswipe"
@@ -115,6 +123,7 @@ class Reorder extends React.Component {
         >
           {this.renderTiles()}
         </div>
+        <ReorderDirectionsModal isOpen={this.state.gameStarted === false} handleOk={this.startGame}/>
       </React.Fragment>
     );
   }

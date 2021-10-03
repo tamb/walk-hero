@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "reactstrap";
 import { Provide, connect } from "substate-connect/dist/react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { HashRouter as BrowserRouter, Route, Switch } from "react-router-dom";
 
 import store, { STORE_EVENT } from "./store/store";
 import { VIEWS } from "./utils/enums";

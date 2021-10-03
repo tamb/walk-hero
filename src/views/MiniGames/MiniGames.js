@@ -66,7 +66,7 @@ function MiniGames(props) {
       <Row className="MiniGames__top-nav">
         <Col xs={8}>
           <Link to="/">
-            <h1>Walk Hero</h1>
+            <h1 className="h3">Walk Hero</h1>
           </Link>
           <p>Minigames</p>
         </Col>
