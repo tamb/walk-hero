@@ -6,16 +6,17 @@ import { HashRouter as BrowserRouter, Route, Switch } from "react-router-dom";
 import store, { STORE_EVENT } from "./store/store";
 import { VIEWS } from "./utils/enums";
 import FullPageSpinner from "./components/FullPageSpinner/FullPageSpinner";
-import Landing from "./views/Landing/Landing";
 
 import "./App.css";
 
 const Quest = React.lazy(() => import("./views/Quest/Quest"));
 const MiniGames = React.lazy(() => import("./views/MiniGames/MiniGames"));
-
+const Landing = React.lazy(() => import("./views/Landing/Landing"));
 console.log(store);
 
-
+function Blank() {
+  return <div></div>;
+}
 class App extends React.Component {
   goLanding = () => {
     store.emit(STORE_EVENT.UPDATE_STATE, { "play_state.view": VIEWS.LANDING });
@@ -40,8 +41,9 @@ class App extends React.Component {
               </React.Suspense>
             </Route>
             <Route path="">
-              <Landing
-              />
+              <React.Suspense fallback={<Blank />}>
+                <Landing />
+              </React.Suspense>
             </Route>
           </Switch>
         </Container>
@@ -49,8 +51,6 @@ class App extends React.Component {
     );
   }
 }
-
-
 
 const ConnectedApp = connect(store, {
   play_state: "play_state",

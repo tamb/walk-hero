@@ -1,14 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
-import WiredApp from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "tocada";
 
+const WiredApp = React.lazy(() => import("./App"));
+function Blank() {
+  return <div></div>;
+}
 
 ReactDOM.render(
   <React.StrictMode>
-    <WiredApp />
+    <React.Suspense fallback={<Blank />}>
+      <WiredApp />
+    </React.Suspense>
   </React.StrictMode>,
   document.getElementById("root")
 );

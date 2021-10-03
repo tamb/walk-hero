@@ -5,8 +5,8 @@ interface IMiniGames {
   cash: number;
   resources: number;
   lives: number;
-  msg: HTMLElement | ReactNode | null;
   minigame_status: number;
+  msg: HTMLElement | ReactNode | null;
 }
 
 export const minigames: IMiniGames = {

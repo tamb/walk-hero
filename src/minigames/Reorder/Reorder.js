@@ -1,7 +1,11 @@
 import React from "react";
 import arrayShuffle from "array-shuffle";
 import isArraySorted from "is-array-sorted";
+import { connect } from "substate-connect/dist/react";
+import PropTypes from "prop-types";
 
+import store from "store/store";
+import { MINIGAME_STATUS } from "utils/enums";
 import ReorderDirectionsModal from "./ReorderDirectionsModal";
 import ReorderGameStatusModal from "./ReorderGameStatusModal";
 
@@ -11,14 +15,12 @@ const LEVELS = {
   HARD: 25,
   SUPERMAX: 36,
 };
+
 class Reorder extends React.Component {
   constructor(props) {
     super(props);
- 
+
     this.state = {
-      gameOver: false,
-      gameStarted: false,
-      gameWon: false,
       level: LEVELS.MEDIUM,
       seconds: 5 || Math.floor(LEVELS.MEDIUM * 1.75),
       numbers: this.setNumbers(),
@@ -45,7 +47,7 @@ class Reorder extends React.Component {
       gameStarted: false,
       gameOver: false,
       seconds: 5,
-      numbers: this.setNumbers()
+      numbers: this.setNumbers(),
     });
   };
 
@@ -76,10 +78,8 @@ class Reorder extends React.Component {
   };
 
   setNumbers = () => {
-    return arrayShuffle(
-      new Array(LEVELS.MEDIUM).fill().map((x, i) => i + 1)
-    );
-  }
+    return arrayShuffle(new Array(LEVELS.MEDIUM).fill().map((x, i) => i + 1));
+  };
 
   swapFromTap = (e) => {
     this.setState({
@@ -180,4 +180,11 @@ class Reorder extends React.Component {
   }
 }
 
+Reorder.propTypes = {
+  status: PropTypes.shape(MINIGAME_STATUS),
+};
+
+// export default connect(store, {
+//   status: "minigames.minigame_status",
+// })(Reorder);
 export default Reorder;
