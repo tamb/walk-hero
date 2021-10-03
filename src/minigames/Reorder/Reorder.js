@@ -3,23 +3,25 @@ import arrayShuffle from "array-shuffle";
 import isArraySorted from "is-array-sorted";
 
 import ReorderDirectionsModal from "./ReorderDirectionsModal";
+import ReorderGameStatusModal from "./ReorderGameStatusModal";
 
+const LEVELS = {
+  EASY: 9,
+  MEDIUM: 16,
+  HARD: 25,
+  SUPERMAX: 36,
+};
 class Reorder extends React.Component {
   constructor(props) {
     super(props);
-    const LEVELS = {
-      EASY: 9,
-      MEDIUM: 16,
-      HARD: 25,
-      SUPERMAX: 36,
-    };
+ 
     this.state = {
+      gameOver: false,
       gameStarted: false,
-      level: LEVELS.MEDIUM,
-      numbers: arrayShuffle(
-        new Array(LEVELS.MEDIUM).fill().map((x, i) => i + 1)
-      ),
       gameWon: false,
+      level: LEVELS.MEDIUM,
+      seconds: 5 || Math.floor(LEVELS.MEDIUM * 1.75),
+      numbers: this.setNumbers(),
       tapOne: null,
       tapTwo: null,
     };
@@ -28,6 +30,7 @@ class Reorder extends React.Component {
   }
 
   componentDidMount() {
+    this.resetGame();
     this.game.current.addEventListener("swipe", this.swapTile);
     this.game.current.addEventListener("tap", this.swapFromTap);
     this.game.current.addEventListener("touchstart", function (e) {
@@ -35,8 +38,47 @@ class Reorder extends React.Component {
     });
   }
 
+  resetGame = () => {
+    console.log("GAME RESET!");
+    this.setState({
+      gameWon: false,
+      gameStarted: false,
+      gameOver: false,
+      seconds: 5,
+      numbers: this.setNumbers()
+    });
+  };
+
+  endGame = () => {
+    this.setState({ gameOver: true });
+  };
+
   startGame = () => {
-    this.setState({gameStarted: true});
+    this.setState({ gameStarted: true }, this.startTimer);
+  };
+
+  stopTimer = () => {
+    if (this.state.seconds < 1) {
+      clearInterval(this.timer);
+      this.endGame();
+    }
+  };
+
+  startTimer = () => {
+    this.timer = setInterval(() => {
+      this.setState(
+        {
+          seconds: this.state.seconds - 1,
+        },
+        this.stopTimer
+      );
+    }, 1000);
+  };
+
+  setNumbers = () => {
+    return arrayShuffle(
+      new Array(LEVELS.MEDIUM).fill().map((x, i) => i + 1)
+    );
   }
 
   swapFromTap = (e) => {
@@ -103,7 +145,7 @@ class Reorder extends React.Component {
           }}
           key={i}
         >
-          <span className="text-xl d-inline-block">🌾</span>
+          🌾
           {this.state.numbers[i]}
         </div>
       );
@@ -113,8 +155,9 @@ class Reorder extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <h2>Order the Bottles</h2>
+        <h2 className="text-lg">Order the Crop Bundles</h2>
         {this.state.gameWon && <p class="lead">YOU DID IT!</p>}
+        <p>Time left: {this.state.seconds}s</p>
         <div
           id="testswipe"
           ref={this.game}
@@ -123,7 +166,15 @@ class Reorder extends React.Component {
         >
           {this.renderTiles()}
         </div>
-        <ReorderDirectionsModal isOpen={this.state.gameStarted === false} handleOk={this.startGame}/>
+        <ReorderGameStatusModal
+          isOpen={this.state.gameOver}
+          won={this.gameWon}
+          handlePlayAgain={this.resetGame}
+        />
+        <ReorderDirectionsModal
+          isOpen={this.state.gameStarted === false}
+          handleOk={this.startGame}
+        />
       </React.Fragment>
     );
   }

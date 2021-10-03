@@ -1,8 +1,23 @@
 .text-lg {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
 }
-.text-xl, 
+
+.text-md {
+  font-size: $font-size-base;
+}
+
+.text-sm {
+  font-size: 1rem;
+}
+
+.text-xs {
+  font-size: 0.85rem;
+}
+
+.text-xl {
+  font-size: 1.75rem;
+}
+
 .fs-2 {
   font-size: 2rem;
 }
-
