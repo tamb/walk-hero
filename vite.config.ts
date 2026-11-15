@@ -5,6 +5,7 @@ import { defineConfig, lazyPlugins } from "vite-plus";
 import { VitePWA } from "vite-plugin-pwa";
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
+// "/" locally. The Pages workflow sets VITE_BASE_PATH=/walk-hero/.
 const base = process.env.VITE_BASE_PATH || "/";
 
 export default defineConfig({
