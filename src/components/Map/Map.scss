@@ -6,7 +6,7 @@
   }
 }
 #map {
-  height: 100vh -$bottom-nav-height - $banner-offset; // calc does not work with css variable for some reason
+  height: 100vh - $bottom-nav-height - $banner-offset; // calc does not work with css variable for some reason
   // so I use scss and do it this way
   width: calc(100% + #{$bs-margin * 2});
   margin-left: -$bs-margin;

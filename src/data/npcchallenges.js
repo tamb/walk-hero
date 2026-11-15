@@ -7,16 +7,14 @@ const npcChallenges = [
     challenges: {
       hangman: {
         // ChallengeFraming
-        intro:
-          "I will reward thee for thy intellect! I shall punish thee for thy ignorance!",
+        intro: "I will reward thee for thy intellect! I shall punish thee for thy ignorance!",
         outro: {
           success: "Thou art brilliant! Huzzah!",
           failure: "Thou hast the mind of a goat! Barooom!",
         },
       },
       raid: {
-        intro:
-          "Zounds! These hooligans have broken my staff!  Stop them before they kill us all!",
+        intro: "Zounds! These hooligans have broken my staff!  Stop them before they kill us all!",
         outro: {
           success: "Huzzah! Thank you! Now I must mend my staff...",
           failure: "We have suffered a great loss.",
@@ -30,8 +28,7 @@ const npcChallenges = [
         },
       },
       prime_number: {
-        intro:
-          "To concoct this potion I need the help of a skilled mathematician...",
+        intro: "To concoct this potion I need the help of a skilled mathematician...",
         outro: {
           success: "Excellent! Here is your reward!",
           failure: "My formula is ruined!",

@@ -1,43 +1,40 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "substate-connect/dist/react";
+import { connect } from "../../store/connect";
 import { Link } from "react-router-dom";
 
 import store from "../../store/store";
 
 function VibrateLink(props: {
   onClick?: React.MouseEventHandler;
-  vibrationsOn: any;
+  vibrationsOn?: boolean;
   pattern?: number | number[];
   href: string;
-  color: any;
-  children:
-    | boolean
-    | React.ReactChild
-    | React.ReactFragment
-    | React.ReactPortal
-    | null
-    | undefined;
+  color?: string;
+  children?: React.ReactNode;
 }) {
+  const pattern = props.pattern === undefined ? [10] : props.pattern;
+  const color = props.color === undefined ? "link" : props.color;
+
   function clickVibrate(): void {
-    if (props.vibrationsOn && props.pattern !== undefined) {
-      window.navigator.vibrate(props.pattern);
+    if (props.vibrationsOn && pattern !== undefined) {
+      window.navigator.vibrate(pattern);
     }
   }
 
-  const newProps = { ...props };
-  delete newProps.onClick;
-  delete newProps.vibrationsOn;
-  delete newProps.pattern;
+  const {
+    onClick: _onClick,
+    vibrationsOn: _vibrationsOn,
+    pattern: _pattern,
+    href: _href,
+    color: _color,
+    children,
+    ...rest
+  } = props;
 
   return (
-    <Link
-      to={props.href}
-      className={`btn btn-${props.color}`}
-      onClick={clickVibrate}
-      {...newProps}
-    >
-      {props.children}
+    <Link to={props.href} className={`btn btn-${color}`} onClick={clickVibrate} {...rest}>
+      {children}
     </Link>
   );
 }
@@ -46,11 +43,6 @@ VibrateLink.propTypes = {
   pattern: PropTypes.arrayOf(PropTypes.number),
   color: PropTypes.string,
   href: PropTypes.string,
-};
-
-VibrateLink.defaultProps = {
-  pattern: [10],
-  color: "link",
 };
 
 export default connect(store, {

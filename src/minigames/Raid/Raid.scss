@@ -9,7 +9,9 @@
     button {
       flex: 1;
       font-size: 3rem;
-      transition: 0.4s transform, background-color;
+      transition:
+        0.4s transform,
+        background-color;
     }
   }
 

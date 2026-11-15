@@ -3,18 +3,17 @@ $bottom-nav-height: 8vh;
 $bs-margin: 15px;
 $banner-offset: 10vh;
 
-:root{
-    --banner-ad-offset: 10vh;
+:root {
+  --banner-ad-offset: 10vh;
 }
 
-.ad-free{
-    --banner-ad-offset: 0;
+.ad-free {
+  --banner-ad-offset: 0;
 }
 
 $theme-colors: (
   "secondary": rgb(113, 202, 243),
   "secondary-light": rgba(113, 202, 243, 0.5),
-
 );
 $font-size-lg: 2rem;
 $font-size-base: 1.25rem;

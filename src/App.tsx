@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "reactstrap";
-import { Provide, connect } from "substate-connect/dist/react";
-import { HashRouter as BrowserRouter, Route, Switch } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import { Provide, connect } from "./store/connect";
 
 import store, { STORE_EVENT } from "./store/store";
 import { VIEWS } from "./utils/enums";
@@ -27,27 +27,36 @@ class App extends React.Component {
   // Render Methods
   render() {
     return (
-      <BrowserRouter>
+      <HashRouter>
         <Container fluid id="app">
-          <Switch>
-            <Route path="/quest">
-              <React.Suspense fallback={<FullPageSpinner />}>
-                <Quest />
-              </React.Suspense>
-            </Route>
-            <Route path="/minigames">
-              <React.Suspense fallback={<FullPageSpinner />}>
-                <MiniGames />
-              </React.Suspense>
-            </Route>
-            <Route path="">
-              <React.Suspense fallback={<Blank />}>
-                <Landing />
-              </React.Suspense>
-            </Route>
-          </Switch>
+          <Routes>
+            <Route
+              path="/quest"
+              element={
+                <React.Suspense fallback={<FullPageSpinner />}>
+                  <Quest />
+                </React.Suspense>
+              }
+            />
+            <Route
+              path="/minigames/*"
+              element={
+                <React.Suspense fallback={<FullPageSpinner />}>
+                  <MiniGames />
+                </React.Suspense>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <React.Suspense fallback={<Blank />}>
+                  <Landing />
+                </React.Suspense>
+              }
+            />
+          </Routes>
         </Container>
-      </BrowserRouter>
+      </HashRouter>
     );
   }
 }
@@ -68,5 +77,5 @@ export default Provide(
   ],
   function () {
     console.log("I mounted", store.getCurrentState());
-  }
+  },
 )(ConnectedApp);

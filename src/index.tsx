@@ -1,5 +1,6 @@
+import "./react19-compat";
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "./index.scss";
 import reportWebVitals from "./reportWebVitals";
 import "tocada";
@@ -9,13 +10,17 @@ function Blank() {
   return <div></div>;
 }
 
-ReactDOM.render(
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+  throw new Error("Root element #root was not found");
+}
+
+createRoot(rootElement).render(
   <React.StrictMode>
     <React.Suspense fallback={<Blank />}>
       <WiredApp />
     </React.Suspense>
   </React.StrictMode>,
-  document.getElementById("root")
 );
 
 document.body.classList.add("ad-free");

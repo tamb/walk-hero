@@ -3,44 +3,43 @@
   justify-content: center;
   height: 90vh;
   flex-direction: column;
-  animation: .75s fade-in;
+  animation: 0.75s fade-in;
   animation-fill-mode: forwards;
 
-  h1{
+  h1 {
     animation: stretch 1.4s;
     animation-fill-mode: forwards;
   }
-  img{
-    width: 20%
+  img {
+    width: 20%;
   }
 
-  hr{
+  hr {
     width: 33%;
   }
 
-  &__version{
-    font-size: .9em;
+  &__version {
+    font-size: 0.9em;
   }
 }
 
-@keyframes fade-in{
+@keyframes fade-in {
   from {
     opacity: 0;
     transform: translateY(-10vh);
   }
 
-  to{
-
+  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes stretch{
-  from{
+@keyframes stretch {
+  from {
     letter-spacing: -1px;
   }
-  to{
+  to {
     letter-spacing: 2px;
   }
 }
