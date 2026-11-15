@@ -2,12 +2,6 @@ name: Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
-    inputs:
-      base_path:
-        description: "Asset base path. Use / for walkhero.io. Use /walk-hero/ for a project site without a custom domain."
-        required: false
-        default: "/"
-        type: string
 
 permissions:
   contents: read
@@ -39,7 +33,8 @@ jobs:
 
       - name: Build
         env:
-          VITE_BASE_PATH: ${{ inputs.base_path }}
+          # Project site: https://tamb.github.io/walk-hero/
+          VITE_BASE_PATH: /walk-hero/
         run: npm run build
 
       - name: Upload Pages artifact
