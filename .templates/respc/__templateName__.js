@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Row, Col } from "reactstrap";
-import { connect } from "substate-connect";
+import { connect } from "@store/connect";
 
 import store, { EVENTS } from "@store/store";
 
@@ -13,11 +13,7 @@ class __templateNameToPascalCase__ extends React.Component {
   }
 
   render() {
-    return (
-      <div className="__templateNameToPascalCase__">
-        
-      </div>
-    );
+    return <div className="__templateNameToPascalCase__"></div>;
   }
 }
 

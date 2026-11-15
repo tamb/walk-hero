@@ -12,14 +12,8 @@ module.exports = {
     // You can change the text in the file
     return fileText
       .replace(/__templateName__/g, templateName)
-      .replace(
-        /__templateNameToPascalCase__/g,
-        changeCase.pascalCase(templateName)
-      )
-      .replace(
-        /__templateNameToParamCase__/g,
-        changeCase.paramCase(templateName)
-      );
+      .replace(/__templateNameToPascalCase__/g, changeCase.pascalCase(templateName))
+      .replace(/__templateNameToParamCase__/g, changeCase.paramCase(templateName));
   },
   renameFileFn: (fileName, templateName, utils) => {
     const { path } = utils;
@@ -30,5 +24,5 @@ module.exports = {
     const { changeCase } = _utils;
     const newDirectoryName = changeCase.paramCase(templateName);
     return directoryName.replace(/__templateName__/g, newDirectoryName);
-  }
+  },
 };

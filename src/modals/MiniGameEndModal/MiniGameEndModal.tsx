@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Modal, ModalHeader, ModalFooter, ModalBody, Alert } from "reactstrap";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import store, { STORE_EVENT } from "../../store/store";
 import { MINIGAME_STATUS } from "../../utils/enums";
@@ -23,11 +23,11 @@ interface IMiniGameEndModalProps {
   msg: string | React.ReactNode | null;
 }
 
-const MiniGameEndModal = (props: IMiniGameEndModalProps) => {
-  const browserHistory = useHistory();
+const MiniGameEndModal = ({ isOpen = false, won = false, msg = null }: IMiniGameEndModalProps) => {
+  const navigate = useNavigate();
 
   function handleOk(): void {
-    browserHistory.goBack();
+    navigate(-1);
     store.emit(STORE_EVENT.UPDATE_STATE, {
       [STORE_FIELDS.status]: MINIGAME_STATUS.NOT_PLAYING,
     });
@@ -41,23 +41,21 @@ const MiniGameEndModal = (props: IMiniGameEndModalProps) => {
   }
 
   return (
-    <Modal centered backdrop="static" isOpen={props.isOpen}>
-      <ModalHeader>You {props.won ? "win" : "lose"}!</ModalHeader>
-      {props.msg && (
-        <Alert color={props.won ? "success" : "warning"}>{props.msg}</Alert>
-      )}
+    <Modal centered backdrop="static" isOpen={isOpen}>
+      <ModalHeader>You {won ? "win" : "lose"}!</ModalHeader>
+      {msg && <Alert color={won ? "success" : "warning"}>{msg}</Alert>}
       <ModalBody className="text-center">
         <div>
           <span>
-            💰{props.won ? `+${PRIZE.cash[0]}` : `${PRIZE.cash[1]}`}
+            💰{won ? `+${PRIZE.cash[0]}` : `${PRIZE.cash[1]}`}
             &nbsp;&nbsp;&nbsp;
           </span>
           <span>
-            💖{props.won ? `+${PRIZE.life[0]}` : `${PRIZE.life[1]}`}
+            💖{won ? `+${PRIZE.life[0]}` : `${PRIZE.life[1]}`}
             &nbsp;&nbsp;&nbsp;
           </span>
           <span>
-            📦{props.won ? `+${PRIZE.resources[0]}` : `${PRIZE.resources[1]}`}
+            📦{won ? `+${PRIZE.resources[0]}` : `${PRIZE.resources[1]}`}
             &nbsp;&nbsp;
           </span>
         </div>
@@ -78,12 +76,6 @@ MiniGameEndModal.propTypes = {
   won: PropTypes.bool.isRequired,
   isOpen: PropTypes.bool.isRequired,
   msg: PropTypes.node,
-};
-
-MiniGameEndModal.defaultProps = {
-  isOpen: false,
-  won: false,
-  msg: null,
 };
 
 export default MiniGameEndModal;

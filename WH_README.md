@@ -4,10 +4,8 @@
 
 uses a VSCode extension to build react templates. These are custom defined templates
 
-## for project specific notes that are separate from Create React App notes
+## for project specific notes
 
 geodata = Geolocation Position object
 
-## CRACO
-
-I don't use craco at the moment but the file is there for when I want to implement it
+The app is built with Vite+. `npm start` runs the dev server, `npm test` runs Vitest, and `npm run build` writes `dist/`. A manual GitHub Actions workflow deploys that folder to GitHub Pages.

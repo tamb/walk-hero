@@ -11,7 +11,7 @@ $width: 100vw;
   width: $width;
   max-width: 500px;
   transition: transform 0.3s;
-  transform: translateX(($width * -1 ) - 2);
+  transform: translateX(($width * -1) - 2);
   box-shadow: 2px 2px 10px gray;
   z-index: 9999;
   padding: 1rem;
@@ -36,7 +36,7 @@ $width: 100vw;
     opacity: 0;
   }
 
-  strong{
+  strong {
     font-weight: 400;
   }
 }

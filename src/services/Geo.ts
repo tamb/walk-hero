@@ -10,9 +10,7 @@ export const toTime = (geoData: GeolocationPosition): string | undefined => {
   }
 };
 
-export const toLatLong = (
-  geoData: GeolocationPosition
-): number[] | undefined => {
+export const toLatLong = (geoData: GeolocationPosition): number[] | undefined => {
   try {
     return [geoData.coords.latitude, geoData.coords.longitude];
   } catch (err) {
@@ -35,9 +33,7 @@ export function killPoll(poll: number): void {
   navigator.geolocation.clearWatch(poll);
 }
 
-export function cloneGeoData(
-  geoData: GeolocationPosition
-): GeolocationPosition | undefined {
+export function cloneGeoData(geoData: GeolocationPosition): GeolocationPosition | undefined {
   try {
     return {
       timestamp: geoData.timestamp,
@@ -50,7 +46,7 @@ export function cloneGeoData(
         heading: geoData.coords.heading,
         speed: geoData.coords.speed,
       },
-    };
+    } as GeolocationPosition;
   } catch (err) {
     console.error("[cloneGeoData] ", err);
   }

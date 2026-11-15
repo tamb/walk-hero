@@ -1,10 +1,6 @@
-@import "~bootswatch/dist/sketchy/variables";
+@import "bootswatch/dist/sketchy/variables";
 
 @import "./_variables";
-
-
-
-
 
 button:disabled:hover {
   cursor: not-allowed;
@@ -26,11 +22,7 @@ body {
   letter-spacing: 1px;
   font-size: 1.2rem;
   background: rgb(246, 95, 53);
-  background: linear-gradient(
-    180deg,
-    rgba(246, 95, 53, 1) 0%,
-    rgba(246, 148, 53, 1) 100%
-  );
+  background: linear-gradient(180deg, rgba(246, 95, 53, 1) 0%, rgba(246, 148, 53, 1) 100%);
   padding-top: var(--banner-ad-offset);
 
   .container,
@@ -58,5 +50,5 @@ body {
 }
 
 @import "./_utility-classes.scss";
-@import "~bootstrap/scss/bootstrap";
-@import "~bootswatch/dist/sketchy/bootswatch";
+@import "bootstrap/scss/bootstrap";
+@import "bootswatch/dist/sketchy/bootswatch";
