@@ -13,8 +13,8 @@ The toolchain is [Vite+](https://viteplus.dev/) (`vp dev`, `vp test`, `vp build`
 
 ## GitHub Pages
 
-Deploy is manual. In GitHub, open **Actions → Deploy to GitHub Pages → Run workflow**.
+Pushes to `main` publish https://tamb.github.io/walk-hero/. The same workflow can be run by hand from **Actions → Deploy to GitHub Pages**.
 
-The site is published at https://tamb.github.io/walk-hero/. The workflow builds with that project path so scripts, the manifest, and the service worker resolve under `/walk-hero/`. Local dev stays at http://localhost:3000.
+The build uses `/walk-hero/` so scripts, the manifest, and the service worker resolve on that project URL. Local dev stays at http://localhost:3000.
 
 The published site is a PWA: installable manifest, icons, and a service worker that precaches the app shell. The screen wake lock is requested from the lock button and requested again when you come back to the page, because browsers release it whenever the screen turns off.
